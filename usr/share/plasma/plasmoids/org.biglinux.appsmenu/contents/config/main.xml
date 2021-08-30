@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+    http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+    <group name="General">
+        <entry name="icon" type="String">
+            <label>The name of the icon used in the compact representation (e.g. on a small panel).</label>
+            <default>start-here-kde</default>
+        </entry>
+        <entry name="favorites" type="StringList">
+            <label>List of general favorites. Supported values are menu id's (usually .desktop file names), special URLs that expand into default applications (e.g. preferred://browser), document URLs and KPeople contact URIs.</label>
+            <default>preferred://browser,org.kde.dolphin.desktop,io.elementary.photos.desktop,org.pantheon.mail.desktop,libreoffice-startcenter.desktop,org.kde.kate.desktop,vlc.desktop,systemsettings.desktop</default>
+        </entry>
+        <entry name="systemFavorites" type="StringList">
+            <label>List of system action favorites.</label>
+<!--        <default>switch-user,lock-screen,shutdown</default> -->
+            <default>lock-screen,shutdown</default>
+        </entry>
+        <entry name="favoritesPortedToKAstats" type="Bool">
+            <label>Are the favorites ported to use KActivitiesStats to allow per-activity favorites</label>
+            <default>false</default>
+        </entry>
+        <entry name="systemApplications" type="StringList">
+            <label>List of applications at the top of the "Computer" tab.</label>
+            <default>systemsettings.desktop,org.kde.kinfocenter.desktop,org.kde.discover.desktop</default>
+        </entry>
+        <entry name="gridAllowTwoLines" type="Bool">
+            <label>Whether to allow showing two lines in grid view.</label>
+            <default>true</default>
+        </entry>
+        <entry name="fullScreen" type="Bool">
+            <label>Use full screen.</label>
+            <default>false</default>
+        </entry>
+        <entry name="menuright" type="Bool">
+            <label>Show categories on right side.</label>
+            <default>false</default>
+        </entry>
+        <entry name="prefshowallapps" type="Bool">
+            <label>Show category all apps.</label>
+            <default>false</default>
+        </entry>
+        <entry name="prefshowpowersession" type="Bool">
+            <label>Show category power session</label>
+            <default>false</default>
+        </entry>
+        <entry name="alphaSort" type="Bool">
+            <label>Whether to sort menu contents alphabetically or use manual/system sort order.</label>
+            <default>true</default>
+        </entry>
+    </group>
+</kcfg>
