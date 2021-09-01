@@ -201,6 +201,7 @@
     "X-Plasma-Provides": [
         "org.kde.plasma.launchermenu"
     ],
+    "X-Plasma-RootPath": "org.kde.plasma.kickoff",
     "X-Plasma-RequiredExtensions": [
         "LaunchApp"
     ]

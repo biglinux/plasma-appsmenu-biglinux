@@ -33,7 +33,7 @@ import org.kde.plasma.private.kicker 0.1 as Kicker
 
 Item {
     id: root
-    Layout.minimumWidth: (plasmoid.configuration.fullScreen == false) ? Math.round(PlasmaCore.Units.gridUnit * 32 * 1.55) : Screen.desktopAvailableWidth
+    Layout.minimumWidth: (plasmoid.configuration.fullScreen == false) ? Math.round(PlasmaCore.Units.gridUnit * 34 * 1.55) : Screen.desktopAvailableWidth
     Layout.maximumWidth: Layout.minimumWidth
  
     Layout.minimumHeight: (plasmoid.configuration.fullScreen == false) ? PlasmaCore.Units.gridUnit * 30 : Screen.desktopAvailableHeight
