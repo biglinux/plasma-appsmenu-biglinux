@@ -224,13 +224,11 @@ Item {
                     id: favoritesGridPage
                     visible: parent.currentItem == favoritesGridPage
                     anchors.fill: parent
-                    anchors.topMargin: PlasmaCore.Units.smallSpacing * 1.5
                 }
                 ApplicationsView {
                     id: applicationsPage
                     visible: parent.currentItem == applicationsPage
                     anchors.fill: parent
-                    anchors.topMargin: PlasmaCore.Units.smallSpacing * 1.5
                 }
             }
 
