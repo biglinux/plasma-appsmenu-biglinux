@@ -16,7 +16,7 @@
         <entry name="systemFavorites" type="StringList">
             <label>List of system action favorites.</label>
 <!--        <default>switch-user,lock-screen,shutdown</default> -->
-            <default>lock-screen,shutdown</default>
+            <default>switch-user,lock-screen,shutdown</default>
         </entry>
         <entry name="favoritesPortedToKAstats" type="Bool">
             <label>Are the favorites ported to use KActivitiesStats to allow per-activity favorites</label>
