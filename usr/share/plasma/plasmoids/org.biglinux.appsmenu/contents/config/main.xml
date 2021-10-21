@@ -7,7 +7,7 @@
     <group name="General">
         <entry name="icon" type="String">
             <label>The name of the icon used in the compact representation (e.g. on a small panel).</label>
-            <default>start-here-kde</default>
+            <default>big-logo</default>
         </entry>
         <entry name="favorites" type="StringList">
             <label>List of general favorites. Supported values are menu id's (usually .desktop file names), special URLs that expand into default applications (e.g. preferred://browser), document URLs and KPeople contact URIs.</label>
@@ -16,7 +16,7 @@
         <entry name="systemFavorites" type="StringList">
             <label>List of system action favorites.</label>
 <!--        <default>switch-user,lock-screen,shutdown</default> -->
-            <default>switch-user,lock-screen,shutdown</default>
+            <default>switch-user,lock-screen,logout</default>
         </entry>
         <entry name="favoritesPortedToKAstats" type="Bool">
             <label>Are the favorites ported to use KActivitiesStats to allow per-activity favorites</label>
