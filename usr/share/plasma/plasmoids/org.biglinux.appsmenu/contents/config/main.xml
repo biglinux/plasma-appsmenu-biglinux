@@ -16,7 +16,7 @@
         <entry name="systemFavorites" type="StringList">
             <label>List of system action favorites.</label>
 <!--        <default>switch-user,lock-screen,shutdown</default> -->
-            <default>switch-user,lock-screen,logout</default>
+            <default></default>
         </entry>
         <entry name="favoritesPortedToKAstats" type="Bool">
             <label>Are the favorites ported to use KActivitiesStats to allow per-activity favorites</label>
@@ -44,7 +44,7 @@
         </entry>
         <entry name="prefshowpowersession" type="Bool">
             <label>Show category power session</label>
-            <default>false</default>
+            <default>true</default>
         </entry>
         <entry name="alphaSort" type="Bool">
             <label>Whether to sort menu contents alphabetically or use manual/system sort order.</label>

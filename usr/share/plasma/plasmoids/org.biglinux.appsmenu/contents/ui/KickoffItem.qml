@@ -33,7 +33,7 @@ Item {
     property bool isCategories: false
 
     width: ListView.view.width
-    height: isCategories ? PlasmaCore.Units.smallSpacing + Math.max(PlasmaCore.Units.smallSpacing*2.5, titleElement.implicitHeight + PlasmaCore.Units.smallSpacing*2.5) : (PlasmaCore.Units.smallSpacing * 2) + Math.max(elementIcon.height+ PlasmaCore.Units.smallSpacing*2, titleElement.implicitHeight + PlasmaCore.Units.smallSpacing*2)
+    height: isCategories ? PlasmaCore.Units.smallSpacing + Math.max(PlasmaCore.Units.smallSpacing*2.5, titleElement.implicitHeight + PlasmaCore.Units.smallSpacing*2) : (PlasmaCore.Units.smallSpacing * 2) + Math.max(elementIcon.height+ PlasmaCore.Units.smallSpacing*2, titleElement.implicitHeight + PlasmaCore.Units.smallSpacing*2)
 
     signal reset
     signal actionTriggered(string actionId, variant actionArgument)
