@@ -202,11 +202,6 @@ FocusScope {
 
             delegate: KickoffGridItem { }
 
-            PC3.ToolTip {
-                parent: gridView.currentItem ? gridView.currentItem : gridView
-                visible: itemGrid.parent == root.currentContentView && gridView.currentItem && hoverArea.containsMouse     
-                text: gridView.currentItem ? gridView.currentItem.display : ""
-            }
 
             highlight: Item {
                 opacity: navigationMethod.state != "keyboard" || (keyboardNavigation.state == "RightColumn" && gridView.activeFocus) ? 1 : 0.5
