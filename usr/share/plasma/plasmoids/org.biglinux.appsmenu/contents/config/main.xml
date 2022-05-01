@@ -24,7 +24,7 @@
         </entry>
         <entry name="systemApplications" type="StringList">
             <label>List of applications at the top of the "Computer" tab.</label>
-            <default>systemsettings.desktop,org.kde.kinfocenter.desktop,org.kde.discover.desktop</default>
+            <default>big-store.desktop</default>
         </entry>
         <entry name="gridAllowTwoLines" type="Bool">
             <label>Whether to allow showing two lines in grid view.</label>
