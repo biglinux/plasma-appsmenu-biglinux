@@ -121,8 +121,8 @@ Item {
             anchors.fill: parent
             source: plasmoid.icon
             active: parent.containsMouse || compactDragArea.containsDrag
-            smooth: true
-            roundToIconSize: aspectRatio === 1
+            smooth: false
+            roundToIconSize: aspectRatio === 2
         }
     }
 
