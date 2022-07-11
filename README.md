@@ -20,23 +20,3 @@ Un menú derivado del menú oficial de KDE y FerenOS, mejorando la visibilidad d
 # See in youtube:
 
 [![See example in Youtube](https://img.youtube.com/vi/VvtLuJOGwzg/0.jpg)](https://www.youtube.com/watch?v=VvtLuJOGwzg)
-
-----------------
-
-# Pictures
-![Normal](https://gitlab.com/biglinux/plasma-appsmenu-biglinux/-/raw/main/normal.jpg)
-
-![Right mode](https://gitlab.com/biglinux/plasma-appsmenu-biglinux/-/raw/main/rightmode.jpg)
-
-![Fullscreen](https://gitlab.com/biglinux/plasma-appsmenu-biglinux/-/raw/main/fullscreen.jpg)
-
-![Fullscreen right mode](https://gitlab.com/biglinux/plasma-appsmenu-biglinux/-/raw/main/fullscreen-right.jpg)
-
-
-
-
-
-
-
-
-
