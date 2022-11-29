@@ -64,7 +64,8 @@ Item {
 
     property string displayName: managesChildrenOutside ? ListView.view.model.getI18nName(index) : model.display
     property string accessibleName: modelChildren || managesChildrenOutside ? i18n("%1 submenu", displayName) : displayName
-
+    property bool displayicons: managesChildrenOutside ? ListView.View.model.getItem(index) : model.display
+    
     onAboutToShowActionMenu: {
         var actionList = hasActionList ? model.actionList : [];
         Tools.fillActionMenu(i18n, actionMenu, actionList, ListView.view.model.favoritesModel, model.favoriteId);
@@ -115,7 +116,24 @@ Item {
             actionTriggered(actionId, actionArgument);
         }
     }
+PlasmaCore.IconItem {
+        id: categoryIcon
 
+        anchors {
+            left: parent.left
+            leftMargin: PlasmaCore.Units.smallSpacing * 6
+            verticalCenter: parent.verticalCenter
+        }
+        width: PlasmaCore.Units.iconSizes.smallMedium
+        height: width
+
+        animated: false
+        usesPlasmaTheme: false
+
+        source: model.decoration
+        
+    }
+    
     PlasmaCore.IconItem {
         id: elementIcon
 
@@ -139,9 +157,9 @@ Item {
         id: titleElement
 
         anchors {
-            left: isCategories ? parent.left : elementIcon.right
+            left: isCategories  ? parent.left : elementIcon.right 
             right: parent.right
-            leftMargin: isCategories ? PlasmaCore.Units.smallSpacing * 6 : PlasmaCore.Units.smallSpacing * 4
+            leftMargin: isCategories ? PlasmaCore.Units.smallSpacing * 13 : PlasmaCore.Units.smallSpacing * 4
             rightMargin: PlasmaCore.Units.smallSpacing * 6
             verticalCenter: parent.verticalCenter
         }
