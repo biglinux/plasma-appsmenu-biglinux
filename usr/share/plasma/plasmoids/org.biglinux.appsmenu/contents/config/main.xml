@@ -9,46 +9,73 @@
             <label>The name of the icon used in the compact representation (e.g. on a small panel).</label>
             <default>big-logo</default>
         </entry>
-        <entry name="favorites" type="StringList">
-            <label>List of general favorites. Supported values are menu id's (usually .desktop file names), special URLs that expand into default applications (e.g. preferred://browser), document URLs and KPeople contact URIs.</label>
-            <default>preferred://browser,org.kde.dolphin.desktop,org.kde.kate.desktop</default>
-        </entry>
-        <entry name="systemFavorites" type="StringList">
-            <label>List of system action favorites.</label>
-<!--        <default>switch-user,lock-screen,shutdown</default> -->
+        <entry name="menuLabel" type="string">
+            <label>Text label for the Panel button</label>
             <default></default>
         </entry>
-        <entry name="favoritesPortedToKAstats" type="Bool">
-            <label>Are the favorites ported to use KActivitiesStats to allow per-activity favorites</label>
+        <entry name="showRecentDocsCategory" type="Bool">
+            <label>show/hide recent documents category</label>
             <default>false</default>
         </entry>
-        <entry name="systemApplications" type="StringList">
-            <label>List of applications at the top of the "Computer" tab.</label>
-            <default>big-store.desktop</default>
+        <entry name="showRecentAppsCategory" type="Bool">
+            <label>show/hide recent applications category.</label>
+            <default>false</default>
         </entry>
-        <entry name="gridAllowTwoLines" type="Bool">
-            <label>Whether to allow showing two lines in grid view.</label>
+        <entry name="showFavoritesCategory" type="Bool">
+            <label>show/hide favorites category</label>
             <default>true</default>
         </entry>
-        <entry name="fullScreen" type="Bool">
-            <label>Use full screen.</label>
-            <default>false</default>
+        <entry name="showCategoryIcons" type="Bool">
+            <label>show/hide categories icons</label>
+            <default>true</default>
         </entry>
-        <entry name="menuright" type="Bool">
-            <label>Show categories on right side.</label>
-            <default>false</default>
-        </entry>
-        <entry name="prefshowallapps" type="Bool">
-            <label>Show category all apps.</label>
-            <default>false</default>
-        </entry>
-        <entry name="prefshowpowersession" type="Bool">
-            <label>Show category power session</label>
+        <entry name="showFullscreenButton" type="Bool">
+            <label>show/hide the fulscreen button</label>
             <default>true</default>
         </entry>
         <entry name="alphaSort" type="Bool">
             <label>Whether to sort menu contents alphabetically or use manual/system sort order.</label>
+            <default>false</default>
+        </entry>
+        <entry name="showPinButton" type="Bool">
+            <label>Whether the popup should remain open when another window is activated</label>
+            <default>false</default>
+        </entry>
+        <entry name="showPowercategory" type="Bool">
+            <label>show/hide power category</label>
             <default>true</default>
         </entry>
+        <entry name="compactMode" type="Bool">
+            <label>Whether to use a compact display style for category items</label>
+            <default>true</default>
+        </entry>
+        <entry name="showPowerButton" type="Bool">
+            <label>Show/hide power button </label>
+            <default>true</default>
+        </entry>
+        <entry name="favorites" type="StringList">
+            <label>List of general favorites. Supported values are menu id's (usually .desktop file names), special URLs that expand into default applications (e.g. preferred://browser), document URLs and KPeople contact URIs.</label>
+            <default>preferred://browser,org.kde.kontact.desktop,systemsettings.desktop,org.kde.dolphin.desktop,ktp-contactlist.desktop,org.kde.discover.desktop</default>
+        </entry>
+        <entry name="systemFavorites" type="StringList">
+            <label>List of system action favorites.</label>
+            <default>suspend,hibernate,reboot,shutdown</default>
+        </entry>
+        <entry name="systemApplications" type="StringList">
+            <label>List of applications at the top of the "Computer" tab.</label>
+            <default>systemsettings.desktop,org.kde.kinfocenter.desktop,org.kde.discover.desktop</default>
+        </entry>
+        <entry name="favoritesDisplay" type="Int">
+            <label>How to display favorites: 0 = Grid, 1 = List</label>
+            <default>0</default>
+        </entry>
+        <entry name="applicationsDisplay" type="Int">
+            <label>How to display applications: 0 = Grid, 1 = List</label>
+            <default>0</default>
+        </entry>
+         <entry name="primaryActions" type="Int">
+            <label>Which actions should be displayed in the header: 0 = Power, 1 = Session, 2 = shutdown, 3 = Power and session</label>
+            <default>2</default>
+        </entry>  
     </group>
 </kcfg>
