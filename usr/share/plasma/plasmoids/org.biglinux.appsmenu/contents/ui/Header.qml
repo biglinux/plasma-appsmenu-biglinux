@@ -1,131 +1,190 @@
 /*
- *    Copyright 2014  Sebastian Kügler <sebas@kde.org>
- *    SPDX-FileCopyrightText: (C) 2020 Carl Schwan <carl@carlschwan.eu>
- *    Copyright (C) 2021 by Mikel Johnson <mikel5764@gmail.com>
- *
- *    This program is free software; you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation; either version 2 of the License, or
- *    (at your option) any later version.
- *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
- *
- *    You should have received a copy of the GNU General Public License along
- *    with this program; if not, write to the Free Software Foundation, Inc.,
- *    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+    SPDX-FileCopyrightText: 2014 Sebastian Kügler <sebas@kde.org>
+    SPDX-FileCopyrightText: 2020 Carl Schwan <carl@carlschwan.eu>
+    SPDX-FileCopyrightText: 2021 Mikel Johnson <mikel5764@gmail.com>
+    SPDX-FileCopyrightText: 2021 Noah Davis <noahadvs@gmail.com>
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
-import QtQuick 2.12
-import QtQuick.Layouts 1.12
+import QtQuick 2.15
+import QtQml 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Templates 2.15 as T
+import QtGraphicalEffects 1.15
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
+import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kcoreaddons 1.0 as KCoreAddons
-import org.kde.plasma.private.kicker 0.1 as Kicker //for Leave Buttons
-// While using Kirigami in applets is normally a no, we
-// use Avatar, which doesn't need to read the colour scheme
-// at all to function, so there won't be any oddities with colours.
 import org.kde.kirigami 2.13 as Kirigami
+import org.kde.kcoreaddons 1.0 as KCoreAddons
 import org.kde.kquickcontrolsaddons 2.0 as KQuickAddons
 
 PlasmaExtras.PlasmoidHeading {
-    id: header
+    id: root
+    
+    property alias searchText: searchField.text
+    property alias fullScreenMode: fullscreenButton.checked
+    
+    contentHeight: searchField.implicitHeight
+    contentWidth: searchField.implicitWidth
+    
+    leftPadding: 0
+    rightPadding: 10
+    topPadding: Math.round((background.margins.top - background.inset.top) / 2.0)
+    bottomPadding: background.margins.bottom + Math.round((background.margins.bottom - background.inset.bottom) / 2.0)
 
-    implicitHeight: Math.round(PlasmaCore.Units.gridUnit * 2.5)
-    rightPadding: rightInset
+    leftInset: -plasmoid.rootItem.backgroundMetrics.leftPadding
+    rightInset: -plasmoid.rootItem.backgroundMetrics.rightPadding
+    topInset: -background.margins.top
+    bottomInset: 0
 
-    property alias query: queryField.text
-    property Item input: queryField
-    property Item configureButton: configureButton
-    property Item avatar: avatarButton
+    spacing: plasmoid.rootItem.backgroundMetrics.spacing
+        
+            HoverHandler {
+                id: hoverHandler
+                cursorShape: Qt.PointingHandCursor
+            }
+            PC3.ToolTip.text: Accessible.name
+            PC3.ToolTip.visible: hovered
+            PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
 
-    KCoreAddons.KUser {
-        id: kuser
-    }
+            Keys.onLeftPressed: if (LayoutMirroring.enabled) {
+                searchField.forceActiveFocus(Qt.TabFocusReason)
+            }
+            Keys.onRightPressed: if (!LayoutMirroring.enabled) {
+                searchField.forceActiveFocus(Qt.TabFocusReason)
+            }
+            Keys.onDownPressed: if (plasmoid.rootItem.sideBar) {
+                plasmoid.rootItem.sideBar.forceActiveFocus(Qt.TabFocusReason)
+            } else {
+                plasmoid.rootItem.contentArea.forceActiveFocus(Qt.TabFocusReason)
+            }
 
     RowLayout {
-        id: nameAndIcon
-        anchors.left: parent.left
-        anchors.leftMargin: PlasmaCore.Units.gridUnit + header.leftInset + PlasmaCore.Units.devicePixelRatio //border width
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.rightMargin: PlasmaCore.Units.gridUnit - PlasmaCore.Units.devicePixelRatio - PlasmaCore.Units.smallSpacing //separator width
-        
-        // looks visually balanced that way
-        spacing: Math.round(PlasmaCore.Units.smallSpacing * 2.5)
-        
-        PlasmaComponents.TextField {
-            id: queryField
+        id: rowLayout
+        spacing: root.spacing
+        height: parent.height
+        anchors {
+            left: parent.left
+            right: parent.right
+        }
+        Keys.onDownPressed: plasmoid.rootItem.contentArea.forceActiveFocus(Qt.TabFocusReason)
 
+        PlasmaExtras.SearchField {
+            id: searchField
+            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
             Layout.fillWidth: true
+            Layout.leftMargin: plasmoid.rootItem.backgroundMetrics.leftPadding
+            focus: true
 
-            placeholderText: i18n("Search…")
-            clearButtonShown: true
-
-            Accessible.editable: true
-            Accessible.searchEdit: true
-
-            onTextChanged: {
-                if (root.state != "Search") {
-                    root.previousState = root.state;
-                    root.state = "Search";
+            Binding {
+                target: plasmoid.rootItem
+                property: "searchField"
+                value: searchField
+                // there's only one header ever, so don't waste resources
+                restoreMode: Binding.RestoreNone
+            }
+            Connections {
+                target: plasmoid
+                function onExpandedChanged() {
+                    if (plasmoid.expanded) {
+                        searchField.clear()
+                    }
                 }
-                if (text == "") {
-                    root.state = root.previousState;
+            }
+            onTextEdited: {
+                searchField.forceActiveFocus(Qt.ShortcutFocusReason)
+            }
+            onAccepted: {
+                plasmoid.rootItem.contentArea.currentItem.action.triggered()
+                plasmoid.rootItem.contentArea.currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
+            }
+            Keys.priority: Keys.AfterItem
+            Keys.forwardTo: plasmoid.rootItem.contentArea !== null ? plasmoid.rootItem.contentArea.view : []
+            Keys.onLeftPressed: if (activeFocus) {
+                if (LayoutMirroring.enabled) {
+                    nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+                } else {
+                    nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
+                }
+            }
+            Keys.onRightPressed: if (activeFocus) {
+                if (!LayoutMirroring.enabled) {
+                    nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+                } else {
+                    nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
                 }
             }
         }
+        
 
-        Repeater {
-            model: systemFavorites
-
-            PlasmaComponents.ToolButton {
-                // so that it lets the buttons elide...
-                Layout.fillWidth: true
-                // ... but does not make the buttons grow
-                Layout.maximumWidth: implicitWidth
-                text: model.display
-                icon.name: model.decoration
-                onClicked: {
-                    systemFavorites.trigger(index, "", "")
-                }
+        PC3.ToolButton {
+            checkable: true
+            checked: plasmoid.configuration.pin
+            visible: plasmoid.configuration.showPinButton
+            icon.name: "window-pin"
+            text: i18n("Keep Open")
+            display: PC3.ToolButton.IconOnly
+            PC3.ToolTip.text: text
+            PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
+            PC3.ToolTip.visible: hovered
+            Binding {
+                target: plasmoid
+                property: "hideOnWindowDeactivate"
+                value: !plasmoid.configuration.pin
+                // there should be no other bindings, so don't waste resources
+                restoreMode: Binding.RestoreNone
             }
-        }
-    }
-
-    Instantiator {
-        model: Kicker.SystemModel {
-            id: systemModel
-            favoritesModel: globalFavorites
-        }
-        delegate: PlasmaComponents.MenuItem {
-            text: model.display
-            visible: !String(plasmoid.configuration.systemFavorites).includes(model.favoriteId)
-
-            onClicked: systemModel.trigger(index, "", "")
-        }
-    }
-    
-    //TODO: Figure out keyboard hotkeys for this later - refer to LeaveButtons.qml
-    Keys.onPressed: {
-        // On tab focus on left pane (or search when searching)
-        if (event.key == Qt.Key_Tab) {
-            navigationMethod.state = "keyboard"
-            // There's no left panel when we search
-            if (root.state == "Search") {
-                keyboardNavigation.state = "RightColumn"
-                root.currentContentView.forceActiveFocus()
-            } else if (mainTabGroup.state == "top") {
-                applicationButton.forceActiveFocus(Qt.TabFocusReason)
+            
+            KeyNavigation.backtab: fullscreenButton
+            KeyNavigation.tab: if (plasmoid.rootItem.sideBar) {
+                return plasmoid.rootItem.sideBar
             } else {
-                keyboardNavigation.state = "LeftColumn"
-                root.currentView.forceActiveFocus()
+                return nextItemInFocusChain()
             }
-            event.accepted = true;
-            return;
+            Keys.onLeftPressed: if (LayoutMirroring.enabled) {
+                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+            } else {
+                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
+            }
+            Keys.onRightPressed: if (!LayoutMirroring.enabled) {
+                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+            } else {
+                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
+            }
+            onToggled: plasmoid.configuration.pin = checked
+          }
+        
+         PC3.ToolButton {
+            id: fullscreenButton
+            checkable: true
+            visible: plasmoid.configuration.showFullscreenButton
+            icon.name: "view-fullscreen"
+            text: i18n("Fullscreen view")
+            display: PC3.ToolButton.IconOnly
+
+            PC3.ToolTip.text: text
+            PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
+            PC3.ToolTip.visible: hovered
+            Keys.onLeftPressed: if (LayoutMirroring.enabled) {
+                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+            } else {
+                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
+            }
+            Keys.onRightPressed: if (!LayoutMirroring.enabled) {
+                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+            } else {
+                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
+            }
+        }
+         
+     LeaveButtons {
+        id: leaveButtons
+        anchors {
+            right: parent.right
+            top: parent.top
+            bottom: parent.bottom
+            leftMargin: root.spacing
         }
     }
+  } 
 }

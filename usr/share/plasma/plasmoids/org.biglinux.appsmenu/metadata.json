@@ -10,14 +10,10 @@
                 "Name": "Mikel Johnson"
             },
             {
-                "Email": "ferenosdev@outlook.com",
-                "Name": "Dominic Hayes"
-            },
-            {
-                "Email": "bigbruno@gmail.com",
-                "Name": "Bruno Goncalves"
+                "Email": "dg2003gh@gmail.com",
+                "Name": "Douglas Guimarães"
             }
-        ],
+            
         "Category": "Application Launchers",
         "Description": "Launcher to start applications",
         "Description[af]": "Lanseerder om programme te loop",
@@ -193,7 +189,7 @@
         "ServiceTypes": [
             "Plasma/Applet"
         ],
-        "Version": "1.0",
+        "Version": "3.0",
         "Website": "https://gitlab.com/biglinux"
     },
     "X-Plasma-API": "declarativeappletscript",

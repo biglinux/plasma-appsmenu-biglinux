@@ -1,355 +1,291 @@
 /*
-    Copyright (C) 2011  Martin Gräßlin <mgraesslin@kde.org>
-    Copyright (C) 2012  Gregor Taetzner <gregor@freenet.de>
-    Copyright (C) 2015-2018  Eike Hein <hein@kde.org>
-    Copyright (C) 2021 by Mikel Johnson <mikel5764@gmail.com>
+    SPDX-FileCopyrightText: 2011 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2012 Gregor Taetzner <gregor@freenet.de>
+    SPDX-FileCopyrightText: 2015-2018 Eike Hein <hein@kde.org>
+    SPDX-FileCopyrightText: 2021 Mikel Johnson <mikel5764@gmail.com>
+    SPDX-FileCopyrightText: 2021 Noah Davis <noahadvs@gmail.com>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+    SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.0
+import QtQuick 2.15
+import QtQml 2.15
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components 2.0 as PC2
 import org.kde.plasma.components 3.0 as PC3
+import org.kde.kirigami 2.16 as Kirigami
 
-FocusScope {
-    id: view
+// ScrollView makes it difficult to control implicit size using the contentItem.
+// Using EmptyPage instead.
+EmptyPage {
+    id: root
+    property alias model: view.model
+    property alias count: view.count
+    property alias currentIndex: view.currentIndex
+    property alias currentItem: view.currentItem
+    property alias delegate: view.delegate
+    property alias section: view.section
+    property alias view: view
 
-    signal reset
-    signal addBreadcrumb(var model, string title)
+    property bool mainContentView: false
+    property bool hasSectionView: false
 
-    readonly property Item listView: listView
+    /**
+     * Request showing the section view
+     */
+    signal showSectionViewRequested(string sectionName)
 
-    property bool appView: false
+    clip: view.height < view.contentHeight
 
-    property alias model: listView.model
-    property alias delegate: listView.delegate
-    property alias currentIndex: listView.currentIndex
-
-    property alias currentItem: listView.currentItem
-    property alias count: listView.count
-    property alias interactive: listView.interactive
-    property alias contentHeight: listView.contentHeight
-
-    property alias move: listView.move
-    property alias moveDisplaced: listView.moveDisplaced
-
-    // left sidebar app list
-    property bool isManagerMode: false
-    property bool isCategories: false
-
-    // left sidebar places list
-    property bool isExternalManagerMode: false
-
-    property alias section: listView.section
-
-    // Accessibility NOTE: We don't name panes because doing so would be annoying and redundant
-
-    function incrementCurrentIndex() {
-        if (listView.currentIndex < listView.count - 1) {
-            listView.incrementCurrentIndex();
-            return true;
-        } else {
-            return false;
-        }
-    }
-    function decrementCurrentIndex() {
-        if (listView.currentIndex > 0) {
-            listView.decrementCurrentIndex();
-            return true;
-        } else {
-            return false;
-        }
-    }
-    function keyNavDown() {
-        return view.incrementCurrentIndex()
-    }
-
-    function keyNavUp() {
-        return view.decrementCurrentIndex()
-    }
-
-    Connections {
-        target: plasmoid
-
-        function onExpandedChanged() {
-            if (!plasmoid.expanded) {
-                listView.positionAtBeginning()
+    header: MouseArea {
+        implicitHeight: KickoffSingleton.listItemMetrics.margins.top
+        hoverEnabled: true
+        onEntered: {
+            if (containsMouse) {
+                let targetIndex = view.indexAt(mouseX + view.contentX, view.contentY)
+                if (targetIndex >= 0) {
+                    view.currentIndex = targetIndex
+                    view.forceActiveFocus(Qt.MouseFocusReason)
+                }
             }
         }
     }
 
-    // This only applies to the left sidebar
-    // If we're hovering over items quickly they change instantly
-    // however if we stop on one item (section) we add a delay
-    // so that we can stop accidental category switching when going from left sidebar to the right one
-    // that way you can move your cursor diagonally without switching sections
-    // and still have highlight following instantly when quickly hovering over sections
-    // thus preventing feeling of sluggishness
-
-    Timer {
-        id: changedIndexRecently
-        // this is an interaction and not an animation, so we want it as a constant
-        interval: 300
-        repeat: false
-    }
-
-    Timer {
-        id: delayedActivation
-        // interaction time needs to be a constant
-        interval: 250
-        repeat: false
-        property int indexToGoTo: -1
-        onTriggered: {
-            if (indexToGoTo !== -1) {
-                listView.currentIndex = indexToGoTo
-                indexToGoTo = -1
+    footer: MouseArea {
+        implicitHeight: KickoffSingleton.listItemMetrics.margins.bottom
+        hoverEnabled: true
+        onEntered: {
+            if (containsMouse) {
+                let targetIndex = view.indexAt(mouseX + view.contentX, view.height + view.contentY - 1)
+                if (targetIndex >= 0) {
+                    view.currentIndex = targetIndex
+                    view.forceActiveFocus(Qt.MouseFocusReason)
+                }
             }
         }
     }
 
-    PC3.ScrollView {
-        anchors.fill: parent
-        PC3.ScrollBar.horizontal.visible: false
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            contentWidth, // exclude padding to avoid scrollbars automatically affecting implicitWidth
+                            implicitHeaderWidth2,
+                            implicitFooterWidth2)
+
+    leftPadding: verticalScrollBar.visible && root.mirrored ? verticalScrollBar.implicitWidth : 0
+    rightPadding: verticalScrollBar.visible && !root.mirrored ? verticalScrollBar.implicitWidth : 0
+
+    contentItem: ListView {
+        id: view
+
+        readonly property real availableWidth: width - leftMargin - rightMargin
+        readonly property real availableHeight: height - topMargin - bottomMargin
+        property bool movedWithKeyboard: false
+
+        Accessible.role: Accessible.List
+
+        implicitWidth: {
+            let totalMargins = leftMargin + rightMargin
+            if (mainContentView) {
+                if (plasmoid.rootItem.mayHaveGridWithScrollBar) {
+                    totalMargins += verticalScrollBar.implicitWidth
+                }
+                return KickoffSingleton.gridCellSize * 4 + totalMargins
+            }
+            return contentWidth + totalMargins
+        }
+        implicitHeight: {
+            // use grid cells to determine size
+            let h = KickoffSingleton.gridCellSize * 4
+            // If no grids are used, use the number of items that would fit in the grid height
+            if (plasmoid.configuration.favoritesDisplay != 0 && plasmoid.configuration.applicationsDisplay != 0) {
+                h = Math.floor(h / plasmoid.rootItem.listDelegateHeight) * plasmoid.rootItem.listDelegateHeight
+            }
+            return h + topMargin + bottomMargin
+        }
+
+        leftMargin: plasmoid.rootItem.backgroundMetrics.leftPadding
+        rightMargin: plasmoid.rootItem.backgroundMetrics.rightPadding
+
+        currentIndex: count > 0 ? 0 : -1
         focus: true
+        interactive: height < contentHeight
+        pixelAligned: true
+        reuseItems: true
+        boundsBehavior: Flickable.StopAtBounds
+        // default keyboard navigation doesn't allow focus reasons to be used
+        // and eats up/down key events when at the beginning or end of the list.
+        keyNavigationEnabled: false
+        keyNavigationWraps: false
 
-        ListView {
-            currentIndex: 0
-            onCurrentIndexChanged: {
-                if (currentIndex != -1) {
-                    // stop reporting list count when index changes
-                    accessibilityCount = false
-                    if (view.isManagerMode || view.isExternalManagerMode) {
-                        changedIndexRecently.restart()
-                    }
-                    if (view.isExternalManagerMode) {
-                        model.trigger(currentIndex)
-                        return;
-                    }
-                    if (view.isManagerMode && currentItem.appView && currentItem.modelChildren) {
-                        view.activatedItem = view.currentItem;
-                        view.moveRight();
-                    }
-                }
-            }
-            id: listView
-            property int listBeginningMargin: currentSection == "" && (!view.appView || view.isManagerMode) ? PlasmaCore.Units.smallSpacing * 3 : 0 // don't add margin in the right app view or when sections are present
-            property int listEndMargin: (contentHeight + listBeginningMargin) > parent.height ? PlasmaCore.Units.smallSpacing * 3 : 0
-            clip: currentSection == "" && view.appView && !view.isManagerMode //clip only in the right app view where breadcrumb is present
+        // This is actually needed. The highlight will animate from thin to wide otherwise.
+        highlightResizeDuration: 0
+        highlightMoveDuration: 0
+        highlight: PlasmaCore.FrameSvgItem {
+            // The default Z value for delegates is 1. The default Z value for the section delegate is 2.
+            // The highlight gets a value of 3 while the drag is active and then goes back to the default value of 0.
+            z: root.currentItem && root.currentItem.Drag.active ?
+                3 : 0
+            opacity: view.activeFocus
+                || (plasmoid.rootItem.contentArea === root
+                    && plasmoid.rootItem.searchField.activeFocus) ? 1 : 0.5
+            imagePath: "widgets/viewitem"
+            prefix: "hover"
+        }
 
-            topMargin: listBeginningMargin
-            bottomMargin: listEndMargin
+        delegate: KickoffListDelegate {
+            width: view.availableWidth
+        }
 
-            focus: true
+        section {
+            property: "group"
+            criteria: ViewSection.FullString
+            delegate: PC3.AbstractButton {
+                width: view.availableWidth
+                height: KickoffSingleton.compactListDelegateHeight
 
-            verticalLayoutDirection: ListView.TopToBottom
-
-            // Currently narrator only notifies about focus changes
-            // That means that if item has focus narrator won't notify about name/description changes, like count changing
-            // which is most apparent with submenus
-            // We work around this by having the first focused item having the list count and name as a description
-            // When we unfocus it goes back to only reporting it's name
-            // That way we create a seamless experience where when model changes we always report the new item count
-
-            // Determines whether or not we tell the amount of items in the list
-            property bool accessibilityCount: true
-
-            // we report item amount when model changes
-            onModelChanged: {
-                accessibilityCount = true
-            }
-
-            // and also when we focus on our list
-            onActiveFocusChanged: {
-                accessibilityCount = true
-            }
-
-            // Let root handle keyboard interaction
-            Keys.forwardTo: [root]
-
-            function positionAtBeginning() {
-                positionViewAtBeginning();
-                // positionViewAtBeginning doesn't account for margins
-                // move content manually only if it overflows
-                if (visibleArea.heightRatio !== 1.0) {
-                    contentY -= topMargin;
-                }
-                currentIndex = 0;
-            }
-            boundsBehavior: Flickable.StopAtBounds
-            property bool hasKeyboardFocus: navigationMethod.inSearch || (keyboardNavigation.state == (view.isManagerMode || view.isExternalManagerMode  ? "LeftColumn" : "RightColumn"))
-
-            highlight: Item {
-                opacity: navigationMethod.state != "keyboard" || (listView.hasKeyboardFocus && listView.activeFocus) ? 1 : 0.5
-                PlasmaCore.FrameSvgItem {
-                    anchors {
-                        fill: parent
-                        leftMargin: PlasmaCore.Units.smallSpacing * 3
-                        rightMargin: PlasmaCore.Units.smallSpacing * 3
-                    }
-                    imagePath: "widgets/viewitem"
-                    prefix: "hover"
-                }
-            }
-            highlightMoveDuration : 0
-            highlightResizeDuration: 0
-
-            delegate: KickoffItem {
-                id: delegateItem
-                isManagerMode: view.isManagerMode
-                isCategories: view.isCategories
-                appView: view.appView
-
-                onReset: view.reset()
-                onAddBreadcrumb: view.addBreadcrumb(model, title)
-            }
-
-            section {
-                property: "group"
-                criteria: ViewSection.FullString
-                delegate: SectionDelegate {}
-            }
-
-            MouseArea {
-                anchors.left: parent.left
-
-                width: parent.width
-                height: parent.height
-
-                id: mouseArea
-
-                property Item pressed: null
-                property int pressX: -1
-                property int pressY: -1
-                property bool tapAndHold: false
-
-                hoverEnabled: true
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-                onExited: {
-                    if (view.isManagerMode || view.isExternalManagerMode) {
-                        delayedActivation.stop();
-                        delayedActivation.indexToGoTo = -1;
-                    }
+                PC3.Label {
+                    id: contentLabel
+                    anchors.left: parent.left
+                    width: section.length === 1
+                        ? KickoffSingleton.compactListDelegateContentHeight + leftPadding + rightPadding
+                        : parent.width
+                    height: parent.height
+                    leftPadding: view.effectiveLayoutDirection === Qt.LeftToRight
+                        ? KickoffSingleton.listItemMetrics.margins.left : 0
+                    rightPadding: view.effectiveLayoutDirection === Qt.RightToLeft
+                        ? KickoffSingleton.listItemMetrics.margins.right : 0
+                    horizontalAlignment: section.length === 1 ? Text.AlignHCenter : Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    maximumLineCount: 1
+                    elide: Text.ElideRight
+                    font.pixelSize: KickoffSingleton.compactListDelegateContentHeight
+                    enabled: hoverHandler.hovered
+                    text: section.length === 1 ? section.toUpperCase() : section
+                    textFormat: Text.PlainText
                 }
 
-                onPressed: {
-                    var mapped = listView.mapToItem(listView.contentItem, mouse.x, mouse.y);
-                    var item = listView.itemAt(mapped.x, mapped.y);
+                HoverHandler {
+                    id: hoverHandler
+                    enabled: root.hasSectionView
+                    cursorShape: enabled ? Qt.PointingHandCursor : undefined
+                }
 
-                    if (!item) {
-                        return;
-                    }
+                onClicked: root.showSectionViewRequested(contentLabel.text)
+            }
+        }
 
-                    if (mouse.buttons & Qt.RightButton) {
-                        if (item.hasActionList) {
-                            mapped = listView.contentItem.mapToItem(item, mapped.x, mapped.y);
-                            listView.currentItem.openActionMenu(mapped.x, mapped.y);
+        move: normalTransition
+        moveDisplaced: normalTransition
+
+        Transition {
+            id: normalTransition
+            NumberAnimation {
+                duration: PlasmaCore.Units.shortDuration
+                properties: "x, y"
+                easing.type: Easing.OutCubic
+            }
+        }
+
+        PC3.ScrollBar.vertical: PC3.ScrollBar {
+            id: verticalScrollBar
+            parent: root
+            z: 2
+            height: root.height
+            anchors.right: parent.right
+        }
+
+        Kirigami.WheelHandler {
+            target: view
+            filterMouseEvents: true
+            // `20 * Qt.styleHints.wheelScrollLines` is the default speed.
+            // `* PlasmaCore.Units.devicePixelRatio` is needed on X11
+            // because Plasma doesn't support Qt scaling.
+            horizontalStepSize: 20 * Qt.styleHints.wheelScrollLines * PlasmaCore.Units.devicePixelRatio
+            verticalStepSize: 20 * Qt.styleHints.wheelScrollLines * PlasmaCore.Units.devicePixelRatio
+        }
+
+        Connections {
+            target: plasmoid
+            function onExpandedChanged() {
+                if (plasmoid.expanded) {
+                    view.currentIndex = 1
+                    view.positionViewAtBeginning()
+                }
+            }
+        }
+
+        Timer {
+            id: movedWithKeyboardTimer
+            interval: 200
+            onTriggered: view.movedWithKeyboard = false
+        }
+
+        function focusCurrentItem(event, focusReason) {
+            currentItem.forceActiveFocus(focusReason)
+            event.accepted = true
+        }
+
+        Keys.onMenuPressed: if (currentItem !== null) {
+            currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
+            currentItem.openActionMenu()
+        }
+        Keys.onPressed: {
+            let targetX = currentItem ? currentItem.x : contentX
+            let targetY = currentItem ? currentItem.y : contentY
+            let targetIndex = currentIndex
+            let atFirst = currentIndex === 0
+            let atLast = currentIndex === count - 1
+            if (count > 1) {
+                switch (event.key) {
+                    case Qt.Key_Up: if (!atFirst) {
+                        decrementCurrentIndex()
+                        focusCurrentItem(event, Qt.BacktabFocusReason)
+                    } break
+                    case Qt.Key_K: if (!atFirst && event.modifiers & Qt.ControlModifier) {
+                        decrementCurrentIndex()
+                        focusCurrentItem(event, Qt.BacktabFocusReason)
+                    } break
+                    case Qt.Key_Down: if (!atLast) {
+                        incrementCurrentIndex()
+                        focusCurrentItem(event, Qt.TabFocusReason)
+                    } break
+                    case Qt.Key_J: if (!atLast && event.modifiers & Qt.ControlModifier) {
+                        incrementCurrentIndex()
+                        focusCurrentItem(event, Qt.TabFocusReason)
+                    } break
+                    case Qt.Key_Home: if (!atFirst) {
+                        currentIndex = 0
+                        focusCurrentItem(event, Qt.BacktabFocusReason)
+                    } break
+                    case Qt.Key_End: if (!atLast) {
+                        currentIndex = count - 1
+                        focusCurrentItem(event, Qt.TabFocusReason)
+                    } break
+                    case Qt.Key_PageUp: if (!atFirst) {
+                        targetY = targetY - height + 1
+                        targetIndex = indexAt(targetX, targetY)
+                        // TODO: Find a more efficient, but accurate way to do this
+                        while (targetIndex === -1) {
+                            targetY += 1
+                            targetIndex = indexAt(targetX, targetY)
                         }
-                    } else {
-                        pressed = item;
-                        pressX = mouse.x;
-                        pressY = mouse.y;
-                    }
-                }
-
-                onReleased: {
-                    var mapped = listView.mapToItem(listView.contentItem, mouse.x, mouse.y);
-                    var item = listView.itemAt(mapped.x, mapped.y);
-
-                    if (item && pressed === item && !tapAndHold) {
-                        if (item.appView) {
-                            if (mouse.source == Qt.MouseEventSynthesizedByQt) {
-                                positionChanged(mouse);
-                            }
-                            if (isManagerMode && view.currentItem && !view.currentItem.modelChildren) {
-                                view.activatedItem = view.currentItem;
-                                view.moveRight();
-                            } else if (!isManagerMode) {
-                                view.state = "OutgoingLeft";
-                            }
-                        } else {
-                            item.activate();
+                        currentIndex = Math.max(targetIndex, 0)
+                        focusCurrentItem(event, Qt.BacktabFocusReason)
+                    } break
+                    case Qt.Key_PageDown: if (!atLast) {
+                        targetY = targetY + height - 1
+                        targetIndex = indexAt(targetX, targetY)
+                        // TODO: Find a more efficient, but accurate way to do this
+                        while (targetIndex === -1) {
+                            targetY -= 1
+                            targetIndex = indexAt(targetX, targetY)
                         }
-                    }
-                    if (tapAndHold && mouse.source == Qt.MouseEventSynthesizedByQt) {
-                        if (item.hasActionList) {
-                            mapped = listView.contentItem.mapToItem(item, mapped.x, mapped.y);
-                            listView.currentItem.openActionMenu(mapped.x, mapped.y);
-                        }
-                    }
-                    pressed = null;
-                    pressX = -1;
-                    pressY = -1;
-                    tapAndHold = false;
+                        currentIndex = Math.min(targetIndex, count - 1)
+                        focusCurrentItem(event, Qt.TabFocusReason)
+                    } break
                 }
-
-                onPositionChanged: {
-                    var mapped = listView.mapToItem(listView.contentItem, mouse.x, mouse.y);
-                    var item = listView.itemAt(mapped.x, mapped.y);
-
-                    if (item) {
-                        navigationMethod.state = "mouse"
-                        if (!navigationMethod.inSearch) {
-                            if (view.isManagerMode || view.isExternalManagerMode) {
-                                keyboardNavigation.state = "LeftColumn"
-                            } else {
-                                keyboardNavigation.state = "RightColumn"
-                            }
-                        }
-                        if (kickoff.dragSource == null || kickoff.dragSource == item) {
-                            if ((!view.isManagerMode && !view.isExternalManagerMode) || changedIndexRecently.running || mouse.source == Qt.MouseEventSynthesizedByQt) {
-                                listView.currentIndex = item.itemIndex;
-                            } else {
-                                delayedActivation.indexToGoTo = item.itemIndex;
-                                delayedActivation.start()
-                            }
-                        }
-                    }
-
-                    if (mouse.source != Qt.MouseEventSynthesizedByQt || tapAndHold) {
-                        if (pressed && pressX != -1 && pressed.url && dragHelper.isDrag(pressX, pressY, mouse.x, mouse.y)) {
-                            kickoff.dragSource = item;
-                            if (mouse.source == Qt.MouseEventSynthesizedByQt) {
-                                dragHelper.dragIconSize = PlasmaCore.Units.iconSizes.huge
-                                dragHelper.startDrag(kickoff, pressed.url, pressed.decoration);
-                            } else {
-                                dragHelper.dragIconSize = PlasmaCore.Units.iconSizes.medium
-                                dragHelper.startDrag(kickoff, pressed.url, pressed.decoration);
-                            }
-                            pressed = null;
-                            pressX = -1;
-                            pressY = -1;
-                            tapAndHold = false;
-                        }
-                    }
-                }
-
-                onContainsMouseChanged: {
-                    if (!containsMouse) {
-                        pressed = null;
-                        pressX = -1;
-                        pressY = -1;
-                        tapAndHold = false;
-                    }
-                }
-
-                onPressAndHold: {
-                    if (mouse.source == Qt.MouseEventSynthesizedByQt) {
-                        tapAndHold = true;
-                        positionChanged(mouse);
-                    }
-                }
+            }
+            movedWithKeyboard = event.accepted
+            if (movedWithKeyboard) {
+                movedWithKeyboardTimer.restart()
             }
         }
     }
