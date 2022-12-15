@@ -39,15 +39,19 @@ RowLayout {
             PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
             PC3.ToolTip.visible: display === PC3.AbstractButton.IconOnly && hovered
 
-            Keys.onLeftPressed: if (!LayoutMirroring.enabled) {
-                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
-            } else if (index < buttonRepeater.count - 1 || leaveButton.visible) {
-                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+             Keys.onLeftPressed: if (activeFocus) {
+             if (LayoutMirroring.enabled) {
+            nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+            } else {
+            nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
+                }
             }
-            Keys.onRightPressed: if (LayoutMirroring.enabled) {
-                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
-            } else if (index < buttonRepeater.count - 1 || leaveButton.visible) {
-                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+        Keys.onRightPressed: if (activeFocus) {
+        if (!LayoutMirroring.enabled) {
+            nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+        } else {
+            nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
+                }
             }
         }
     }

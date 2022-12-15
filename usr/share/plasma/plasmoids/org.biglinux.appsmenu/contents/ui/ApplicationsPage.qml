@@ -21,22 +21,20 @@ BasePage {
         section.property: ""
         delegate: KickoffListDelegate {
             width: view.availableWidth
-            isCategory: true
+            isCategory: model.hasChildren
         }
     }
     contentAreaComponent: VerticalStackView {
-        id: stackView
 
         popEnter: Transition {
             NumberAnimation {
-                property: "x"
+                properties: "x"
                 from: 0.5 * root.width
                 to: 0
                 duration: PlasmaCore.Units.longDuration
                 easing.type: Easing.OutCubic
             }
-            NumberAnimation {
-                property: "opacity"
+            NumberAnimation { property: "opacity"
                 from: 0.0
                 to: 1.0
                 duration: PlasmaCore.Units.longDuration
@@ -46,14 +44,13 @@ BasePage {
 
         pushEnter: Transition {
             NumberAnimation {
-                property: "x"
+                properties: "x"
                 from: 0.5 * -root.width
                 to: 0
                 duration: PlasmaCore.Units.longDuration
                 easing.type: Easing.OutCubic
             }
-            NumberAnimation {
-                property: "opacity"
+            NumberAnimation { property: "opacity"
                 from: 0.0
                 to: 1.0
                 duration: PlasmaCore.Units.longDuration
@@ -61,10 +58,11 @@ BasePage {
             }
         }
 
-        readonly property string preferredFavoritesViewObjectName: plasmoid.configuration.favoritesDisplay === 0 ? "favoritesGridView" : "favoritesListView"
-        readonly property Component preferredFavoritesViewComponent: plasmoid.configuration.favoritesDisplay === 0 ? favoritesGridViewComponent : favoritesListViewComponent
-        readonly property string preferredAppsViewObjectName: plasmoid.configuration.applicationsDisplay === 0 ? "applicationsGridView" : "applicationsListView"
-        readonly property Component preferredAppsViewComponent: plasmoid.configuration.applicationsDisplay === 0 ? applicationsGridViewComponent : applicationsListViewComponent
+        id: stackView
+        readonly property string preferredFavoritesViewObjectName: plasmoid.configuration.favoritesDisplay == 0 ? "favoritesGridView" : "favoritesListView"
+        readonly property Component preferredFavoritesViewComponent: plasmoid.configuration.favoritesDisplay == 0 ? favoritesGridViewComponent : favoritesListViewComponent
+        readonly property string preferredAppsViewObjectName: plasmoid.configuration.applicationsDisplay == 0 ? "applicationsGridView" : "applicationsListView"
+        readonly property Component preferredAppsViewComponent: plasmoid.configuration.applicationsDisplay == 0 ? applicationsGridViewComponent : applicationsListViewComponent
         // NOTE: The 0 index modelForRow isn't supposed to be used. That's just how it works.
         // But to trigger model data update, set initial value to 0
         property int appsModelRow: 0
@@ -101,9 +99,9 @@ BasePage {
                 objectName: "applicationsListView"
                 mainContentView: true
                 model: stackView.appsModel
-                section.property: model && model.description === "KICKER_ALL_MODEL" ? "group" : ""
+                section.property: model && model.description == "KICKER_ALL_MODEL" ? "group" : ""
                 section.criteria: ViewSection.FirstCharacter
-                hasSectionView: stackView.appsModelRow === 0
+                hasSectionView: stackView.appsModelRow === 1
 
                 onShowSectionViewRequested: {
                     stackView.push(applicationsSectionViewComponent, {
@@ -139,12 +137,12 @@ BasePage {
         }
 
         onPreferredFavoritesViewComponentChanged: {
-            if (root.sideBarItem !== null && root.sideBarItem.currentIndex === 0) {
+            if (root.sideBarItem != null && root.sideBarItem.currentIndex === 0) {
                 stackView.replace(stackView.preferredFavoritesViewComponent)
             }
         }
         onPreferredAppsViewComponentChanged: {
-            if (root.sideBarItem !== null && root.sideBarItem.currentIndex > 1) {
+            if (root.sideBarItem != null && root.sideBarItem.currentIndex > 1) {
                 stackView.replace(stackView.preferredAppsViewComponent)
             }
         }

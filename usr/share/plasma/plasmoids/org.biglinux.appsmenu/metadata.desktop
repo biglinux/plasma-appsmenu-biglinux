@@ -176,10 +176,10 @@ X-Plasma-Provides=org.biglinux.appsmenu
 
 X-Plasma-RequiredExtensions=LaunchApp
 
-X-KDE-PluginInfo-Authors=Martin Graesslin,Mikel Johnson,Dominic Hayes,Bruno Goncalves
-X-KDE-PluginInfo-Emails=plasma-devel@kde.org,mikel5764@gmail.com,ferenosdev@outlook.com,bigbruno@gmail.com
+X-KDE-PluginInfo-Authors=Martin Graesslin,Mikel Johnson,Dominic Hayes,Douglas Guimarães
+X-KDE-PluginInfo-Emails=plasma-devel@kde.org,mikel5764@gmail.com,dg2003gh@gmail.com
 X-KDE-PluginInfo-Name=org.biglinux.appsmenu
-X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Version=2.0
 X-KDE-PluginInfo-Website=https://gitlab.com/biglinux
 X-KDE-PluginInfo-Category=Application Launchers
 X-KDE-PluginInfo-License=GPL-2.0+
