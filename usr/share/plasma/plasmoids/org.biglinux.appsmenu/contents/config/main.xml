@@ -25,6 +25,10 @@
             <label>show/hide favorites category</label>
             <default>true</default>
         </entry>
+        <entry name="showAllAppsCategory" type="Bool">
+            <label>show/hide all apps category</label>
+            <default>false</default>
+        </entry>
         <entry name="showCategoryIcons" type="Bool">
             <label>show/hide categories icons</label>
             <default>true</default>
