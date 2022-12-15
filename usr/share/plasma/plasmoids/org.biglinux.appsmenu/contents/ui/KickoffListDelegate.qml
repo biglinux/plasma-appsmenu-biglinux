@@ -21,7 +21,7 @@ AbstractKickoffItemDelegate {
 
     property bool compact: Kirigami.Settings.tabletMode ? false : plasmoid.configuration.compactMode
 
-    leftPadding: 20
+    leftPadding: KickoffSingleton.listItemMetrics.margins.left
     + (mirrored ? KickoffSingleton.fontMetrics.descent : 0)
     rightPadding: KickoffSingleton.listItemMetrics.margins.right
     + (!mirrored ? KickoffSingleton.fontMetrics.descent : 0)
@@ -40,11 +40,10 @@ AbstractKickoffItemDelegate {
 
     contentItem: RowLayout {
         id: row
-        spacing: KickoffSingleton.listItemMetrics.margins.left 
+        spacing: KickoffSingleton.listItemMetrics.margins.left * 2
 
         PlasmaCore.IconItem {
             id: icon
-            visible: isCategory? plasmoid.configuration.showCategoryIcons : true
             implicitWidth: root.icon.width
             implicitHeight: root.icon.height
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
@@ -87,7 +86,7 @@ AbstractKickoffItemDelegate {
             PC3.Label {
                 id: descriptionLabel
                 Layout.fillWidth: true
-                visible: plasmoid.configuration.showAppsdescription || text.length > 0 && text !== root.text
+                visible: text.length > 0 && text !== root.text
                 enabled: false
                 text: root.description
                 textFormat: Text.PlainText

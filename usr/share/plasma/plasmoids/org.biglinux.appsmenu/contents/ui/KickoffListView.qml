@@ -206,7 +206,7 @@ EmptyPage {
             target: plasmoid
             function onExpandedChanged() {
                 if (plasmoid.expanded) {
-                    view.currentIndex = 1
+                    view.currentIndex = 0
                     view.positionViewAtBeginning()
                 }
             }

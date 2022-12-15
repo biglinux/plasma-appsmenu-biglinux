@@ -23,6 +23,7 @@ ColumnLayout {
     property alias cfg_showPinButton: showPinButton.checked
  // property alias cfg_showPowercategory: showPowercategory.checked
     property alias cfg_showPowerButton: showPowerButton.checked
+    property alias cfg_showAllAppsCategory: showAllAppscategory.checked
     property alias cfg_showCategoryIcons: showCategoryIcons.checked
     property alias cfg_showFavoritesCategory: showFavoritesCategory.checked
     //property alias cfg_showRecentAppsCategory: showRecentAppsCategory.checked
@@ -257,6 +258,10 @@ ColumnLayout {
         CheckBox {
             id: showFavoritesCategory
             text: i18n("Show favorites category")
+        }
+        CheckBox {
+            id: showAllAppscategory
+            text: i18n("Show all apps category")
         }
         CheckBox {
             id: showCategoryIcons
