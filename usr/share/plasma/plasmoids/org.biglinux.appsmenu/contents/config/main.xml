@@ -35,7 +35,7 @@
         </entry>
         <entry name="alphaSort" type="Bool">
             <label>Whether to sort menu contents alphabetically or use manual/system sort order.</label>
-            <default>false</default>
+            <default>true</default>
         </entry>
         <entry name="showPinButton" type="Bool">
             <label>Whether the popup should remain open when another window is activated</label>

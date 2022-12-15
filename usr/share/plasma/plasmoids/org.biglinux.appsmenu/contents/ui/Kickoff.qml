@@ -21,7 +21,7 @@ import "code/tools.js" as Tools
 
 Item {
     id: kickoff
-    
+
     // The properties are defined here instead of the singleton because each
     // instance of Kickoff requires different instances of these properties
 
@@ -39,7 +39,7 @@ Item {
     // Used to prevent the width from changing frequently when the scrollbar appears or disappears
     property bool mayHaveGridWithScrollBar: plasmoid.configuration.applicationsDisplay === 0
         || (plasmoid.configuration.favoritesDisplay === 0 && plasmoid.rootItem.rootModel.favoritesModel.count > 16)
-        
+    
     //BEGIN Models
     property Kicker.RootModel rootModel: Kicker.RootModel {
         autoPopulate: false
@@ -49,14 +49,14 @@ Item {
          flat: true // have categories, but no subcategories
         sorted: plasmoid.configuration.alphaSort
         showSeparators: false
-        showTopLevelItems: false
+        showTopLevelItems: true
 
         showAllApps: false
         showAllAppsCategorized: true
         showRecentApps: plasmoid.configuration.showRecentAppsCategory
         showRecentDocs: plasmoid.configuration.showRecentDocsCategory
         showRecentContacts: false
-        showPowerSession: false
+        showPowerSession: plasmoid.configuration.showPowercategory
         showFavoritesPlaceholder: plasmoid.configuration.showFavoritesCategory
 
         Component.onCompleted: {
@@ -76,6 +76,15 @@ Item {
         appletInterface: plasmoid
         mergeResults: true
         favoritesModel: rootModel.favoritesModel
+    }
+
+    property Kicker.ComputerModel computerModel: Kicker.ComputerModel {
+        appletInterface: plasmoid
+        favoritesModel: rootModel.favoritesModel
+        systemApplications: plasmoid.configuration.systemApplications
+        Component.onCompleted: {
+            //systemApplications = plasmoid.configuration.systemApplications;
+        }
     }
 
     property Kicker.RecentUsageModel recentUsageModel: Kicker.RecentUsageModel {
@@ -98,7 +107,7 @@ Item {
     // Set in FullRepresentation.qml, ApplicationPage.qml, PlacesPage.qml
     property Item sideBar: null // is null when searching
     property Item contentArea: null // is searchView when searching
-    
+
     //END
 
     //BEGIN Metrics
@@ -111,6 +120,24 @@ Item {
         readonly property real spacing: leftPadding
         visible: false
         imagePath: plasmoid.formFactor === PlasmaCore.Types.Planar ? "widgets/background" : "dialogs/background"
+    }
+
+    // This is here rather than in the singleton with the other metrics items
+    // because the list delegate's height depends on a configuration setting
+    // and the singleton can't access those
+    readonly property real listDelegateHeight: listDelegate.height
+    KickoffListDelegate {
+        id: listDelegate
+        visible: false
+        enabled: false
+        model: null
+        index: -1
+        text: "asdf"
+        url: ""
+        decoration: "start-here-kde"
+        description: "asdf"
+        action: null
+        indicator: null
     }
 
     //END
@@ -129,7 +156,7 @@ Item {
 
         // Taken from DigitalClock to ensure uniform sizing when next to each other
         readonly property bool tooSmall: plasmoid.formFactor === PlasmaCore.Types.Horizontal && Math.round(2 * (compactRoot.height / 5)) <= PlasmaCore.Theme.smallestFont.pixelSize
-        
+
         implicitWidth: PlasmaCore.Units.iconSizeHints.panel
         implicitHeight: PlasmaCore.Units.iconSizeHints.panel
 
@@ -185,7 +212,7 @@ Item {
         // For some reason, onClicked can cause the plasmoid to expand after
         // releasing sometimes in plasmoidviewer.
         // plasmashell doesn't seem to have this issue.
-        onClicked: plasmoid.expanded = !plasmoid.expanded 
+        onClicked: plasmoid.expanded = !plasmoid.expanded
 
         DropArea {
             id: compactDragArea
