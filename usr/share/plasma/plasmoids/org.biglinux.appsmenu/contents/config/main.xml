@@ -43,7 +43,7 @@
         </entry>
         <entry name="showPowercategory" type="Bool">
             <label>show/hide power category</label>
-            <default>true</default>
+            <default>false</default>
         </entry>
         <entry name="compactMode" type="Bool">
             <label>Whether to use a compact display style for category items</label>
