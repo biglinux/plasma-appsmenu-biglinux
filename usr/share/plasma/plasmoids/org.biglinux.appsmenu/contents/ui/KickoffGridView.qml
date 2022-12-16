@@ -83,7 +83,7 @@ EmptyPage {
         } else {
             return 0
         }
-        width: Math.min(parent.width - rightMargin)
+        width: Math.min(parent.width, Math.floor((parent.width - leftMargin - rightMargin) / cellWidth) * cellWidth + leftMargin + rightMargin)
 
         Accessible.description: i18n("Grid with %1 rows, %2 columns", rows, columns) // can't use i18np here
 

@@ -39,24 +39,24 @@ Item {
     // Used to prevent the width from changing frequently when the scrollbar appears or disappears
     property bool mayHaveGridWithScrollBar: plasmoid.configuration.applicationsDisplay === 0
         || (plasmoid.configuration.favoritesDisplay === 0 && plasmoid.rootItem.rootModel.favoritesModel.count > 16)
-    
+
     //BEGIN Models
     property Kicker.RootModel rootModel: Kicker.RootModel {
         autoPopulate: false
 
         appletInterface: plasmoid
 
-         flat: true // have categories, but no subcategories
+        flat: true // have categories, but no subcategories
         sorted: plasmoid.configuration.alphaSort
         showSeparators: false
         showTopLevelItems: true
 
-        showAllApps: false
-        showAllAppsCategorized: true
-        showRecentApps: plasmoid.configuration.showRecentAppsCategory
-        showRecentDocs: plasmoid.configuration.showRecentDocsCategory
+        showAllApps: plasmoid.configuration.showAllAppsCategory
+        showAllAppsCategorized: false
+        showRecentApps: false
+        showRecentDocs: false
         showRecentContacts: false
-        showPowerSession: plasmoid.configuration.showPowercategory
+        showPowerSession: false
         showFavoritesPlaceholder: plasmoid.configuration.showFavoritesCategory
 
         Component.onCompleted: {
@@ -108,6 +108,8 @@ Item {
     property Item sideBar: null // is null when searching
     property Item contentArea: null // is searchView when searching
 
+    // Set in NormalPage.qml
+    property Item footer: null
     //END
 
     //BEGIN Metrics
@@ -244,8 +246,8 @@ Item {
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
                 source: !kickoff.vertical ? plasmoid.icon : plasmoid.icon ? plasmoid.icon : kickoff.defaultIcon
                 active: compactRoot.containsMouse || compactDragArea.containsDrag
-                smooth: true
-                roundToIconSize: aspectRatio === 1
+                smooth: false
+                roundToIconSize: aspectRatio === 2
             }
 
             PC3.Label {
