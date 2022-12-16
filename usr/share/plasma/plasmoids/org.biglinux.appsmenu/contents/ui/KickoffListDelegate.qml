@@ -44,10 +44,11 @@ AbstractKickoffItemDelegate {
 
         PlasmaCore.IconItem {
             id: icon
+            visible: if(isCategory){ plasmoid.configuration.showCategoryIcons}
             implicitWidth: root.icon.width
             implicitHeight: root.icon.height
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-
+            
             animated: false
             usesPlasmaTheme: false
 
