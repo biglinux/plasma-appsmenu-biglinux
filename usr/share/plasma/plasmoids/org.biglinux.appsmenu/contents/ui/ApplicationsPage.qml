@@ -68,7 +68,11 @@ BasePage {
         property int appsModelRow: 0
         readonly property Kicker.AppsModel appsModel: plasmoid.rootItem.rootModel.modelForRow(appsModelRow)
         focus: true
-        initialItem: preferredFavoritesViewComponent
+        initialItem: if (plasmoid.configuration.showFavoritesCategory == true){
+                        preferredFavoritesViewComponent
+                     }else{
+                         preferredAppsViewComponent
+                    }
 
         Component {
             id: favoritesListViewComponent
@@ -152,23 +156,24 @@ BasePage {
             function onCurrentIndexChanged() {
                 // Only update row index if the condition is met.
                 // The 0 index modelForRow isn't supposed to be used. That's just how it works.
-                if (root.sideBarItem.currentIndex > 0) {
+                if (root.sideBarItem.currentIndex >= 0) {
                     appsModelRow = root.sideBarItem.currentIndex
                 }
-                if (root.sideBarItem.currentIndex === 0
+                if (plasmoid.configuration.showFavoritesCategory == true){
+                    if (root.sideBarItem.currentIndex === 0
                     && stackView.currentItem.objectName !== stackView.preferredFavoritesViewObjectName) {
                     stackView.replace(stackView.preferredFavoritesViewComponent)
-                } else if (root.sideBarItem.currentIndex === 1
-                    && stackView.currentItem.objectName !== stackView.preferredAppsViewObjectName) {
-                    // Always use list view for alphabetical apps view since grid view doesn't have sections
-                    // TODO: maybe find a way to have a list view with grids in each section?
-                    stackView.replace(preferredAppsViewComponent)
-                } else if (root.sideBarItem.currentIndex > 1
+                 } else if (root.sideBarItem.currentIndex >= 1
                     && stackView.currentItem.objectName !== stackView.preferredAppsViewObjectName) {
                     stackView.replace(stackView.preferredAppsViewComponent)
+                  }
                 }
-            }
-        }
+                else{
+                    stackView.replace(stackView.preferredAppsViewComponent)
+                }
+              }
+           }
+              
         Connections {
             target: plasmoid
             function onExpandedChanged() {

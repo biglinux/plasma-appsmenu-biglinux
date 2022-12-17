@@ -21,6 +21,8 @@ import "code/tools.js" as Tools
 
 Item {
     id: kickoff
+    
+    Layout.alignment: Qt.AlignRight
 
     // The properties are defined here instead of the singleton because each
     // instance of Kickoff requires different instances of these properties
@@ -75,19 +77,6 @@ Item {
         query: kickoff.searchField ? kickoff.searchField.text : ""
         appletInterface: plasmoid
         mergeResults: true
-        favoritesModel: rootModel.favoritesModel
-    }
-
-    property Kicker.ComputerModel computerModel: Kicker.ComputerModel {
-        appletInterface: plasmoid
-        favoritesModel: rootModel.favoritesModel
-        systemApplications: plasmoid.configuration.systemApplications
-        Component.onCompleted: {
-            //systemApplications = plasmoid.configuration.systemApplications;
-        }
-    }
-
-    property Kicker.RecentUsageModel recentUsageModel: Kicker.RecentUsageModel {
         favoritesModel: rootModel.favoritesModel
     }
 
@@ -158,7 +147,7 @@ Item {
 
         // Taken from DigitalClock to ensure uniform sizing when next to each other
         readonly property bool tooSmall: plasmoid.formFactor === PlasmaCore.Types.Horizontal && Math.round(2 * (compactRoot.height / 5)) <= PlasmaCore.Theme.smallestFont.pixelSize
-
+        
         implicitWidth: PlasmaCore.Units.iconSizeHints.panel
         implicitHeight: PlasmaCore.Units.iconSizeHints.panel
 
