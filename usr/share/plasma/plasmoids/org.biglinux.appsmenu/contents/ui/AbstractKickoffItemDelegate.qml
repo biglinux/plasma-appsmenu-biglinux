@@ -41,7 +41,6 @@ T.ItemDelegate {
     property bool labelTruncated: false
     property bool descriptionTruncated: false
     property bool descriptionVisible: true
-
     property Item dragIconItem: null
 
     function openActionMenu(x = undefined, y = undefined) {

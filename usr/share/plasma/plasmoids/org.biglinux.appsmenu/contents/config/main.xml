@@ -81,5 +81,9 @@
             <label>Which actions should be displayed in the header: 0 = Power, 1 = Session, 2 = shutdown, 3 = Power and session</label>
             <default>2</default>
         </entry>  
+        <entry name="showAppsdescription" type="Bool">
+            <label>show/hide applications description.</label>
+            <default>false</default>
+        </entry>
     </group>
 </kcfg>

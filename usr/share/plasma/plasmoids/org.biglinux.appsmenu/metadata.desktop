@@ -172,7 +172,7 @@ X-KDE-ServiceTypes=Plasma/Applet
 
 X-Plasma-API=declarativeappletscript
 X-Plasma-MainScript=ui/Kickoff.qml
-X-Plasma-Provides=org.biglinux.appsmenu
+X-Plasma-Provides=org.kde.plasma.launchermenu
 
 X-Plasma-RequiredExtensions=LaunchApp
 
