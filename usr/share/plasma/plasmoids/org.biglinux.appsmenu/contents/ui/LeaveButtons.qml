@@ -1,4 +1,4 @@
-/*
+ /*
     SPDX-FileCopyrightText: 2020 Mikel Johnson <mikel5764@gmail.com>
     SPDX-FileCopyrightText: 2021 Kai Uwe Broulik <kde@broulik.de>
 
@@ -14,6 +14,7 @@ import org.kde.kirigami 2.16 as Kirigami
 
 RowLayout {
     id: root
+    
     property alias leave: leaveButton
     spacing: plasmoid.rootItem.backgroundMetrics.spacing
     visible: plasmoid.configuration.showPowerButton

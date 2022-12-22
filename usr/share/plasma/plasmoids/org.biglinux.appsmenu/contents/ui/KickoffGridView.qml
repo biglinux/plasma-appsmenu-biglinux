@@ -23,7 +23,7 @@ EmptyPage {
     property alias currentItem: view.currentItem
     property alias delegate: view.delegate
     property alias view: view
-
+    
     clip: view.height < view.contentHeight
 
     header: MouseArea {
@@ -101,7 +101,7 @@ EmptyPage {
         rightMargin: plasmoid.rootItem.backgroundMetrics.rightPadding
 
         cellHeight: KickoffSingleton.gridCellSize
-        cellWidth: PlasmaCore.Units.largeSpacing * 9.4
+        cellWidth: PlasmaCore.Units.largeSpacing * 9.5
 
         currentIndex: count > 0 ? 0 : -1
         focus: true
@@ -131,8 +131,10 @@ EmptyPage {
 
         delegate: KickoffGridDelegate {
             id: itemDelegate
+            
             width: view.cellWidth
             Accessible.role: Accessible.Cell
+            
         }
 
         move: normalTransition
@@ -286,4 +288,19 @@ EmptyPage {
             }
         }
     }
+
+    PC3.Label {
+                id: descriptionLabel
+                visible: plasmoid.configuration.showAppsdescription
+                enabled: false
+                text: itemDelegate.appsdescription
+                textFormat: Text.PlainText
+                font: PlasmaCore.Theme.smallestFont
+                elide: root.ElideRight
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                rightPadding: 20
+                bottomPadding: 20
+                maximumLineCount: 1
+            }
 }

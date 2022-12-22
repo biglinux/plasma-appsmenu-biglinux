@@ -22,8 +22,6 @@ import "code/tools.js" as Tools
 Item {
     id: kickoff
     
-    Layout.alignment: Qt.AlignRight
-
     // The properties are defined here instead of the singleton because each
     // instance of Kickoff requires different instances of these properties
 
@@ -69,7 +67,9 @@ Item {
                     favoritesModel.portOldFavorites(plasmoid.configuration.favorites);
                 }
                 plasmoid.configuration.favoritesPortedToKAstats = true;
+                
             }
+        
         }
     }
 
@@ -80,10 +80,11 @@ Item {
         favoritesModel: rootModel.favoritesModel
     }
 
-    property Kicker.RecentUsageModel frequentUsageModel: Kicker.RecentUsageModel {
+    readonly property Kicker.RecentUsageModel frequentUsageModel: Kicker.RecentUsageModel {
         favoritesModel: rootModel.favoritesModel
         ordering: 1 // Popular / Frequently Used
     }
+    
     //END
 
     //BEGIN UI elements
@@ -93,12 +94,8 @@ Item {
     // Set in Header.qml
     property PC3.TextField searchField: null
 
-    // Set in FullRepresentation.qml, ApplicationPage.qml, PlacesPage.qml
     property Item sideBar: null // is null when searching
     property Item contentArea: null // is searchView when searching
-
-    // Set in NormalPage.qml
-    property Item footer: null
     //END
 
     //BEGIN Metrics
@@ -144,7 +141,6 @@ Item {
 
     Plasmoid.compactRepresentation: MouseArea {
         id: compactRoot
-
         // Taken from DigitalClock to ensure uniform sizing when next to each other
         readonly property bool tooSmall: plasmoid.formFactor === PlasmaCore.Types.Horizontal && Math.round(2 * (compactRoot.height / 5)) <= PlasmaCore.Theme.smallestFont.pixelSize
         
@@ -204,10 +200,10 @@ Item {
         // releasing sometimes in plasmoidviewer.
         // plasmashell doesn't seem to have this issue.
         onClicked: plasmoid.expanded = !plasmoid.expanded
-
         DropArea {
             id: compactDragArea
             anchors.fill: parent
+             Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
         }
 
         Timer {
@@ -222,7 +218,7 @@ Item {
             id: iconLabelRow
             anchors.fill: parent
             spacing: PlasmaCore.Units.smallSpacing
-
+        
             PlasmaCore.IconItem {
                 id: buttonIcon
 

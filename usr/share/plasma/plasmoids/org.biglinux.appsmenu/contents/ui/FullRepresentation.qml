@@ -20,9 +20,7 @@ import org.kde.plasma.private.kicker 0.1 as Kicker
 
 EmptyPage {
     id: root
-
-    property alias headerPath : root.header
-
+    
     // plasmoid.rootItem is Kickoff.qml
     leftPadding: -plasmoid.rootItem.backgroundMetrics.leftPadding
     rightPadding: -plasmoid.rootItem.backgroundMetrics.rightPadding

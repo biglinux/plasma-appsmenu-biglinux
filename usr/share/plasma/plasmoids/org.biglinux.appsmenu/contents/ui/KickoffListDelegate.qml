@@ -20,7 +20,7 @@ AbstractKickoffItemDelegate {
     id: root
 
     property bool compact: Kirigami.Settings.tabletMode ? false : plasmoid.configuration.compactMode
-
+    
     leftPadding: KickoffSingleton.listItemMetrics.margins.left
     + (mirrored ? KickoffSingleton.fontMetrics.descent : 0)
     rightPadding: KickoffSingleton.listItemMetrics.margins.right
@@ -34,7 +34,7 @@ AbstractKickoffItemDelegate {
 
     labelTruncated: label.truncated
     descriptionTruncated: descriptionLabel.truncated
-    descriptionVisible: descriptionLabel.visible
+    descriptionVisible: descriptionLabel.visible 
 
     dragIconItem: icon
 
@@ -87,7 +87,7 @@ AbstractKickoffItemDelegate {
             PC3.Label {
                 id: descriptionLabel
                 Layout.fillWidth: true
-                visible: text.length > 0 && text !== root.text
+                visible: plasmoid.configuration.showAppsdescription
                 enabled: false
                 text: root.description
                 textFormat: Text.PlainText

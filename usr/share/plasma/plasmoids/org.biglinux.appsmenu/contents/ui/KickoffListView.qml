@@ -66,8 +66,7 @@ EmptyPage {
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             contentWidth, // exclude padding to avoid scrollbars automatically affecting implicitWidth
-                            implicitHeaderWidth2,
-                            implicitFooterWidth2)
+                            implicitHeaderWidth2)
 
     leftPadding: verticalScrollBar.visible && root.mirrored ? verticalScrollBar.implicitWidth : 0
     rightPadding: verticalScrollBar.visible && !root.mirrored ? verticalScrollBar.implicitWidth : 0

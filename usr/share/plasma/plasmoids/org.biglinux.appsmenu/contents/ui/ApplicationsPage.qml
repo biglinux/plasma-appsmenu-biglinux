@@ -59,6 +59,7 @@ BasePage {
         }
 
         id: stackView
+    
         readonly property string preferredFavoritesViewObjectName: plasmoid.configuration.favoritesDisplay == 0 ? "favoritesGridView" : "favoritesListView"
         readonly property Component preferredFavoritesViewComponent: plasmoid.configuration.favoritesDisplay == 0 ? favoritesGridViewComponent : favoritesListViewComponent
         readonly property string preferredAppsViewObjectName: plasmoid.configuration.applicationsDisplay == 0 ? "applicationsGridView" : "applicationsListView"
@@ -73,7 +74,8 @@ BasePage {
                      }else{
                          preferredAppsViewComponent
                     }
-
+        
+    
         Component {
             id: favoritesListViewComponent
             DropAreaListView {
@@ -139,7 +141,8 @@ BasePage {
                 model: stackView.appsModel
             }
         }
-
+        
+   
         onPreferredFavoritesViewComponentChanged: {
             if (root.sideBarItem != null && root.sideBarItem.currentIndex === 0) {
                 stackView.replace(stackView.preferredFavoritesViewComponent)
@@ -160,10 +163,11 @@ BasePage {
                     appsModelRow = root.sideBarItem.currentIndex
                 }
                 if (plasmoid.configuration.showFavoritesCategory == true){
-                    if (root.sideBarItem.currentIndex === 0
+                 
+                if (root.sideBarItem.currentIndex === 0
                     && stackView.currentItem.objectName !== stackView.preferredFavoritesViewObjectName) {
                     stackView.replace(stackView.preferredFavoritesViewComponent)
-                 } else if (root.sideBarItem.currentIndex >= 1
+                 }else if (root.sideBarItem.currentIndex >= 1
                     && stackView.currentItem.objectName !== stackView.preferredAppsViewObjectName) {
                     stackView.replace(stackView.preferredAppsViewComponent)
                   }

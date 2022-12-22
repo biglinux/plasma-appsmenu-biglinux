@@ -15,9 +15,10 @@ import QtQuick.Layouts 1.15
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PC3
 
+ 
 AbstractKickoffItemDelegate {
     id: root
-
+    
     leftPadding: KickoffSingleton.listItemMetrics.margins.left
     rightPadding: KickoffSingleton.listItemMetrics.margins.right
     topPadding: PlasmaCore.Units.smallSpacing * 2
@@ -62,3 +63,4 @@ AbstractKickoffItemDelegate {
         }
     }
 }
+
