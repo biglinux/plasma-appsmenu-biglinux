@@ -29,7 +29,7 @@ EmptyPage {
  
     readonly property var appletInterface: plasmoid.self
     
-    Layout.minimumWidth: root.header.fullScreenMode == true ? Screen.desktopAvailableWidth : Math.round(PlasmaCore.Units.gridUnit * 34 *1.55)
+    Layout.minimumWidth: root.header.fullScreenMode == true ? Screen.desktopAvailableWidth : Math.round(PlasmaCore.Units.gridUnit * 34 *1.45)
     Layout.maximumWidth: Layout.minimumWidth
     Layout.minimumHeight: root.header.fullScreenMode == true  ? Screen.desktopAvailableHeight : PlasmaCore.Units.gridUnit * 30
     Layout.maximumHeight: Layout.minimumHeight
