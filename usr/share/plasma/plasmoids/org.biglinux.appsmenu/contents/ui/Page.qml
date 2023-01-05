@@ -25,4 +25,6 @@ EmptyPage {
         }
         // Eat down events to prevent them from reaching the contentArea or searchField
         Keys.onDownPressed: {}
+        
+        
     }

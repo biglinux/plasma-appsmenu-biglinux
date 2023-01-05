@@ -56,9 +56,10 @@ Item {
         showRecentApps: false
         showRecentDocs: false
         showRecentContacts: false
-        showPowerSession: false
+        showPowerSession: plasmoid.configuration.showPowercategory
         showFavoritesPlaceholder: plasmoid.configuration.showFavoritesCategory
-
+        
+        
         Component.onCompleted: {
             favoritesModel.initForClient("org.kde.plasma.kickoff.favorites.instance-" + plasmoid.id)
 

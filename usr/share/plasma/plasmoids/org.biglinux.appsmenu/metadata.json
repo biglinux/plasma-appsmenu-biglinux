@@ -97,10 +97,12 @@
         "Description[x-test]": "xxLauncher to start applicationsxx",
         "Description[zh_CN]": "应用程序的启动器",
         "Description[zh_TW]": "應用程式啟動器",
+        
         "EnabledByDefault": true,
-        "Icon": "start-here-kde",
+        "Icon": "biglinux-globo",
         "Id": "org.biglinux.appsmenu",
         "License": "GPL-2.0+",
+        
         "Name": "BigLinux Application Launcher",
         "Name[af]": "BigLinux Programlanseerder",
         "Name[ar]": "مطلق التّطبيقات BigLinux",

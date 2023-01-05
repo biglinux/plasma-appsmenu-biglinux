@@ -21,7 +21,7 @@ ColumnLayout {
     property string cfg_icon: plasmoid.configuration.icon
     property alias cfg_alphaSort: alphaSort.checked
     property alias cfg_showPinButton: showPinButton.checked
- // property alias cfg_showPowercategory: showPowercategory.checked
+    property alias cfg_showPowercategory: showPowercategory.checked
     property alias cfg_showPowerButton: showPowerButton.checked
     property alias cfg_showAllAppsCategory: showAllAppscategory.checked
     property alias cfg_showCategoryIcons: showCategoryIcons.checked
@@ -289,10 +289,10 @@ ColumnLayout {
             
         }
        
-       /* CheckBox {
+       CheckBox {
             id: showPowercategory
-            text: i18n("Show power category")
-        } */
+            text: i18n("Show power/session category")
+        } 
        
         CheckBox {
             id: showPowerButton

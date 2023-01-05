@@ -59,11 +59,14 @@ BasePage {
         }
 
         id: stackView
-    
+        
         readonly property string preferredFavoritesViewObjectName: plasmoid.configuration.favoritesDisplay == 0 ? "favoritesGridView" : "favoritesListView"
         readonly property Component preferredFavoritesViewComponent: plasmoid.configuration.favoritesDisplay == 0 ? favoritesGridViewComponent : favoritesListViewComponent
         readonly property string preferredAppsViewObjectName: plasmoid.configuration.applicationsDisplay == 0 ? "applicationsGridView" : "applicationsListView"
         readonly property Component preferredAppsViewComponent: plasmoid.configuration.applicationsDisplay == 0 ? applicationsGridViewComponent : applicationsListViewComponent
+        readonly property string preferredpowerViewObjectName: plasmoid.configuration.applicationsDisplay == 0 ? "powerGridView" : "powerListView"
+        readonly property Component preferredpowerViewComponent: plasmoid.configuration.applicationsDisplay == 0 ? powerGridViewComponent : powerListViewComponent
+        
         // NOTE: The 0 index modelForRow isn't supposed to be used. That's just how it works.
         // But to trigger model data update, set initial value to 0
         property int appsModelRow: 0
@@ -142,6 +145,26 @@ BasePage {
             }
         }
         
+          Component {
+            id: powerListViewComponent
+            DropAreaListView {
+                id: powerListView
+                objectName: "powerListView"
+                mainContentView: true
+                focus: true
+                model: plasmoid.rootItem.frequentUsageModel
+            }
+        }
+
+        Component {
+            id: powerGridViewComponent
+            DropAreaGridView {
+                id: powerGridView
+                objectName: "powerGridView"
+                focus: true
+                model: plasmoid.rootItem.frequentUsageModel
+            }
+        }
    
         onPreferredFavoritesViewComponentChanged: {
             if (root.sideBarItem != null && root.sideBarItem.currentIndex === 0) {
@@ -149,11 +172,15 @@ BasePage {
             }
         }
         onPreferredAppsViewComponentChanged: {
-            if (root.sideBarItem != null && root.sideBarItem.currentIndex > 1) {
+            if (root.sideBarItem != null && root.sideBarItem.currentIndex >= 1) {
                 stackView.replace(stackView.preferredAppsViewComponent)
             }
         }
-
+        onPreferredpowerViewComponentChanged: {
+            if (root.sideBarItem != null && root.sideBarItem.currentIndex >= 2) {
+                stackView.replace(stackView.preferredpowerViewComponent)
+            }
+        }
         Connections {
             target: root.sideBarItem
             function onCurrentIndexChanged() {
@@ -171,13 +198,17 @@ BasePage {
                     && stackView.currentItem.objectName !== stackView.preferredAppsViewObjectName) {
                     stackView.replace(stackView.preferredAppsViewComponent)
                   }
-                }
-                else{
+                }else if (root.sideBarItem.currentIndex >= 2
+                    && stackView.currentItem.objectName !== stackView.preferredpowerViewObjectName) {
+                    stackView.replace(stackView.preferredpowerViewComponent)
+                  }
+
+               else{
                     stackView.replace(stackView.preferredAppsViewComponent)
                 }
               }
-           }
-              
+            }
+            
         Connections {
             target: plasmoid
             function onExpandedChanged() {
