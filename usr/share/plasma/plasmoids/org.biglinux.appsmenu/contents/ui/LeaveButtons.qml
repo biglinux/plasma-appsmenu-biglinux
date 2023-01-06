@@ -33,8 +33,7 @@ RowLayout {
             // TODO: Don't generate items that will never be seen. Maybe DelegateModel can help?
             visible: String(plasmoid.configuration.systemFavorites).includes(model.favoriteId)
             onClicked: systemModel.trigger(index, "", null)
-            display: plasmoid.configuration.showActionButtonCaptions ? PC3.AbstractButton.TextBesideIcon : PC3.AbstractButton.IconOnly;
-            Layout.rightMargin: model.favoriteId === "switch-user" && plasmoid.configuration.primaryActions === 3 ? PlasmaCore.Units.gridUnit : undefined
+            display: PC3.AbstractButton.IconOnly;
 
             PC3.ToolTip.text: text
             PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
@@ -64,12 +63,8 @@ RowLayout {
         Accessible.role: Accessible.ButtonMenu
         icon.width: PlasmaCore.Units.iconSizes.smallMedium
         icon.height: PlasmaCore.Units.iconSizes.smallMedium
-        icon.name: ["system-log-out", "system-shutdown", "view-more-symbolic", ""][currentId];
+
         display: PC3.AbstractButton.IconOnly;
-        text: [i18n("Leave"), i18n("Power"), i18n("More"), ""][leaveButton.currentId]
-        // Make it look pressed while the menu is open
-        down: contextMenu.status === PC2.DialogStatus.Open || pressed
-        PC3.ToolTip.text: text
         PC3.ToolTip.visible: leaveButton.hovered
         PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
        Keys.onLeftPressed: if (activeFocus) {
@@ -88,35 +83,4 @@ RowLayout {
             }
     }
 
-    Instantiator {
-        model: systemModel
-        // Not a QQC1 MenuItem. It's actually a custom QQuickItem.
-        delegate: PC2.MenuItem {
-            text: model.display
-            icon: model.decoration
-            // TODO: Don't generate items that will never be seen. Maybe DelegateModel can help?
-            visible: !String(plasmoid.configuration.systemFavorites).includes(model.favoriteId)
-            Accessible.role: Accessible.MenuItem
-            onClicked: systemModel.trigger(index, "", null)
-        }
-        onObjectAdded: contextMenu.addMenuItem(object)
-        onObjectRemoved: contextMenu.removeMenuItem(object)
-    }
-
-    // Not a QQC1 Menu. It's actually a custom QObject that uses a QMenu.
-    PC2.Menu {
-        id: contextMenu
-        visualParent: leaveButton
-        placement: {
-            switch (plasmoid.location) {
-            case PlasmaCore.Types.LeftEdge:
-            case PlasmaCore.Types.RightEdge:
-            case PlasmaCore.Types.TopEdge:
-                return PlasmaCore.Types.BottomPosedRightAlignedPopup;
-            case PlasmaCore.Types.BottomEdge:
-            default:
-                return PlasmaCore.Types.TopPosedRightAlignedPopup;
-            }
-        }
-    }
 }

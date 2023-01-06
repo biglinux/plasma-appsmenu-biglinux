@@ -63,7 +63,7 @@
         </entry>
         <entry name="systemFavorites" type="StringList">
             <label>List of system action favorites.</label>
-            <default>suspend,hibernate,reboot,shutdown</default>
+            <default>shutdown</default>
         </entry>
         <entry name="systemApplications" type="StringList">
             <label>List of applications at the top of the "Computer" tab.</label>
