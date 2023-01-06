@@ -29,10 +29,12 @@ EmptyPage {
  
     readonly property var appletInterface: plasmoid.self
     
-    Layout.minimumWidth: root.header.fullScreenMode == true ? Screen.desktopAvailableWidth : Math.round(PlasmaCore.Units.gridUnit * 34 *1.45)
-    Layout.maximumWidth: Layout.minimumWidth
-    Layout.minimumHeight: root.header.fullScreenMode == true  ? Screen.desktopAvailableHeight : PlasmaCore.Units.gridUnit * 30
-    Layout.maximumHeight: Layout.minimumHeight
+    Layout.minimumWidth: Math.round(PlasmaCore.Units.gridUnit * 34 *1.45)
+    Layout.maximumWidth: Screen.width
+    Layout.minimumHeight: PlasmaCore.Units.gridUnit * 30 
+    Layout.maximumHeight: Screen.height
+    Layout.preferredWidth: root.header.fullScreenMode == true ? Screen.desktopAvailableWidth : Math.round(PlasmaCore.Units.gridUnit * 34 *1.45)
+    Layout.preferredHeight: root.header.fullScreenMode == true  ? Screen.desktopAvailableHeight : PlasmaCore.Units.gridUnit * 30 
     
     /* NOTE: Important things to know about keyboard input handling:
      *
