@@ -193,14 +193,14 @@
         "ServiceTypes": [
             "Plasma/Applet"
         ],
-        "Version": "2.0",
-        "Website": "https://gitlab.com/biglinux"
+        "Version": "3.0",
+        "Website": "https://github.com/biglinux/plasma-appsmenu-biglinux"
     },
     "X-Plasma-API": "declarativeappletscript",
     "X-Plasma-MainScript": "ui/Kickoff.qml",
-        "X-Plasma-Provides": [
-            "X-Plasma-Provides=org.kde.plasma.launchermenu"
-        ],
+    "X-Plasma-Provides": [
+        "org.kde.plasma.launchermenu"
+    ],
     "X-Plasma-RootPath": "org.kde.plasma.kickoff",
     "X-Plasma-RequiredExtensions": [
         "LaunchApp"
