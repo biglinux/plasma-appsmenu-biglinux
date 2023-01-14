@@ -80,4 +80,5 @@ FocusScope {
         Keys.onUpPressed: plasmoid.rootItem.searchField.forceActiveFocus(Qt.BacktabFocusReason)
         Keys.onDownPressed: plasmoid.rootItem.footer.leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
     }
+    
 }

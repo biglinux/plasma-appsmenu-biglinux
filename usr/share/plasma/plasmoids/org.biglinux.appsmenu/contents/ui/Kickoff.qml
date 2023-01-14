@@ -34,7 +34,7 @@ Item {
         || plasmoid.location === PlasmaCore.Types.LeftEdge
     property bool vertical: plasmoid.formFactor === PlasmaCore.Types.Vertical
 
-    property string defaultIcon: "start-here-kde"
+    property string defaultIcon: "biglinux-globo"
 
     // Used to prevent the width from changing frequently when the scrollbar appears or disappears
     property bool mayHaveGridWithScrollBar: plasmoid.configuration.applicationsDisplay === 0
@@ -45,7 +45,7 @@ Item {
         autoPopulate: false
 
         appletInterface: plasmoid
-
+        
         flat: true // have categories, but no subcategories
         sorted: plasmoid.configuration.alphaSort
         showSeparators: false
@@ -56,21 +56,18 @@ Item {
         showRecentApps: false
         showRecentDocs: false
         showRecentContacts: false
-        showPowerSession: plasmoid.configuration.showPowercategory
+        showPowerSession: plasmoid.configuration.showSystemCategory
         showFavoritesPlaceholder: plasmoid.configuration.showFavoritesCategory
-        
-        
+      
         Component.onCompleted: {
-            favoritesModel.initForClient("org.kde.plasma.kickoff.favorites.instance-" + plasmoid.id)
-
+            favoritesModel.initForClient("org.kde.plasma.Kickoff.favorites.instance-" + plasmoid.id)
+            
             if (!plasmoid.configuration.favoritesPortedToKAstats) {
                 if (favoritesModel.count < 1) {
                     favoritesModel.portOldFavorites(plasmoid.configuration.favorites);
                 }
                 plasmoid.configuration.favoritesPortedToKAstats = true;
-                
             }
-        
         }
     }
 
@@ -80,10 +77,15 @@ Item {
         mergeResults: true
         favoritesModel: rootModel.favoritesModel
     }
-
     readonly property Kicker.RecentUsageModel frequentUsageModel: Kicker.RecentUsageModel {
         favoritesModel: rootModel.favoritesModel
         ordering: 1 // Popular / Frequently Used
+    }
+    
+    
+     property Kicker.SystemModel systemModel: Kicker.SystemModel {
+        id: systemModel
+        favoritesModel: plasmoid.rootItem.rootModel.systemFavoritesModel
     }
     
     //END

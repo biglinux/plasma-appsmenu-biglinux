@@ -21,8 +21,9 @@ EmptyPage {
         initialItem: ApplicationsPage {
             id: applicationsPage
             preferredSideBarWidth: root.preferredSideBarWidth + plasmoid.rootItem.backgroundMetrics.leftPadding
+    
         }
-        }
+    }
         // Eat down events to prevent them from reaching the contentArea or searchField
         Keys.onDownPressed: {}
         

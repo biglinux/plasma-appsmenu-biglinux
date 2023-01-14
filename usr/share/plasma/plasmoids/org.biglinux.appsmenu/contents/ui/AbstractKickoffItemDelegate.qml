@@ -28,7 +28,7 @@ T.ItemDelegate {
     required property url url
     required property var decoration
     required property string description
-
+    
     readonly property Flickable view: ListView.view ?? GridView.view
     property bool isCategory: false
     readonly property bool hasActionList: model && (model.favoriteId !== null || ("hasActionList" in model && model.hasActionList === true))

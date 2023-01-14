@@ -99,7 +99,7 @@
         "Description[zh_TW]": "應用程式啟動器",
         
         "EnabledByDefault": true,
-        "Icon": "biglinux-globo",
+        "Icon": "biglinux-menu.png",
         "Id": "org.biglinux.appsmenu",
         "License": "GPL-2.0+",
         

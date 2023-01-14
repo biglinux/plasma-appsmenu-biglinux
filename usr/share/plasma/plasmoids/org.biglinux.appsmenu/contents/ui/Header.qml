@@ -116,6 +116,29 @@ PlasmaExtras.PlasmoidHeading {
             }
         }
         
+         PC3.ToolButton {
+            id: configureButton
+            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+            visible: plasmoid.configuration.showSettingsButton
+            icon.name: "configure"
+            text: plasmoid.action("configure").text
+            display: PC3.ToolButton.IconOnly
+
+            PC3.ToolTip.text: text
+            PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
+            PC3.ToolTip.visible: hovered
+            Keys.onLeftPressed: if (LayoutMirroring.enabled) {
+                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+            } else {
+                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
+            }
+            Keys.onRightPressed: if (!LayoutMirroring.enabled) {
+                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+            } else {
+                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
+            }
+            onClicked: plasmoid.action("configure").trigger()
+        }
 
         PC3.ToolButton {
             checkable: true
