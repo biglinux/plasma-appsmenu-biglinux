@@ -123,7 +123,7 @@ EmptyPage {
             }
         }
     }
-
+    
     Component.onCompleted: {
         rootModel.refresh();
     }

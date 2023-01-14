@@ -64,19 +64,16 @@ BasePage {
         readonly property Component preferredFavoritesViewComponent: plasmoid.configuration.favoritesDisplay == 0 ? favoritesGridViewComponent : favoritesListViewComponent
         readonly property string preferredAppsViewObjectName: plasmoid.configuration.applicationsDisplay == 0 ? "applicationsGridView" : "applicationsListView"
         readonly property Component preferredAppsViewComponent: plasmoid.configuration.applicationsDisplay == 0 ? applicationsGridViewComponent : applicationsListViewComponent
-        readonly property string preferredpowerViewObjectName: plasmoid.configuration.applicationsDisplay == 0 ? "powerGridView" : "powerListView"
-        readonly property Component preferredpowerViewComponent: plasmoid.configuration.applicationsDisplay == 0 ? powerGridViewComponent : powerListViewComponent
+        readonly property string preferredSystemViewObjectName: plasmoid.configuration.systemDisplay == 0 ? "systemGridView" : "systemListView"
+        readonly property Component preferredSystemViewComponent: plasmoid.configuration.systemDisplay == 0 ? systemGridViewComponent : systemListViewComponent
         
         // NOTE: The 0 index modelForRow isn't supposed to be used. That's just how it works.
         // But to trigger model data update, set initial value to 0
         property int appsModelRow: 0
         readonly property Kicker.AppsModel appsModel: plasmoid.rootItem.rootModel.modelForRow(appsModelRow)
         focus: true
-        initialItem: if (plasmoid.configuration.showFavoritesCategory == true){
-                        preferredFavoritesViewComponent
-                     }else{
-                         preferredAppsViewComponent
-                    }
+        initialItem: plasmoid.configuration.showFavoritesCategory == true ? preferredFavoritesViewComponent : preferredAppsViewComponent
+                    
         
     
         Component {
@@ -127,7 +124,6 @@ BasePage {
             SectionView {
                 id: sectionView
                 model: stackView.appsModel.sections
-
                 onHideSectionViewRequested: {
                     stackView.pop();
                     stackView.currentItem.view.positionViewAtIndex(index, ListView.Beginning);
@@ -145,26 +141,27 @@ BasePage {
             }
         }
         
-          Component {
-            id: powerListViewComponent
+        Component {
+            id: systemListViewComponent
             DropAreaListView {
-                id: powerListView
-                objectName: "powerListView"
+                id: systemListView
+                objectName: "systemListView"
                 mainContentView: true
                 focus: true
-                model: plasmoid.rootItem.frequentUsageModel
+                model: plasmoid.rootItem.systemModel
             }
         }
 
         Component {
-            id: powerGridViewComponent
+            id: systemGridViewComponent
             DropAreaGridView {
-                id: powerGridView
-                objectName: "powerGridView"
+                id: systemGridView
+                objectName: "systemGridView"
                 focus: true
-                model: plasmoid.rootItem.frequentUsageModel
+                model: plasmoid.rootItem.systemModel
             }
         }
+
    
         onPreferredFavoritesViewComponentChanged: {
             if (root.sideBarItem != null && root.sideBarItem.currentIndex === 0) {
@@ -176,11 +173,13 @@ BasePage {
                 stackView.replace(stackView.preferredAppsViewComponent)
             }
         }
-        onPreferredpowerViewComponentChanged: {
-            if (root.sideBarItem != null && root.sideBarItem.currentIndex >= 2) {
-                stackView.replace(stackView.preferredpowerViewComponent)
+        onPreferredSystemViewComponentChanged: {
+            if (root.sideBarItem != null && root.sideBarItem.currentIndex >= root.sideBarItem.count - 1 ) {
+                stackView.replace(stackView.preferredSystemViewComponent)
             }
         }
+        
+        
         Connections {
             target: root.sideBarItem
             function onCurrentIndexChanged() {
@@ -191,24 +190,24 @@ BasePage {
                 }
                 if (plasmoid.configuration.showFavoritesCategory == true){
                  
-                if (root.sideBarItem.currentIndex === 0
-                    && stackView.currentItem.objectName !== stackView.preferredFavoritesViewObjectName) {
-                    stackView.replace(stackView.preferredFavoritesViewComponent)
-                 }else if (root.sideBarItem.currentIndex >= 1
-                    && stackView.currentItem.objectName !== stackView.preferredAppsViewObjectName) {
-                    stackView.replace(stackView.preferredAppsViewComponent)
-                  }
-                }else if (root.sideBarItem.currentIndex >= 2
-                    && stackView.currentItem.objectName !== stackView.preferredpowerViewObjectName) {
-                    stackView.replace(stackView.preferredpowerViewComponent)
-                  }
-
-               else{
-                    stackView.replace(stackView.preferredAppsViewComponent)
+                    if (root.sideBarItem.currentIndex === 0
+                        && stackView.currentItem.objectName !== stackView.preferredFavoritesViewObjectName) { //I know...
+                        stackView.replace(stackView.preferredFavoritesViewComponent)
+                    }else if (root.sideBarItem.currentIndex >= 1
+                        && stackView.currentItem.objectName !== stackView.preferredAppsViewObjectName) {
+                       stackView.replace(stackView.preferredAppsViewComponent)
+                    } 
+                }else{
+                       stackView.replace(stackView.preferredAppsViewComponent)
                 }
-              }
+                
+                if (plasmoid.configuration.showSystemCategory == true 
+                    && root.sideBarItem.currentIndex >= root.sideBarItem.count - 1
+                    && stackView.currentItem.objectName !== stackView.preferredSystemViewObjectName) {
+                      stackView.replace(stackView.preferredSystemViewComponent)
+                    }  
             }
-            
+        } 
         Connections {
             target: plasmoid
             function onExpandedChanged() {
@@ -218,9 +217,9 @@ BasePage {
             }
         }
     }
-    // NormalPage doesn't get destroyed when deactivated, so the binding uses
+    // Page doesn't get destroyed when deactivated, so the binding uses
     // StackView.status and visible. This way the bindings are reset when
-    // NormalPage is Activated again.
+    // Page is Activated again.
     Binding {
         target: plasmoid.rootItem
         property: "sideBar"
@@ -235,4 +234,6 @@ BasePage {
         when: root.T.StackView.status === T.StackView.Active && root.visible
         restoreMode: Binding.RestoreBinding
     }
+
 }
+        

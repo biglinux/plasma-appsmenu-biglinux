@@ -21,21 +21,23 @@ ColumnLayout {
     property string cfg_icon: plasmoid.configuration.icon
     property alias cfg_alphaSort: alphaSort.checked
     property alias cfg_showPinButton: showPinButton.checked
-    property alias cfg_showPowercategory: showPowercategory.checked
-    property alias cfg_showPowerButton: showPowerButton.checked
+    property alias cfg_showSystemCategory: showPowercategory.checked
+    property alias cfg_showSystemButton: showPowerButton.checked
     property alias cfg_showAllAppsCategory: showAllAppscategory.checked
     property alias cfg_showCategoryIcons: showCategoryIcons.checked
     property alias cfg_showFavoritesCategory: showFavoritesCategory.checked
     //property alias cfg_showRecentAppsCategory: showRecentAppsCategory.checked
     //property alias cfg_showRecentDocsCategory: showRecentDocsCategory.checked
     property alias cfg_showFullscreenButton: showFullScreenButton.checked
+    property alias cfg_showSettingsButton: showSettingsButton.checked
     property alias cfg_compactMode: compactModeCheckbox.checked
     property alias cfg_showAppsdescription: showAppsdescription.checked 
     property int cfg_favoritesDisplay: plasmoid.configuration.favoritesDisplay
     property int cfg_applicationsDisplay: plasmoid.configuration.applicationsDisplay
+    property int cfg_systemDisplay: plasmoid.configuration.systemDisplay
     property var cfg_systemFavorites: String(plasmoid.configuration.systemFavorites)
     property int cfg_primaryActions: plasmoid.configuration.primaryActions
-    property alias cfg_menuPosition: menuPosition.currentIndex
+    //property alias cfg_menuPosition: menuPosition.currentIndex
     
     Kirigami.FormLayout {
         Button {
@@ -137,7 +139,7 @@ ColumnLayout {
             Kirigami.FormData.isSection: true
         }
       
-        ComboBox {
+       /* ComboBox {
         id: menuPosition
 
         Kirigami.FormData.label: i18n("Menu Position:")
@@ -146,7 +148,7 @@ ColumnLayout {
         onActivated: cfg_menuPosition = currentIndex
         
         
-    }
+    }*/
         Item {
             Kirigami.FormData.isSection: true
         }
@@ -193,6 +195,26 @@ ColumnLayout {
             Kirigami.FormData.isSection: true
         }
         
+        RadioButton {
+            id: showSystemInGrid
+            Kirigami.FormData.label: i18n("Show system actions:")
+            text: i18nc("Part of a sentence: 'Show system actions in a grid'", "In a grid")
+            ButtonGroup.group: systemDisplayGroup
+            property int index: 0
+            checked: plasmoid.configuration.systemDisplay == index
+        }
+
+        RadioButton {
+            id: showSystemInList
+            text: i18nc("Part of a sentence: 'Show system actions in a list'", "In a list")
+            ButtonGroup.group: systemDisplayGroup
+            property int index: 1
+            checked: plasmoid.configuration.systemDisplay == index
+        }
+        
+        Item {
+            Kirigami.FormData.isSection: true
+        }
 
         RadioButton {
             id: powerActionsButton
@@ -271,6 +293,10 @@ ColumnLayout {
             id: showAppsdescription
             text: i18n("Show apps description")
         }
+        CheckBox {
+            id: showSettingsButton
+            text: i18n("Show menu settings button")
+        }
         /*CheckBox {
             id: showRecentAppsCategory
             text: i18n("Show Recent applications category")
@@ -323,6 +349,16 @@ ColumnLayout {
             }
         }
     }
+    
+    ButtonGroup {
+        id: systemDisplayGroup
+        onCheckedButtonChanged: {
+            if (checkedButton) {
+                cfg_systemDisplay = checkedButton.index
+            }
+        }
+    }
+
 
     ButtonGroup {
         id: radioGroup
