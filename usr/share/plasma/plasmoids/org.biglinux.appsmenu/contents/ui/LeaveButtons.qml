@@ -18,10 +18,14 @@ RowLayout {
     property alias leave: leaveButton
     spacing: plasmoid.rootItem.backgroundMetrics.spacing
     visible: plasmoid.configuration.showSystemButton
-
+    Kicker.SystemModel {
+        id: systemModel
+        favoritesModel: plasmoid.rootItem.rootModel.systemFavoritesModel
+    }
     Repeater {
         id: buttonRepeater
-        model: plasmoid.rootItem.systemModel
+        
+        model: systemModel
         delegate: PC3.ToolButton {
             id: buttonDelegate
             text: model.display
