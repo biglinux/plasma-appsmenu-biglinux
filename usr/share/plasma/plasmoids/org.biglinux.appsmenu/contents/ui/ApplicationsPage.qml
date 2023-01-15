@@ -117,7 +117,7 @@ BasePage {
                 }
             }
         }
-
+        
         Component {
             id: applicationsSectionViewComponent
 
@@ -148,7 +148,7 @@ BasePage {
                 objectName: "systemListView"
                 mainContentView: true
                 focus: true
-                model: plasmoid.rootItem.systemModel
+                model: systemModel
             }
         }
 
@@ -158,10 +158,14 @@ BasePage {
                 id: systemGridView
                 objectName: "systemGridView"
                 focus: true
-                model: plasmoid.rootItem.systemModel
+                model: systemModel
             }
         }
-
+        
+        Kicker.SystemModel {
+        id: systemModel
+        favoritesModel: plasmoid.rootItem.rootModel.systemFavoritesModel
+        }
    
         onPreferredFavoritesViewComponentChanged: {
             if (root.sideBarItem != null && root.sideBarItem.currentIndex === 0) {

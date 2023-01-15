@@ -58,7 +58,7 @@ Item {
         showRecentContacts: false
         showPowerSession: plasmoid.configuration.showSystemCategory
         showFavoritesPlaceholder: plasmoid.configuration.showFavoritesCategory
-      
+        
         Component.onCompleted: {
             favoritesModel.initForClient("org.kde.plasma.Kickoff.favorites.instance-" + plasmoid.id)
             
@@ -80,12 +80,6 @@ Item {
     readonly property Kicker.RecentUsageModel frequentUsageModel: Kicker.RecentUsageModel {
         favoritesModel: rootModel.favoritesModel
         ordering: 1 // Popular / Frequently Used
-    }
-    
-    
-     property Kicker.SystemModel systemModel: Kicker.SystemModel {
-        id: systemModel
-        favoritesModel: plasmoid.rootItem.rootModel.systemFavoritesModel
     }
     
     //END
