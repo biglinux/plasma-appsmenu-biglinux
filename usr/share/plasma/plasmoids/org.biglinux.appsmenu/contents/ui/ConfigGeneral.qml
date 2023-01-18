@@ -26,7 +26,7 @@ ColumnLayout {
     property alias cfg_showAllAppsCategory: showAllAppscategory.checked
     property alias cfg_showCategoryIcons: showCategoryIcons.checked
     property alias cfg_showFavoritesCategory: showFavoritesCategory.checked
-    //property alias cfg_showRecentAppsCategory: showRecentAppsCategory.checked
+    property alias cfg_menuright: sideBarRightside.checked
     //property alias cfg_showRecentDocsCategory: showRecentDocsCategory.checked
     property alias cfg_showFullscreenButton: showFullScreenButton.checked
     property alias cfg_showSettingsButton: showSettingsButton.checked
@@ -149,76 +149,49 @@ ColumnLayout {
         
         
     }*/
-        Item {
+       Item {
             Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: i18n("Header options")
         }
         
-        RadioButton {
-            id: showFavoritesInGrid
-            Kirigami.FormData.label: i18n("Show favorites:")
-            text: i18nc("Part of a sentence: 'Show favorites in a grid'", "In a grid")
-            ButtonGroup.group: favoritesDisplayGroup
-            property int index: 0
-            checked: plasmoid.configuration.favoritesDisplay == index
-        }
-
-        RadioButton {
-            id: showFavoritesInList
-            text: i18nc("Part of a sentence: 'Show favorites in a list'", "In a list")
-            ButtonGroup.group: favoritesDisplayGroup
-            property int index: 1
-            checked: plasmoid.configuration.favoritesDisplay == index
+        
+        CheckBox {
+            id: showPowerButton
+            
+            text: i18n("Power/session button")
         }
         
-        Item {
-            Kirigami.FormData.isSection: true
+        CheckBox {
+            id: showFullScreenButton
+            text: i18n("Fullscreen button")
+            
+        }
+       
+        CheckBox {
+            id: showSettingsButton
+            text: i18n("Menu settings button")
         }
         
-        RadioButton {
-            id: showAppsInGrid
-            Kirigami.FormData.label: i18n("Show other applications:")
-            text: i18nc("Part of a sentence: 'Show other applications in a grid'", "In a grid")
-            ButtonGroup.group: applicationsDisplayGroup
-            property int index: 0
-            checked: plasmoid.configuration.applicationsDisplay == index
+        CheckBox {
+            id: showPinButton
+            text: i18n("Pin button")
         }
-
-        RadioButton {
-            id: showAppsInList
-            text: i18nc("Part of a sentence: 'Show other applications in a list'", "In a list")
-            ButtonGroup.group: applicationsDisplayGroup
-            property int index: 1
-            checked: plasmoid.configuration.applicationsDisplay == index
+        
+         Button {
+            enabled: KQuickAddons.KCMShell.authorize("kcm_plasmasearch.desktop").length > 0
+            icon.name: "settings-configure"
+            text: i18nc("@action:button", "Configure Enabled Search Plugins…")
+            onClicked: KQuickAddons.KCMShell.openSystemSettings("kcm_plasmasearch")
         }
         
         Item {
             Kirigami.FormData.isSection: true
-        }
-        
-        RadioButton {
-            id: showSystemInGrid
-            Kirigami.FormData.label: i18n("Show system actions:")
-            text: i18nc("Part of a sentence: 'Show system actions in a grid'", "In a grid")
-            ButtonGroup.group: systemDisplayGroup
-            property int index: 0
-            checked: plasmoid.configuration.systemDisplay == index
-        }
-
-        RadioButton {
-            id: showSystemInList
-            text: i18nc("Part of a sentence: 'Show system actions in a list'", "In a list")
-            ButtonGroup.group: systemDisplayGroup
-            property int index: 1
-            checked: plasmoid.configuration.systemDisplay == index
-        }
-        
-        Item {
-            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: i18n("Header system actions button:")
         }
 
         RadioButton {
             id: powerActionsButton
-            Kirigami.FormData.label: i18n("Show buttons for:")
+            
             text: i18n("Power")
             ButtonGroup.group: radioGroup
             property string actions: "suspend,hibernate,reboot,shutdown"
@@ -244,6 +217,7 @@ ColumnLayout {
             checked: plasmoid.configuration.primaryActions == index
         }
         
+        
         RadioButton {
             id: allActionsButton
             text: i18n("Power and session")
@@ -252,14 +226,89 @@ ColumnLayout {
             property int index: 3
             checked: plasmoid.configuration.primaryActions == index
         }
+         
+       
         
         Item {
             Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: i18n("Favorites")
+        }
+            CheckBox {
+                id: showFavoritesCategory
+                text: i18n(" Show favorites category")
+            }
+            
+        RadioButton {
+            id: showFavoritesInGrid
+            
+            text: i18nc("Part of a sentence: 'Show favorites in a grid'", "In a grid")
+            ButtonGroup.group: favoritesDisplayGroup
+            property int index: 0
+            checked: plasmoid.configuration.favoritesDisplay == index
+        }
+
+        RadioButton {
+            id: showFavoritesInList
+            text: i18nc("Part of a sentence: 'Show favorites in a list'", "In a list")
+            ButtonGroup.group: favoritesDisplayGroup
+            property int index: 1
+            checked: plasmoid.configuration.favoritesDisplay == index
+        }
+        
+        Item {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: i18n("Show applications")
+        }
+        
+        RadioButton {
+            id: showAppsInGrid
+            
+            text: i18nc("Part of a sentence: 'Show other applications in a grid'", "In a grid")
+            ButtonGroup.group: applicationsDisplayGroup
+            property int index: 0
+            checked: plasmoid.configuration.applicationsDisplay == index
+        }
+
+        RadioButton {
+            id: showAppsInList
+            text: i18nc("Part of a sentence: 'Show other applications in a list'", "In a list")
+            ButtonGroup.group: applicationsDisplayGroup
+            property int index: 1
+            checked: plasmoid.configuration.applicationsDisplay == index
+        }
+        
+        Item {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: i18n("system actions")
+        }
+        CheckBox {
+            id: showPowercategory
+            text: i18n(" Show power/session category")
+        } 
+        RadioButton {
+            id: showSystemInGrid
+            text: i18nc("Part of a sentence: 'Show system actions in a grid'", "In a grid")
+            ButtonGroup.group: systemDisplayGroup
+            property int index: 0
+            checked: plasmoid.configuration.systemDisplay == index
+        }
+
+        RadioButton {
+            id: showSystemInList
+            text: i18nc("Part of a sentence: 'Show system actions in a list'", "In a list")
+            ButtonGroup.group: systemDisplayGroup
+            property int index: 1
+            checked: plasmoid.configuration.systemDisplay == index
+        }
+        
+       Item {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: i18nc("General options", "General:")
         }
         
         CheckBox {
             id: alphaSort
-            Kirigami.FormData.label: i18nc("General options", "General:")
+            
             text: i18n("Always sort applications alphabetically")
         }
 
@@ -277,26 +326,24 @@ ColumnLayout {
             font: Kirigami.Theme.smallFont
         }
 
-        CheckBox {
-            id: showFavoritesCategory
-            text: i18n("Show favorites category")
-        }
+        
         CheckBox {
             id: showAllAppscategory
-            text: i18n("Show all apps category")
+            text: i18n("All apps category")
         }
         CheckBox {
             id: showCategoryIcons
-            text: i18n("Show categories icons")
+            text: i18n("Categories icons")
         }
         CheckBox {
             id: showAppsdescription
-            text: i18n("Show apps description")
+            text: i18n("Apps description")
         }
-        CheckBox {
-            id: showSettingsButton
-            text: i18n("Show menu settings button")
-        }
+       /* CheckBox {
+            id: sideBarRightside
+            text: i18n("Categories on the right side")
+        } */
+        
         /*CheckBox {
             id: showRecentAppsCategory
             text: i18n("Show Recent applications category")
@@ -305,32 +352,11 @@ ColumnLayout {
             id: showRecentDocsCategory
             text: i18n("Show Recent documents category")
         }*/
-        CheckBox {
-            id: showPinButton
-            text: i18n("Show pin button")
-        }
-        CheckBox {
-            id: showFullScreenButton
-            text: i18n("Show fullscreen button")
-            
-        }
-       
-       CheckBox {
-            id: showPowercategory
-            text: i18n("Show power/session category")
-        } 
-       
-        CheckBox {
-            id: showPowerButton
-            text: i18n("Show power/session button")
-        }
         
-        Button {
-            enabled: KQuickAddons.KCMShell.authorize("kcm_plasmasearch.desktop").length > 0
-            icon.name: "settings-configure"
-            text: i18nc("@action:button", "Configure Enabled Search Plugins…")
-            onClicked: KQuickAddons.KCMShell.openSystemSettings("kcm_plasmasearch")
-        }
+        
+        
+        
+       
 
     ButtonGroup {
         id: favoritesDisplayGroup

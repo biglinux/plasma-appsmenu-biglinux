@@ -75,6 +75,10 @@ BasePage {
         initialItem: plasmoid.configuration.showFavoritesCategory == true ? preferredFavoritesViewComponent : preferredAppsViewComponent
                     
         
+        Kicker.SystemModel {
+        id: systemModel
+        favoritesModel: plasmoid.rootItem.rootModel.systemFavoritesModel
+        }
     
         Component {
             id: favoritesListViewComponent
@@ -160,11 +164,6 @@ BasePage {
                 focus: true
                 model: systemModel
             }
-        }
-        
-        Kicker.SystemModel {
-        id: systemModel
-        favoritesModel: plasmoid.rootItem.rootModel.systemFavoritesModel
         }
    
         onPreferredFavoritesViewComponentChanged: {

@@ -18,6 +18,7 @@ import org.kde.kirigami 2.16 as Kirigami
 // Using EmptyPage instead.
 EmptyPage {
     id: root
+    
     property alias model: view.model
     property alias count: view.count
     property alias currentIndex: view.currentIndex

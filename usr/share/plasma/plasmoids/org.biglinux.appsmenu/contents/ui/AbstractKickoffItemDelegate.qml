@@ -22,6 +22,7 @@ import "code/tools.js" as Tools
 T.ItemDelegate {
     id: root
     
+    
     // model properties
     required property var model
     required property int index
