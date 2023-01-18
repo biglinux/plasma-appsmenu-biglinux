@@ -26,7 +26,7 @@ ColumnLayout {
     property alias cfg_showAllAppsCategory: showAllAppscategory.checked
     property alias cfg_showCategoryIcons: showCategoryIcons.checked
     property alias cfg_showFavoritesCategory: showFavoritesCategory.checked
-    property alias cfg_menuright: sideBarRightside.checked
+    //property alias cfg_menuright: sideBarRightside.checked
     //property alias cfg_showRecentDocsCategory: showRecentDocsCategory.checked
     property alias cfg_showFullscreenButton: showFullScreenButton.checked
     property alias cfg_showSettingsButton: showSettingsButton.checked
