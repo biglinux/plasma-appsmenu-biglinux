@@ -1,0 +1,10 @@
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = fluent-icon-theme-git
+
+[Action]
+Description = Change icon for biglinux icon
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/plasma-appsmenu-biglinux-icon

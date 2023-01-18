@@ -10,6 +10,9 @@ pkgdesc="New customizable menu to plasma"
 depends=('plasma-desktop')
 source=("git+https://github.com/biglinux/plasma-appsmenu-biglinux.git")
 md5sums=(SKIP)
+if [ -e "${pkgname}.install" ];then
+    install=${pkgname}.install
+fi
 
 package() {
     # Verify default folder
