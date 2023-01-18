@@ -1,4 +1,4 @@
-# Translation of appsmenu in pt_BR
+# Translation of appsmenu in es
 # Copyright (C) 2023
 # This file is distributed under the same license as the appsmenu package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
@@ -9,64 +9,64 @@ msgstr ""
 "Project-Id-Version: appsmenu\n"
 "Report-Msgid-Bugs-To: https://github.com/biglinux/plasma-appsmenu-biglinux\n"
 "POT-Creation-Date: 2023-01-18 18:17-0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Douglas Gabriel <dg2003gh@gmail.com>\n"
-"Language-Team: BigLinux team <https://github.com/biglinux/>\n"
-"Language: pt_BR\n"
+"PO-Revision-Date: 2023-01-17 10:00-0300\n"
+"Last-Translator: brandon yair galvis diaz <krafairusbrandon104@gmail.com>\n"
+"Language-Team: español <https://github.com/biglinux/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../icons/metadata.desktop ../metadata.desktop
 msgid "BigLinux Application Launcher"
-msgstr "BigLinux Lançador de aplicativos"
+msgstr "Lanzador de Aplicaciones de BigLinux"
 
 #: ../icons/metadata.desktop ../metadata.desktop
 msgid "Launcher to start applications"
-msgstr "Lançador para iniciar aplicativos"
+msgstr "Lanzador para iniciar aplicaciones"
 
 #: ../contents/config/config.qml
 msgid "General"
-msgstr "Geral"
+msgstr "General"
 
 #: ../contents/ui/code/tools.js
 msgid "Remove from Favorites"
-msgstr "Remover dos Favoritos"
+msgstr "Eliminar de favoritos"
 
 #: ../contents/ui/code/tools.js
 msgid "Add to Favorites"
-msgstr "Adicionar aos Favoritos"
+msgstr "Añadir a favoritos"
 
 #: ../contents/ui/code/tools.js
 msgid "On All Activities"
-msgstr "Em Todas Atividades"
+msgstr "En todas las actividades"
 
 #: ../contents/ui/code/tools.js
 msgid "On the Current Activity"
-msgstr "Nesta Atividade"
+msgstr "En la actividad actual"
 
 #: ../contents/ui/code/tools.js
 msgid "Show in Favorites"
-msgstr "Mostrar nos Favoritos"
+msgstr "Mostrar en favoritos"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Icon:"
-msgstr "Ícone:"
+msgstr "Icono:"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "@item:inmenu Open icon chooser dialog"
 msgid "Choose…"
-msgstr "Escolher..."
+msgstr "Seleccionar…"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "@item:inmenu Reset icon to default"
 msgid "Reset to default icon"
-msgstr "Redefinir para o Ícone padrão"
+msgstr "Restablecer el icono al predeterminado"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "@action:inmenu"
 msgid "Remove icon"
-msgstr "Remover ícone"
+msgstr "Eliminar icono"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "@label:textbox"
@@ -76,41 +76,41 @@ msgstr "Etiqueta de texto:"
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "@info:placeholder"
 msgid "Type here to add a text label"
-msgstr "Digite aqui para adicionar uma etiqueta de texto"
+msgstr "Escriba aqui para añadir una etiqueta de texto"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "@info"
 msgid "A text label cannot be set when the Panel is vertical."
-msgstr "Uma etiqueta de texto não pode ser definida quando o painel é vertical."
+msgstr "No se puede establecer una etiqueta de texto cuando el panel esta en posición vertical."
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Header options"
-msgstr "Opções do cabeçalho"
+msgstr "Opciones de encabezado"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Power/session button"
-msgstr "Botão de energia/sessão"
+msgstr "Boton de inicio/sesión"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Fullscreen button"
-msgstr "Botão de tela cheia"
+msgstr "Boton de pantalla completa"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Menu settings button"
-msgstr "Botão de configuração do menu"
+msgstr "Boton para configurar el menú"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Pin button"
-msgstr "Botão de manter aberto"
+msgstr "Anclar boton"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "@action:button"
 msgid "Configure Enabled Search Plugins…"
-msgstr "Configurar os plugins de pesquisa ativados"
+msgstr "Configurar complementos de busqueda activados…"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Header system actions button:"
-msgstr "Botão de ações do sistema do cabeçalho"
+msgstr "Boton de acciones del sistema de encabezado:"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Power"
@@ -118,15 +118,15 @@ msgstr "Energia"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Session"
-msgstr "Sessão"
+msgstr "Sesión"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Shutdown"
-msgstr "Desligar"
+msgstr "Apagar"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Power and session"
-msgstr "Energia e sessão"
+msgstr "Inicio y apagado"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Favorites"
@@ -134,79 +134,79 @@ msgstr "Favoritos"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid " Show favorites category"
-msgstr "Mostrar categoria de favoritos"
+msgstr " Mostrar la categoria de favoritos"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "Part of a sentence: 'Show favorites in a grid'"
 msgid "In a grid"
-msgstr "Em uma grade"
+msgstr "En una cuadricula"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "Part of a sentence: 'Show favorites in a list'"
 msgid "In a list"
-msgstr "Em uma lista"
+msgstr "En una lista"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Show applications"
-msgstr "Mostrar aplicativos"
+msgstr "Mostrar aplicaciones"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "Part of a sentence: 'Show other applications in a grid'"
 msgid "In a grid"
-msgstr "Em uma grade"
+msgstr "En una cuadricula"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "Part of a sentence: 'Show other applications in a list'"
 msgid "In a list"
-msgstr "Em uma lista"
+msgstr "En una lista"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "system actions"
-msgstr "Ações do sistema"
+msgstr "Acciones del sistema"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid " Show power/session category"
-msgstr "Mostrar a categoria de Energia/sessão"
+msgstr " Mostrar la categoria de energia/sesión"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "Part of a sentence: 'Show system actions in a grid'"
 msgid "In a grid"
-msgstr "Em uma grade"
+msgstr "En una cuadricula"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "Part of a sentence: 'Show system actions in a list'"
 msgid "In a list"
-msgstr "Em uma lista"
+msgstr "En una lista"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "General options"
 msgid "General:"
-msgstr "Geral:"
+msgstr "Opciones generales"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Always sort applications alphabetically"
-msgstr "Sempre classificar os aplicativos alfabeticamente"
+msgstr "Ordenas siempre las aplicaciones de forma alfabetica"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Use compact categories style"
-msgstr "Usar estilo de lista compacta"
+msgstr "Usar el estilo de categorias compacto"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgctxt "@info:usagetip under a checkbox when Touch Mode is on"
 msgid "Automatically disabled when in Touch Mode"
-msgstr "Desabilitar automaticamente quando estiver em Touch Mode"
+msgstr "Desabilitar automaticamente cuando esta en modo tactil."
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "All apps category"
-msgstr "Categoria Todos os aplicativos "
+msgstr "Categoria de todas las aplicaciones"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Categories icons"
-msgstr "Ícones das categorias"
+msgstr "Iconos de categorias"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Apps description"
-msgstr "Descrição dos aplicativos"
+msgstr "Descripcion de las aplicaciones"
 
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Categories on the right side"
@@ -214,16 +214,16 @@ msgstr ""
 
 #: ../contents/ui/Header.qml
 msgid "Keep Open"
-msgstr "Manter Aberto"
+msgstr "Mantener abierta"
 
 #: ../contents/ui/Header.qml
 msgid "Fullscreen view"
-msgstr "Tela cheia"
+msgstr "Vista a pantalla completa"
 
 #: ../contents/ui/KickoffGridView.qml
 msgid "Grid with %1 rows, %2 columns"
-msgstr "Grade com %1 fileiras, %2 colunas"
+msgstr "Cuadricula con %1 filas, %2 columnas"
 
 #: ../contents/ui/Kickoff.qml
 msgid "Edit Applications…"
-msgstr "Editar Aplicativos..."
+msgstr "Editar aplicaciones…"

@@ -13,7 +13,7 @@ EmptyPage {
     id: root
  
     property real preferredSideBarWidth: 200
-
+    
     contentItem: HorizontalStackView {
         id: stackView
         focus: true

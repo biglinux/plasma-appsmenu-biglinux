@@ -74,8 +74,6 @@ FocusScope {
             bottom: parent.bottom
         }
         KeyNavigation.backtab: root.sideBarItem
-        // Tab should go to the start of the footer focus chain
-        KeyNavigation.tab: plasmoid.rootItem.footer.nextItemInFocusChain()
         KeyNavigation.left: sideBarLoader
         Keys.onUpPressed: plasmoid.rootItem.searchField.forceActiveFocus(Qt.BacktabFocusReason)
         Keys.onDownPressed: plasmoid.rootItem.footer.leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
