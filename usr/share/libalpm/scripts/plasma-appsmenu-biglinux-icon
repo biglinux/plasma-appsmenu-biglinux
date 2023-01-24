@@ -1,8 +1,0 @@
-#!/bin/sh
-
-mv -f /usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/22/actions/big-system-log-out.svg /usr/share/icons/Fluent-dark/22/actions/system-log-out.svg
-
-mv -f /usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/scalable@3x/big-applications-all.svg /usr/share/icons/Fluent/scalable@3x/applications-all.svg
-
-mv -f /usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent/scalable@3x/big-applications-all.svg /usr/share/icons/Fluent/scalable@3x/applications-all.svg
-
