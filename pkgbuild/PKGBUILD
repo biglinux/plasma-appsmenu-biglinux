@@ -14,6 +14,23 @@ if [ -e "${pkgname}.install" ];then
     install=${pkgname}.install
 fi
 
+#Dark
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/scalable@3x/big-applications-all.svg" "$pkgdir/usr/share/icons/Fluent-dark/scalable@3x/apps/applications-all.svg"
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/22/actions/big-system-log-out.svg" "$pkgdir/usr/share/icons/Fluent-dark/22/actions/system-log-out.svg"
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/scalable/apps/big-system-icon.svg" "$pkgdir/usr/share/icons/Fluent-dark/scalable/apps/configuration_section.svg"
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/scalable/apps/big-dev-icon.svg" "$pkgdir/usr/share/icons/Fluent-dark/scalable/apps/applications-development.svg"
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/scalable/apps/big-office-icon.svg" "$pkgdir/usr/share/icons/Fluent-dark/scalable/apps/applications-office"
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/scalable/apps/big-graphics-icon.svg" "$pkgdir/usr/share/icons/Fluent-dark/scalable/apps/applications-graphics.svg"
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/scalable/apps/big-internet-icon.svg" "$pkgdir/usr/share/icons/Fluent-dark/scalable/apps/applications-internet.svg"
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/scalable/apps/big-games-icon.svg" "$pkgdir/usr/share/icons/Fluent-dark/scalable/apps/applications-games.svg"
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/scalable/apps/big-multimedia-icon.svg" "$pkgdir/usr/share/icons/Fluent-dark/scalable/apps/applications-multimedia.svg"
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/scalable/apps/big-settings-icon.svg" "$pkgdir/usr/share/icons/Fluent-dark/scalable/apps/applications-system.svg"
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent-dark/scalable/apps/big-utilities-icon.svg" "$pkgdir/usr/share/icons/Fluent-dark/scalable/apps/applications-utilities.svg"
+
+# Light
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent/scalable@3x/big-applications-all.svg" "$pkgdir/usr/share/icons/Fluent/scalable@3x/apps/applications-all.svg"
+mv "$pkgdir/usr/share/plasma/plasmoids/org.biglinux.appsmenu/icons/Fluent/22/actions/big-system-log-out.svg" "$pkgdir/usr/share/icons/Fluent/22/actions/system-log-out.svg"
+
 package() {
     # Verify default folder
     if [ -d "${srcdir}/${pkgname}/${pkgname}" ]; then
