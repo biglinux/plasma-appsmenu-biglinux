@@ -1,5 +1,5 @@
 [Desktop Entry]
-Icon=biglinux-menu.png
+Icon=biglinux-globo
 Type=Service
 X-KDE-ServiceTypes=Plasma/Applet
 
@@ -22,6 +22,7 @@ Name=BigLinux Application Launcher
 Comment=Launcher to start applications
 
 Name[es]=Lanzador de Aplicaciones de BigLinux
-Name[pt_BR]=BigLinux Lançador de aplicativos
 Comment[es]=Lanzador para iniciar aplicaciones
+Name[pt_BR]=BigLinux Lançador de aplicativos
 Comment[pt_BR]=Lançador para iniciar aplicativos
+
