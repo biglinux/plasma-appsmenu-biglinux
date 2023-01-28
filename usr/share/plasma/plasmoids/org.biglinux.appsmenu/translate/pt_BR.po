@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: appsmenu\n"
 "Report-Msgid-Bugs-To: https://github.com/biglinux/plasma-appsmenu-biglinux\n"
-"POT-Creation-Date: 2023-01-18 18:17-0300\n"
+"POT-Creation-Date: 2023-01-26 03:43-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Douglas Gabriel <dg2003gh@gmail.com>\n"
 "Language-Team: BigLinux team <https://github.com/biglinux/>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../icons/metadata.desktop ../metadata.desktop
+#: ../metadata.desktop
 msgid "BigLinux Application Launcher"
 msgstr "BigLinux Lançador de aplicativos"
 
-#: ../icons/metadata.desktop ../metadata.desktop
+#: ../metadata.desktop
 msgid "Launcher to start applications"
 msgstr "Lançador para iniciar aplicativos"
 
@@ -207,10 +207,6 @@ msgstr "Ícones das categorias"
 #: ../contents/ui/ConfigGeneral.qml
 msgid "Apps description"
 msgstr "Descrição dos aplicativos"
-
-#: ../contents/ui/ConfigGeneral.qml
-msgid "Categories on the right side"
-msgstr ""
 
 #: ../contents/ui/Header.qml
 msgid "Keep Open"
