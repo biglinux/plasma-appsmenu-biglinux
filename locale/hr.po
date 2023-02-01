@@ -1,0 +1,224 @@
+# Translation of appsmenu in LANGUAGE
+# Copyright (C) 2023
+# This file is distributed under the same license as the appsmenu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: appsmenu\n"
+"Report-Msgid-Bugs-To: https://github.com/biglinux/plasma-appsmenu-biglinux\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: attranslate\n"
+
+#: ../metadata.desktop
+msgid "BigLinux Application Launcher"
+msgstr "BigLinux pokretač aplikacija"
+
+#: ../metadata.desktop
+msgid "Launcher to start applications"
+msgstr "Pokretač za pokretanje aplikacija"
+
+#: ../contents/config/config.qml
+msgid "General"
+msgstr "Općenito"
+
+#: ../contents/ui/code/tools.js
+msgid "Remove from Favorites"
+msgstr "Ukloni iz favorita"
+
+#: ../contents/ui/code/tools.js
+msgid "Add to Favorites"
+msgstr "Dodaj u favorite"
+
+#: ../contents/ui/code/tools.js
+msgid "On All Activities"
+msgstr "O svim aktivnostima"
+
+#: ../contents/ui/code/tools.js
+msgid "On the Current Activity"
+msgstr "O trenutnoj aktivnosti"
+
+#: ../contents/ui/code/tools.js
+msgid "Show in Favorites"
+msgstr "Pokaži u favoritima"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Icon:"
+msgstr "Ikona:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header options"
+msgstr "Mogućnosti zaglavlja"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power/session button"
+msgstr "Gumb Za napajanje/sesiju"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Fullscreen button"
+msgstr "Gumb Preko cijelog zaslona"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Menu settings button"
+msgstr "Gumb Postavke izbornika"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Pin button"
+msgstr "Prikvači gumb"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header system actions button:"
+msgstr "Gumb za akcije sustava zaglavlja:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power"
+msgstr "Moć"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Session"
+msgstr "Sesija"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Shutdown"
+msgstr "Zatvaranje"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power and session"
+msgstr "Snaga i sesija"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Favorites"
+msgstr "Favoriti"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show favorites category"
+msgstr " Pokaži kategoriju favorita"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Show applications"
+msgstr "Pokaži aplikacije"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "system actions"
+msgstr "sistemske akcije"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show power/session category"
+msgstr " Pokaži kategoriju snage/sesije"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Always sort applications alphabetically"
+msgstr "Aplikacije uvijek sortirajte abecednim redom"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Use compact categories style"
+msgstr "Koristi stil kompaktnih kategorija"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "All apps category"
+msgstr "Kategorija svih aplikacija"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Categories icons"
+msgstr "Ikone kategorije"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Apps description"
+msgstr "Opis aplikacija"
+
+#: ../contents/ui/Header.qml
+msgid "Keep Open"
+msgstr "Ostani otvoreno"
+
+#: ../contents/ui/Header.qml
+msgid "Fullscreen view"
+msgstr "Prikaz preko cijelog zaslona"
+
+#: ../contents/ui/KickoffGridView.qml
+msgid "Grid with %1 rows, %2 columns"
+msgstr "Rešetka s %1 redaka, %2 stupaca"
+
+#: ../contents/ui/Kickoff.qml
+msgid "Edit Applications…"
+msgstr "Uređivanje aplikacija..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Open icon chooser dialog"
+msgid "Choose…"
+msgstr "Izabrati..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Reset icon to default"
+msgid "Reset to default icon"
+msgstr "Vrati na zadanu ikonu"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:inmenu"
+msgid "Remove icon"
+msgstr "Ikona Ukloni"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@label:textbox"
+msgid "Text label:"
+msgstr "Tekstni natpis:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:placeholder"
+msgid "Type here to add a text label"
+msgstr "Upišite ovdje da biste dodali tekstni natpis"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info"
+msgid "A text label cannot be set when the Panel is vertical."
+msgstr "Tekstni natpis ne može se postaviti kada je ploča okomita."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:button"
+msgid "Configure Enabled Search Plugins…"
+msgstr "Konfiguriranje omogućenih dodataka za pretraživanje..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a grid'"
+msgid "In a grid"
+msgstr "U rešetki"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a list'"
+msgid "In a list"
+msgstr "Na popisu"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a grid'"
+msgid "In a grid"
+msgstr "U rešetki"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a list'"
+msgid "In a list"
+msgstr "Na popisu"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a grid'"
+msgid "In a grid"
+msgstr "U rešetki"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a list'"
+msgid "In a list"
+msgstr "Na popisu"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "General options"
+msgid "General:"
+msgstr "Općenito:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:usagetip under a checkbox when Touch Mode is on"
+msgid "Automatically disabled when in Touch Mode"
+msgstr "Automatski onemogućeno u načinu dodira"

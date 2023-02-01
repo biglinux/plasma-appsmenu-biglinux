@@ -1,0 +1,224 @@
+# Translation of appsmenu in LANGUAGE
+# Copyright (C) 2023
+# This file is distributed under the same license as the appsmenu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: appsmenu\n"
+"Report-Msgid-Bugs-To: https://github.com/biglinux/plasma-appsmenu-biglinux\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: attranslate\n"
+
+#: ../metadata.desktop
+msgid "BigLinux Application Launcher"
+msgstr "Lansator de aplicații BigLinux"
+
+#: ../metadata.desktop
+msgid "Launcher to start applications"
+msgstr "Lansator pentru a porni aplicațiile"
+
+#: ../contents/config/config.qml
+msgid "General"
+msgstr "General"
+
+#: ../contents/ui/code/tools.js
+msgid "Remove from Favorites"
+msgstr "Eliminarea din Preferințe"
+
+#: ../contents/ui/code/tools.js
+msgid "Add to Favorites"
+msgstr "Adăugarea la Preferințe"
+
+#: ../contents/ui/code/tools.js
+msgid "On All Activities"
+msgstr "Cu privire la toate activitățile"
+
+#: ../contents/ui/code/tools.js
+msgid "On the Current Activity"
+msgstr "Cu privire la activitatea curentă"
+
+#: ../contents/ui/code/tools.js
+msgid "Show in Favorites"
+msgstr "Afișați în Preferințe"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Icon:"
+msgstr "Icoană:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header options"
+msgstr "Opțiuni antet"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power/session button"
+msgstr "Butonul Alimentare/sesiune"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Fullscreen button"
+msgstr "Butonul Ecran complet"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Menu settings button"
+msgstr "Butonul Setări meniu"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Pin button"
+msgstr "Butonul Fixare"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header system actions button:"
+msgstr "Butonul Acțiuni sistem antet:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power"
+msgstr "Putere"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Session"
+msgstr "Sesiune"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Shutdown"
+msgstr "Shutdown"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power and session"
+msgstr "Putere și sesiune"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Favorites"
+msgstr "Preferințe"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show favorites category"
+msgstr " Afișarea categoriei preferințelor"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Show applications"
+msgstr "Afișarea aplicațiilor"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "system actions"
+msgstr "acțiuni de sistem"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show power/session category"
+msgstr " Afișarea categoriei de putere/sesiune"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Always sort applications alphabetically"
+msgstr "Sortați întotdeauna aplicațiile în ordine alfabetică"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Use compact categories style"
+msgstr "Utilizarea stilului categoriilor compacte"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "All apps category"
+msgstr "Toate categoriile de aplicații"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Categories icons"
+msgstr "Pictograme categorii"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Apps description"
+msgstr "Descrierea aplicațiilor"
+
+#: ../contents/ui/Header.qml
+msgid "Keep Open"
+msgstr "Păstrați deschis"
+
+#: ../contents/ui/Header.qml
+msgid "Fullscreen view"
+msgstr "Vizualizare pe ecran complet"
+
+#: ../contents/ui/KickoffGridView.qml
+msgid "Grid with %1 rows, %2 columns"
+msgstr "Grilă cu %1 rânduri, %2 coloane"
+
+#: ../contents/ui/Kickoff.qml
+msgid "Edit Applications…"
+msgstr "Editați aplicațiile..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Open icon chooser dialog"
+msgid "Choose…"
+msgstr "Alege..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Reset icon to default"
+msgid "Reset to default icon"
+msgstr "Resetarea la pictograma implicită"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:inmenu"
+msgid "Remove icon"
+msgstr "Pictograma Eliminare"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@label:textbox"
+msgid "Text label:"
+msgstr "Etichetă text:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:placeholder"
+msgid "Type here to add a text label"
+msgstr "Tastați aici pentru a adăuga o etichetă text"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info"
+msgid "A text label cannot be set when the Panel is vertical."
+msgstr "O etichetă text nu poate fi setată atunci când panoul este vertical."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:button"
+msgid "Configure Enabled Search Plugins…"
+msgstr "Configurați plugin-urile de căutare activate..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a grid'"
+msgid "In a grid"
+msgstr "Într-o grilă"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a list'"
+msgid "In a list"
+msgstr "Într-o listă"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a grid'"
+msgid "In a grid"
+msgstr "Într-o grilă"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a list'"
+msgid "In a list"
+msgstr "Într-o listă"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a grid'"
+msgid "In a grid"
+msgstr "Într-o grilă"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a list'"
+msgid "In a list"
+msgstr "Într-o listă"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "General options"
+msgid "General:"
+msgstr "General:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:usagetip under a checkbox when Touch Mode is on"
+msgid "Automatically disabled when in Touch Mode"
+msgstr "Dezactivat automat atunci când vă aflați în modul tactil"

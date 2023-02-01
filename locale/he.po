@@ -1,0 +1,224 @@
+# Translation of appsmenu in LANGUAGE
+# Copyright (C) 2023
+# This file is distributed under the same license as the appsmenu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: appsmenu\n"
+"Report-Msgid-Bugs-To: https://github.com/biglinux/plasma-appsmenu-biglinux\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: attranslate\n"
+
+#: ../metadata.desktop
+msgid "BigLinux Application Launcher"
+msgstr "משגר היישומים של BigLinux"
+
+#: ../metadata.desktop
+msgid "Launcher to start applications"
+msgstr "מפעיל להפעלת יישומים"
+
+#: ../contents/config/config.qml
+msgid "General"
+msgstr "כללי"
+
+#: ../contents/ui/code/tools.js
+msgid "Remove from Favorites"
+msgstr "הסר מהמועדפים"
+
+#: ../contents/ui/code/tools.js
+msgid "Add to Favorites"
+msgstr "הוסף למועדפים"
+
+#: ../contents/ui/code/tools.js
+msgid "On All Activities"
+msgstr "על כל הפעילויות"
+
+#: ../contents/ui/code/tools.js
+msgid "On the Current Activity"
+msgstr "על הפעילות הנוכחית"
+
+#: ../contents/ui/code/tools.js
+msgid "Show in Favorites"
+msgstr "הצג במועדפים"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Icon:"
+msgstr "סמל:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header options"
+msgstr "אפשרויות כותרת עליונה"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power/session button"
+msgstr "לחצן הפעלה/הפעלה"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Fullscreen button"
+msgstr "לחצן 'מסך מלא'"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Menu settings button"
+msgstr "לחצן 'הגדרות תפריט'"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Pin button"
+msgstr "לחצן 'הצמד'"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header system actions button:"
+msgstr "לחצן 'פעולות מערכת כותרת עליונה':"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power"
+msgstr "כח"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Session"
+msgstr "הפעלה"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Shutdown"
+msgstr "כיבוי"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power and session"
+msgstr "עוצמה וסשן"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Favorites"
+msgstr "מועדפים"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show favorites category"
+msgstr " הקטגוריה 'הצג מועדפים'"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Show applications"
+msgstr "הצג יישומים"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "system actions"
+msgstr "פעולות מערכת"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show power/session category"
+msgstr " הצגת הקטגוריה 'צריכת חשמל/הפעלה'"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Always sort applications alphabetically"
+msgstr "מיון תמיד של יישומים לפי סדר אלפביתי"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Use compact categories style"
+msgstr "שימוש בסגנון קטגוריות קומפקטיות"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "All apps category"
+msgstr "קטגוריית כל האפליקציות"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Categories icons"
+msgstr "סמלי קטגוריות"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Apps description"
+msgstr "תיאור אפליקציות"
+
+#: ../contents/ui/Header.qml
+msgid "Keep Open"
+msgstr "השאר פתוח"
+
+#: ../contents/ui/Header.qml
+msgid "Fullscreen view"
+msgstr "תצוגת מסך מלא"
+
+#: ../contents/ui/KickoffGridView.qml
+msgid "Grid with %1 rows, %2 columns"
+msgstr "רשת עם %1 שורות, %2 עמודות"
+
+#: ../contents/ui/Kickoff.qml
+msgid "Edit Applications…"
+msgstr "ערוך יישומים..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Open icon chooser dialog"
+msgid "Choose…"
+msgstr "בחר..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Reset icon to default"
+msgid "Reset to default icon"
+msgstr "סמל איפוס לברירת המחדל"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:inmenu"
+msgid "Remove icon"
+msgstr "סמל הסרה"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@label:textbox"
+msgid "Text label:"
+msgstr "תווית טקסט:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:placeholder"
+msgid "Type here to add a text label"
+msgstr "הקלד כאן כדי להוסיף תווית טקסט"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info"
+msgid "A text label cannot be set when the Panel is vertical."
+msgstr "לא ניתן להגדיר תווית טקסט כשהחלונית אנכית."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:button"
+msgid "Configure Enabled Search Plugins…"
+msgstr "קביעת תצורה של תוספי חיפוש מופעלים..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a grid'"
+msgid "In a grid"
+msgstr "ברשת"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a list'"
+msgid "In a list"
+msgstr "ברשימה"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a grid'"
+msgid "In a grid"
+msgstr "ברשת"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a list'"
+msgid "In a list"
+msgstr "ברשימה"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a grid'"
+msgid "In a grid"
+msgstr "ברשת"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a list'"
+msgid "In a list"
+msgstr "ברשימה"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "General options"
+msgid "General:"
+msgstr "כללי:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:usagetip under a checkbox when Touch Mode is on"
+msgid "Automatically disabled when in Touch Mode"
+msgstr "מופעל באופן אוטומטי במצב מגע"

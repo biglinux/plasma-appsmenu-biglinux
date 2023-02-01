@@ -1,0 +1,224 @@
+# Translation of appsmenu in LANGUAGE
+# Copyright (C) 2023
+# This file is distributed under the same license as the appsmenu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: appsmenu\n"
+"Report-Msgid-Bugs-To: https://github.com/biglinux/plasma-appsmenu-biglinux\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: attranslate\n"
+
+#: ../metadata.desktop
+msgid "BigLinux Application Launcher"
+msgstr "BigLinux Application Launcher"
+
+#: ../metadata.desktop
+msgid "Launcher to start applications"
+msgstr "启动器以启动应用程序"
+
+#: ../contents/config/config.qml
+msgid "General"
+msgstr "常规"
+
+#: ../contents/ui/code/tools.js
+msgid "Remove from Favorites"
+msgstr "从收藏夹中删除"
+
+#: ../contents/ui/code/tools.js
+msgid "Add to Favorites"
+msgstr "添加到收藏夹"
+
+#: ../contents/ui/code/tools.js
+msgid "On All Activities"
+msgstr "关于所有活动"
+
+#: ../contents/ui/code/tools.js
+msgid "On the Current Activity"
+msgstr "关于当前活动"
+
+#: ../contents/ui/code/tools.js
+msgid "Show in Favorites"
+msgstr "在收藏夹中显示"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Icon:"
+msgstr "图标："
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header options"
+msgstr "标头选项"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power/session button"
+msgstr "电源/会话按钮"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Fullscreen button"
+msgstr "“全屏”按钮"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Menu settings button"
+msgstr "菜单设置按钮"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Pin button"
+msgstr "固定按钮"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header system actions button:"
+msgstr "标头系统操作按钮："
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power"
+msgstr "权力"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Session"
+msgstr "会期"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Shutdown"
+msgstr "关闭"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power and session"
+msgstr "电源和会话"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Favorites"
+msgstr "收藏 夹"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show favorites category"
+msgstr " 显示收藏夹类别"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Show applications"
+msgstr "显示应用程序"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "system actions"
+msgstr "系统操作"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show power/session category"
+msgstr " 显示电源/会话类别"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Always sort applications alphabetically"
+msgstr "始终按字母顺序对应用程序进行排序"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Use compact categories style"
+msgstr "使用紧凑类别样式"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "All apps category"
+msgstr "所有应用类别"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Categories icons"
+msgstr "类别图标"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Apps description"
+msgstr "应用说明"
+
+#: ../contents/ui/Header.qml
+msgid "Keep Open"
+msgstr "保持开放"
+
+#: ../contents/ui/Header.qml
+msgid "Fullscreen view"
+msgstr "全屏视图"
+
+#: ../contents/ui/KickoffGridView.qml
+msgid "Grid with %1 rows, %2 columns"
+msgstr "包含 %1 行、%2 列的网格"
+
+#: ../contents/ui/Kickoff.qml
+msgid "Edit Applications…"
+msgstr "编辑应用程序..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Open icon chooser dialog"
+msgid "Choose…"
+msgstr "选择。。。"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Reset icon to default"
+msgid "Reset to default icon"
+msgstr "重置为默认图标"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:inmenu"
+msgid "Remove icon"
+msgstr "“删除”图标"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@label:textbox"
+msgid "Text label:"
+msgstr "文本标签："
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:placeholder"
+msgid "Type here to add a text label"
+msgstr "在此处键入以添加文本标签"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info"
+msgid "A text label cannot be set when the Panel is vertical."
+msgstr "当面板为垂直时，无法设置文本标签。"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:button"
+msgid "Configure Enabled Search Plugins…"
+msgstr "配置已启用的搜索插件..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a grid'"
+msgid "In a grid"
+msgstr "在网格中"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a list'"
+msgid "In a list"
+msgstr "在列表中"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a grid'"
+msgid "In a grid"
+msgstr "在网格中"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a list'"
+msgid "In a list"
+msgstr "在列表中"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a grid'"
+msgid "In a grid"
+msgstr "在网格中"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a list'"
+msgid "In a list"
+msgstr "在列表中"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "General options"
+msgid "General:"
+msgstr "常规："
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:usagetip under a checkbox when Touch Mode is on"
+msgid "Automatically disabled when in Touch Mode"
+msgstr "在触摸模式下自动禁用"

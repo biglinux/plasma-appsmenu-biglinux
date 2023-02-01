@@ -1,0 +1,224 @@
+# Translation of appsmenu in LANGUAGE
+# Copyright (C) 2023
+# This file is distributed under the same license as the appsmenu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: appsmenu\n"
+"Report-Msgid-Bugs-To: https://github.com/biglinux/plasma-appsmenu-biglinux\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: attranslate\n"
+
+#: ../metadata.desktop
+msgid "BigLinux Application Launcher"
+msgstr "Запускач програм BigLinux"
+
+#: ../metadata.desktop
+msgid "Launcher to start applications"
+msgstr "Лаунчер для запуску додатків"
+
+#: ../contents/config/config.qml
+msgid "General"
+msgstr "Загальне"
+
+#: ../contents/ui/code/tools.js
+msgid "Remove from Favorites"
+msgstr "Видалити з уподобань"
+
+#: ../contents/ui/code/tools.js
+msgid "Add to Favorites"
+msgstr "Додати в обране"
+
+#: ../contents/ui/code/tools.js
+msgid "On All Activities"
+msgstr "Про всі види діяльності"
+
+#: ../contents/ui/code/tools.js
+msgid "On the Current Activity"
+msgstr "Про поточну діяльність"
+
+#: ../contents/ui/code/tools.js
+msgid "Show in Favorites"
+msgstr "Показати в уподобаннях"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Icon:"
+msgstr "Ікона:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header options"
+msgstr "Параметри заголовка"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power/session button"
+msgstr "Кнопка живлення/сеансу"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Fullscreen button"
+msgstr "Повноекранна кнопка"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Menu settings button"
+msgstr "Кнопка налаштувань меню"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Pin button"
+msgstr "Кнопка закріплення"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header system actions button:"
+msgstr "Кнопка системних дій заголовка:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power"
+msgstr "Міць"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Session"
+msgstr "Сеанс"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Shutdown"
+msgstr "Завершення роботи"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power and session"
+msgstr "Потужність і сесія"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Favorites"
+msgstr "Уподобання"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show favorites category"
+msgstr " Категорія \"Показати вподобання\""
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Show applications"
+msgstr "Показати додатки"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "system actions"
+msgstr "системні дії"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show power/session category"
+msgstr " Показати категорію живлення/сеансу"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Always sort applications alphabetically"
+msgstr "Завжди сортування програм за алфавітом"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Use compact categories style"
+msgstr "Використання стилю компактних категорій"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "All apps category"
+msgstr "Категорія \"Усі програми\""
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Categories icons"
+msgstr "Значки категорій"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Apps description"
+msgstr "Опис програм"
+
+#: ../contents/ui/Header.qml
+msgid "Keep Open"
+msgstr "Залишайтеся відкритими"
+
+#: ../contents/ui/Header.qml
+msgid "Fullscreen view"
+msgstr "Повноекранний режим перегляду"
+
+#: ../contents/ui/KickoffGridView.qml
+msgid "Grid with %1 rows, %2 columns"
+msgstr "Сітка з рядками %1, стовпцями %2"
+
+#: ../contents/ui/Kickoff.qml
+msgid "Edit Applications…"
+msgstr "Редагувати програми..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Open icon chooser dialog"
+msgid "Choose…"
+msgstr "Вибирати..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Reset icon to default"
+msgid "Reset to default icon"
+msgstr "Скинути до піктограми за замовчуванням"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:inmenu"
+msgid "Remove icon"
+msgstr "Піктограма видалення"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@label:textbox"
+msgid "Text label:"
+msgstr "Текстова мітка:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:placeholder"
+msgid "Type here to add a text label"
+msgstr "Введіть тут, щоб додати текстову мітку"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info"
+msgid "A text label cannot be set when the Panel is vertical."
+msgstr "Текстову мітку не можна встановити, коли панель вертикальна."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:button"
+msgid "Configure Enabled Search Plugins…"
+msgstr "Налаштуйте увімкнені плагіни пошуку..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a grid'"
+msgid "In a grid"
+msgstr "У сітці"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a list'"
+msgid "In a list"
+msgstr "У списку"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a grid'"
+msgid "In a grid"
+msgstr "У сітці"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a list'"
+msgid "In a list"
+msgstr "У списку"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a grid'"
+msgid "In a grid"
+msgstr "У сітці"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a list'"
+msgid "In a list"
+msgstr "У списку"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "General options"
+msgid "General:"
+msgstr "Загальне:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:usagetip under a checkbox when Touch Mode is on"
+msgid "Automatically disabled when in Touch Mode"
+msgstr "Автоматично вимикається в режимі сенсорного вводу"

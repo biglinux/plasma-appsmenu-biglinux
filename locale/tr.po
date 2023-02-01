@@ -1,0 +1,224 @@
+# Translation of appsmenu in LANGUAGE
+# Copyright (C) 2023
+# This file is distributed under the same license as the appsmenu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: appsmenu\n"
+"Report-Msgid-Bugs-To: https://github.com/biglinux/plasma-appsmenu-biglinux\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: attranslate\n"
+
+#: ../metadata.desktop
+msgid "BigLinux Application Launcher"
+msgstr "BigLinux Uygulama Başlatıcısı"
+
+#: ../metadata.desktop
+msgid "Launcher to start applications"
+msgstr "Uygulamaları başlatmak için Başlatıcı"
+
+#: ../contents/config/config.qml
+msgid "General"
+msgstr "Genel"
+
+#: ../contents/ui/code/tools.js
+msgid "Remove from Favorites"
+msgstr "Sık Kullanılanlardan Kaldır"
+
+#: ../contents/ui/code/tools.js
+msgid "Add to Favorites"
+msgstr "Sık Kullanılanlara Ekle"
+
+#: ../contents/ui/code/tools.js
+msgid "On All Activities"
+msgstr "Tüm Aktivitelerde"
+
+#: ../contents/ui/code/tools.js
+msgid "On the Current Activity"
+msgstr "Mevcut Faaliyet Hakkında"
+
+#: ../contents/ui/code/tools.js
+msgid "Show in Favorites"
+msgstr "Favorilerde Göster"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Icon:"
+msgstr "İkon:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header options"
+msgstr "Başlık seçenekleri"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power/session button"
+msgstr "Güç/oturum düğmesi"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Fullscreen button"
+msgstr "Tam ekran düğmesi"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Menu settings button"
+msgstr "Menü ayarları düğmesi"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Pin button"
+msgstr "İğne düğmesi"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header system actions button:"
+msgstr "Başlık sistemi eylemleri düğmesi:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power"
+msgstr "Güç"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Session"
+msgstr "Oturum"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Shutdown"
+msgstr "Kapatma"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power and session"
+msgstr "Güç ve oturum"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Favorites"
+msgstr "Sık kullanılanlar"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show favorites category"
+msgstr " Sık kullanılanlar kategorisini göster"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Show applications"
+msgstr "Uygulamaları göster"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "system actions"
+msgstr "sistem eylemleri"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show power/session category"
+msgstr " Güç/oturum kategorisini göster"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Always sort applications alphabetically"
+msgstr "Uygulamaları her zaman alfabetik olarak sıralayın"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Use compact categories style"
+msgstr "Kompakt kategoriler stilini kullanma"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "All apps category"
+msgstr "Tüm uygulamalar kategorisi"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Categories icons"
+msgstr "Kategoriler simgeleri"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Apps description"
+msgstr "Uygulama açıklaması"
+
+#: ../contents/ui/Header.qml
+msgid "Keep Open"
+msgstr "Açık Tutun"
+
+#: ../contents/ui/Header.qml
+msgid "Fullscreen view"
+msgstr "Tam ekran görünümü"
+
+#: ../contents/ui/KickoffGridView.qml
+msgid "Grid with %1 rows, %2 columns"
+msgstr "%1 satırlı, %2 sütunlu ızgara"
+
+#: ../contents/ui/Kickoff.qml
+msgid "Edit Applications…"
+msgstr "Uygulamaları Düzenle..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Open icon chooser dialog"
+msgid "Choose…"
+msgstr "Seçmek..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Reset icon to default"
+msgid "Reset to default icon"
+msgstr "Varsayılan simgeye sıfırla"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:inmenu"
+msgid "Remove icon"
+msgstr "Simge kaldır"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@label:textbox"
+msgid "Text label:"
+msgstr "Metin etiketi:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:placeholder"
+msgid "Type here to add a text label"
+msgstr "Metin etiketi eklemek için buraya yazın"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info"
+msgid "A text label cannot be set when the Panel is vertical."
+msgstr "Panel dikey olduğunda metin etiketi ayarlanamaz."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:button"
+msgid "Configure Enabled Search Plugins…"
+msgstr "Etkin Arama Eklentilerini Yapılandır..."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a grid'"
+msgid "In a grid"
+msgstr "Bir ızgarada"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a list'"
+msgid "In a list"
+msgstr "Bir listede"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a grid'"
+msgid "In a grid"
+msgstr "Bir ızgarada"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a list'"
+msgid "In a list"
+msgstr "Bir listede"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a grid'"
+msgid "In a grid"
+msgstr "Bir ızgarada"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a list'"
+msgid "In a list"
+msgstr "Bir listede"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "General options"
+msgid "General:"
+msgstr "Genel:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:usagetip under a checkbox when Touch Mode is on"
+msgid "Automatically disabled when in Touch Mode"
+msgstr "Dokunmatik Mod'dayken otomatik olarak devre dışı bırakılır"
