@@ -42,9 +42,9 @@ jobs:
         run: |
           cd ..
           git clone https://github.com/biglinux/big-auto-translator.git
-          mv big-auto-translator/gettext_po_generator_github.sh .
+          mv big-auto-translator/gettext_po_only_translate_fom_en_github.sh .
           gitfolder=$(echo ${{ github.repository }} | rev | cut -d "/" -f1 | rev)
-          bash gettext_po_generator_github.sh $gitfolder
+          bash gettext_po_only_translate_fom_en_github.sh $gitfolder
           
       ## Tmate ##
       #- name: Setup tmate session
