@@ -1,0 +1,223 @@
+# Translation of appsmenu in LANGUAGE
+# Copyright (C) 2023
+# This file is distributed under the same license as the appsmenu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: appsmenu\n"
+"Report-Msgid-Bugs-To: https://github.com/biglinux/plasma-appsmenu-biglinux\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../metadata.desktop
+msgid "BigLinux Application Launcher"
+msgstr "BigLinux Application Launcher"
+
+#: ../metadata.desktop
+msgid "Launcher to start applications"
+msgstr "Launcher to start applications"
+
+#: ../contents/config/config.qml
+msgid "General"
+msgstr "General"
+
+#: ../contents/ui/code/tools.js
+msgid "Remove from Favorites"
+msgstr "Remove from Favorites"
+
+#: ../contents/ui/code/tools.js
+msgid "Add to Favorites"
+msgstr "Add to Favorites"
+
+#: ../contents/ui/code/tools.js
+msgid "On All Activities"
+msgstr "On All Activities"
+
+#: ../contents/ui/code/tools.js
+msgid "On the Current Activity"
+msgstr "On the Current Activity"
+
+#: ../contents/ui/code/tools.js
+msgid "Show in Favorites"
+msgstr "Show in Favorites"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Icon:"
+msgstr "Icon:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Open icon chooser dialog"
+msgid "Choose…"
+msgstr "Choose…"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@item:inmenu Reset icon to default"
+msgid "Reset to default icon"
+msgstr "Reset to default icon"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:inmenu"
+msgid "Remove icon"
+msgstr "Remove icon"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@label:textbox"
+msgid "Text label:"
+msgstr "Text label:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:placeholder"
+msgid "Type here to add a text label"
+msgstr "Type here to add a text label"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info"
+msgid "A text label cannot be set when the Panel is vertical."
+msgstr "A text label cannot be set when the Panel is vertical."
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header options"
+msgstr "Header options"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power/session button"
+msgstr "Power/session button"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Fullscreen button"
+msgstr "Fullscreen button"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Menu settings button"
+msgstr "Menu settings button"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Pin button"
+msgstr "Pin button"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@action:button"
+msgid "Configure Enabled Search Plugins…"
+msgstr "Configure Enabled Search Plugins…"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Header system actions button:"
+msgstr "Header system actions button:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power"
+msgstr "Power"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Session"
+msgstr "Session"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Shutdown"
+msgstr "Shutdown"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Power and session"
+msgstr "Power and session"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Favorites"
+msgstr "Favorites"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show favorites category"
+msgstr " Show favorites category"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a grid'"
+msgid "In a grid"
+msgstr "In a grid"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show favorites in a list'"
+msgid "In a list"
+msgstr "In a list"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Show applications"
+msgstr "Show applications"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a grid'"
+msgid "In a grid"
+msgstr "In a grid"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show other applications in a list'"
+msgid "In a list"
+msgstr "In a list"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "system actions"
+msgstr "system actions"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid " Show power/session category"
+msgstr " Show power/session category"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a grid'"
+msgid "In a grid"
+msgstr "In a grid"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "Part of a sentence: 'Show system actions in a list'"
+msgid "In a list"
+msgstr "In a list"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "General options"
+msgid "General:"
+msgstr "General:"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Always sort applications alphabetically"
+msgstr "Always sort applications alphabetically"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Use compact categories style"
+msgstr "Use compact categories style"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgctxt "@info:usagetip under a checkbox when Touch Mode is on"
+msgid "Automatically disabled when in Touch Mode"
+msgstr "Automatically disabled when in Touch Mode"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "All apps category"
+msgstr "All apps category"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Categories icons"
+msgstr "Categories icons"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Apps description"
+msgstr "Apps description"
+
+#: ../contents/ui/Header.qml
+msgid "Keep Open"
+msgstr "Keep Open"
+
+#: ../contents/ui/Header.qml
+msgid "Fullscreen view"
+msgstr "Fullscreen view"
+
+#: ../contents/ui/KickoffGridView.qml
+msgid "Grid with %1 rows, %2 columns"
+msgstr "Grid with %1 rows, %2 columns"
+
+#: ../contents/ui/Kickoff.qml
+msgid "Edit Applications…"
+msgstr "Edit Applications…"
