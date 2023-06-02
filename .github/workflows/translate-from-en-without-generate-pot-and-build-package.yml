@@ -1,26 +1,15 @@
 name: Translate and Build Package
 
-# Controls when the workflow will run
 on:
   workflow_dispatch:
   
   push:
-    #branches: [ "master", "main", "*" ]
-    branches: [ "*" ]
-  pull_request:
-    #branches: [ "master", "main", "*" ]
     branches: [ "*" ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       
       - name: Install Translator Dependencies
@@ -46,10 +35,6 @@ jobs:
           gitfolder=$(echo ${{ github.repository }} | rev | cut -d "/" -f1 | rev)
           bash gettext_po_only_translate_fom_en_github.sh $gitfolder
           
-      ## Tmate ##
-      #- name: Setup tmate session
-        #uses: mxschmitt/action-tmate@v3 
-        
       - name: Update github
         run: |
           git add --all
