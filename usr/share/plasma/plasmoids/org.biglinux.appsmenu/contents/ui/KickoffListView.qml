@@ -51,6 +51,20 @@ EmptyPage {
         }
     }
 
+    footer: MouseArea {
+        implicitHeight: KickoffSingleton.listItemMetrics.margins.bottom
+        hoverEnabled: true
+        onEntered: {
+            if (containsMouse) {
+                let targetIndex = view.indexAt(mouseX + view.contentX, view.height + view.contentY - 1)
+                if (targetIndex >= 0) {
+                    view.currentIndex = targetIndex
+                    view.forceActiveFocus(Qt.MouseFocusReason)
+                }
+            }
+        }
+    }
+
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             contentWidth, // exclude padding to avoid scrollbars automatically affecting implicitWidth
                             implicitHeaderWidth2)
@@ -91,7 +105,7 @@ EmptyPage {
         rightMargin: plasmoid.rootItem.backgroundMetrics.rightPadding
 
         currentIndex: count > 0 ? 0 : -1
-        // focus: true
+        focus: true
         interactive: height < contentHeight
         pixelAligned: true
         reuseItems: true
