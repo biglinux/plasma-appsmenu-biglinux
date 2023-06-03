@@ -17,6 +17,7 @@ import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.kirigami 2.13 as Kirigami
 import org.kde.kcoreaddons 1.0 as KCoreAddons
 import org.kde.kquickcontrolsaddons 2.0 as KQuickAddons
+import QtQuick.Window 2.2
 
 PlasmaExtras.PlasmoidHeading {
     id: root
@@ -181,6 +182,7 @@ PlasmaExtras.PlasmoidHeading {
             id: fullscreenButton
             checkable: true
             visible: plasmoid.configuration.showFullscreenButton
+            checked: root.width >= Screen.width / 1.02 ? true : false
             icon.name: "view-fullscreen"
             text: i18n("Fullscreen view")
             display: PC3.ToolButton.IconOnly
