@@ -68,7 +68,7 @@ EmptyPage {
         MouseArea {
             z: -1
             anchors.fill: parent
-            onClicked: plasmoid.expanded = !plasmoid.expanded
+            onClicked: plasmoid.configuration.closeOnEmptySpace == true ? plasmoid.expanded = !plasmoid.expanded : null
         }
 
         Accessible.role: Accessible.List
