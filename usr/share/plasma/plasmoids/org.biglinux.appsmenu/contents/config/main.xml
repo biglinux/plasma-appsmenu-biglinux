@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
-    http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0     http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
     <kcfgfile name=""/>
     <group name="General">
         <entry name="icon" type="String">
@@ -11,7 +8,7 @@
         </entry>
         <entry name="menuLabel" type="string">
             <label>Text label for the Panel button</label>
-            <default></default>
+            <default/>
         </entry>
         <entry name="showRecentDocsCategory" type="Bool">
             <label>show/hide recent documents category</label>
@@ -85,13 +82,17 @@
             <label>How to display system actions: 0 = Grid, 1 = List</label>
             <default>0</default>
         </entry>
-         <entry name="primaryActions" type="Int">
+        <entry name="primaryActions" type="Int">
             <label>Which actions should be displayed in the header: 0 = Power, 1 = Session, 2 = shutdown, 3 = Power and session</label>
             <default>2</default>
-        </entry>  
+        </entry>
         <entry name="showAppsdescription" type="Bool">
             <label>show/hide applications description.</label>
             <default>false</default>
+        </entry>
+        <entry name="closeOnEmptySpace" type="Bool">
+            <label>turn quit clicking on a menu empty space on/off</label>
+            <default>true</default>
         </entry>
     </group>
 </kcfg>
