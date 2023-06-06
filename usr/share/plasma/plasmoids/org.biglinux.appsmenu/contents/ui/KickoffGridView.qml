@@ -39,21 +39,7 @@ EmptyPage {
             }
         }
     }
-
-    footer: MouseArea {
-        implicitHeight: KickoffSingleton.listItemMetrics.margins.bottom
-        hoverEnabled: true
-        onEntered: {
-            if (containsMouse) {
-                let targetIndex = view.indexAt(mouseX + view.contentX, view.height + view.contentY - 1)
-                if (targetIndex >= 0) {
-                    view.currentIndex = targetIndex
-                    view.forceActiveFocus(Qt.MouseFocusReason)
-                }
-            }
-        }
-    }
-
+    
     /* Not setting GridView as the contentItem because GridView has no way to
      * set horizontal alignment. I don't want to use leftPadding/rightPadding
      * for that because I'd have to change the implicitWidth formula and use a
@@ -70,6 +56,13 @@ EmptyPage {
         // NOTE: parent is the contentItem that Control subclasses automatically
         // create when no contentItem is set, but content is added.
         height: parent.height
+        
+        MouseArea {
+            z: -1
+            anchors.fill: parent
+            onClicked: plasmoid.expanded = !plasmoid.expanded
+        }
+        
         // There are lots of ways to try to center the content of a GridView
         // and many of them have bad visual flaws. This way works pretty well.
         // Not center aligning when there might be a scrollbar to keep click target positions consistent.
