@@ -32,6 +32,7 @@ ColumnLayout {
     property alias cfg_showSettingsButton: showSettingsButton.checked
     property alias cfg_compactMode: compactModeCheckbox.checked
     property alias cfg_showAppsdescription: showAppsdescription.checked 
+    property alias cfg_closeOnEmptySpace: closeOnEmptySpace.checked
     property int cfg_favoritesDisplay: plasmoid.configuration.favoritesDisplay
     property int cfg_applicationsDisplay: plasmoid.configuration.applicationsDisplay
     property int cfg_systemDisplay: plasmoid.configuration.systemDisplay
@@ -339,6 +340,12 @@ ColumnLayout {
             id: showAppsdescription
             text: i18n("Apps description")
         }
+        
+        CheckBox {
+            id: closeOnEmptySpace
+            text: i18n("Clicking on empty space the menu will close")
+        }
+        
        /* CheckBox {
             id: sideBarRightside
             text: i18n("Categories on the right side")

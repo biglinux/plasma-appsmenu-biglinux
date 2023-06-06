@@ -60,7 +60,7 @@ EmptyPage {
         MouseArea {
             z: -1
             anchors.fill: parent
-            onClicked: plasmoid.expanded = !plasmoid.expanded
+            onClicked: plasmoid.configuration.closeOnEmptySpace == true ? plasmoid.expanded = !plasmoid.expanded : null
         }
         
         // There are lots of ways to try to center the content of a GridView
