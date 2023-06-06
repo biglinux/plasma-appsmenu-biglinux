@@ -64,6 +64,12 @@ EmptyPage {
         readonly property real availableWidth: width - leftMargin - rightMargin
         readonly property real availableHeight: height - topMargin - bottomMargin
         property bool movedWithKeyboard: false
+        
+        MouseArea {
+            z: -1
+            anchors.fill: parent
+            onClicked: plasmoid.expanded = !plasmoid.expanded
+        }
 
         Accessible.role: Accessible.List
 
