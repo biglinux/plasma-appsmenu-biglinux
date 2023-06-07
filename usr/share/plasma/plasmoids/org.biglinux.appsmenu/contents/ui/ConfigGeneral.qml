@@ -26,19 +26,21 @@ ColumnLayout {
     property alias cfg_showAllAppsCategory: showAllAppscategory.checked
     property alias cfg_showCategoryIcons: showCategoryIcons.checked
     property alias cfg_showFavoritesCategory: showFavoritesCategory.checked
-    //property alias cfg_menuright: sideBarRightside.checked
     //property alias cfg_showRecentDocsCategory: showRecentDocsCategory.checked
     property alias cfg_showFullscreenButton: showFullScreenButton.checked
     property alias cfg_showSettingsButton: showSettingsButton.checked
     property alias cfg_compactMode: compactModeCheckbox.checked
     property alias cfg_showAppsdescription: showAppsdescription.checked 
     property alias cfg_closeOnEmptySpace: closeOnEmptySpace.checked
+    property alias cfg_sidebarOnRight: sidebarOnRight.checked
+    property alias cfg_showSeparator: showSeparator.checked
     property int cfg_favoritesDisplay: plasmoid.configuration.favoritesDisplay
     property int cfg_applicationsDisplay: plasmoid.configuration.applicationsDisplay
     property int cfg_systemDisplay: plasmoid.configuration.systemDisplay
     property var cfg_systemFavorites: String(plasmoid.configuration.systemFavorites)
     property int cfg_primaryActions: plasmoid.configuration.primaryActions
     //property alias cfg_menuPosition: menuPosition.currentIndex
+    //property alias cfg_homePage: homePage.currentIndex
     
     Kirigami.FormLayout {
         Button {
@@ -150,6 +152,20 @@ ColumnLayout {
         
         
     }*/
+//         ComboBox {
+//             id: homePage
+// 
+//             Kirigami.FormData.label: i18n("Choose menu homepage:")
+//             
+//             model: plasmoid.rootItem.rootModel
+//             delegate: KickoffListDelegate {
+//                 width: homePage.availableWidth + 20
+//                 isCategory: model.hasChildren
+//             }
+//             onActivated: cfg_homepage = currentIndex
+//             
+//             
+//         }
        Item {
             Kirigami.FormData.isSection: true
             Kirigami.FormData.label: i18n("Header options")
@@ -346,10 +362,14 @@ ColumnLayout {
             text: i18n("Clicking on empty space the menu will close")
         }
         
-       /* CheckBox {
-            id: sideBarRightside
-            text: i18n("Categories on the right side")
-        } */
+       CheckBox {
+            id: sidebarOnRight
+            text: i18n("Show categories sidebar on the right side")
+        } 
+        CheckBox {
+            id: showSeparator
+            text: i18n("Show separator between categories and apps")
+        } 
         
         /*CheckBox {
             id: showRecentAppsCategory

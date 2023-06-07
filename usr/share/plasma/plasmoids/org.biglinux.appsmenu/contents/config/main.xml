@@ -94,5 +94,13 @@
             <label>turn quit clicking on a menu empty space on/off</label>
             <default>true</default>
         </entry>
+        <entry name="sidebarOnRight" type="Bool">
+            <label>show category sidebar on the right side</label>
+            <default>false</default>
+        </entry>
+        <entry name="showSeparator" type="Bool">
+            <label>show separator between categories and apps</label>
+            <default>false</default>
+        </entry>
     </group>
 </kcfg>
