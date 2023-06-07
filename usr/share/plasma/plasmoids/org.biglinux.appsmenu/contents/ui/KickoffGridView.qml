@@ -17,6 +17,7 @@ import org.kde.kirigami 2.16 as Kirigami
 // Using EmptyPage instead.
 EmptyPage {
     id: root
+    
     property alias model: view.model
     property alias count: view.count
     property alias currentIndex: view.currentIndex
@@ -281,20 +282,35 @@ EmptyPage {
             }
         }
     }
-
-    PC3.Label {
-                id: descriptionLabel
-
-                visible: plasmoid.configuration.showAppsdescription
-                enabled: false
-                text: currentItem.description
-                textFormat: Text.PlainText
-                font: PlasmaCore.Theme.smallestFont
-                elide: root.ElideRight
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                rightPadding: 20
-                bottomPadding: 20
-                maximumLineCount: 1
-            }
+    
+    
+    Rectangle {
+        anchors.fill: descriptionLabel
+        anchors.centerIn: descriptionLabel
+        color: PlasmaCore.ColorScope.backgroundColor
+        radius: 10
+    }
+                
+    Text {
+        id: descriptionLabel
+        
+        visible: plasmoid.configuration.showAppsdescription
+        text: currentItem.description
+        
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        font: PlasmaCore.Theme.smallestFont
+        color: PlasmaCore.Theme.textColor
+        opacity: 0.8
+        anchors {
+            right: view.right
+            rightMargin: 20
+            bottom: view.bottom
+            bottomMargin: 20
+        }
+        padding: 10
+        maximumLineCount: 1
+                
+    }
+    
 }
