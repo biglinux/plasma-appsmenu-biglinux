@@ -285,10 +285,14 @@ EmptyPage {
     
     
     Rectangle {
+        id: descriptionBackground
+       
+        visible: plasmoid.configuration.showAppsdescription
         anchors.fill: descriptionLabel
         anchors.centerIn: descriptionLabel
         color: PlasmaCore.ColorScope.backgroundColor
         radius: 10
+        
     }
                 
     Text {
@@ -296,7 +300,6 @@ EmptyPage {
         
         visible: plasmoid.configuration.showAppsdescription
         text: currentItem.description
-        
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font: PlasmaCore.Theme.smallestFont
