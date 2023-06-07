@@ -4,9 +4,11 @@
     SPDX-FileCopyrightText: 2015-2018 Eike Hein <hein@kde.org>
     SPDX-FileCopyrightText: 2021 Mikel Johnson <mikel5764@gmail.com>
     SPDX-FileCopyrightText: 2021 Noah Davis <noahadvs@gmail.com>
+    SPDX-FileCopyrightText: 2023 Douglas Guimarães <dg2003gh@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Templates 2.15 as T
@@ -82,10 +84,35 @@ FocusScope {
         id: separator
         visible: plasmoid.configuration.showSeparator
         anchors {
-            left: plasmoid.configuration.sidebarOnRight == true ? sideBarFilter.left : sideBarFilter.right
             top: parent.top
             bottom: parent.bottom
         }
+        
+        states: [
+             State {
+                name: "reanchorToLeft" ; when: plasmoid.configuration.sidebarOnRight == false
+
+                AnchorChanges {
+                    target: separator
+                    anchors {
+                        right: undefined
+                        left: sideBarFilter.right
+                    }
+                }
+            },
+            
+            State {
+                name: "reanchorToRight" ; when: plasmoid.configuration.sidebarOnRight == true
+
+                AnchorChanges {
+                    target: separator
+                    anchors {
+                        right: sideBarFilter.left
+                        left: undefined
+                    }
+                }
+            }
+        ]
         implicitWidth: naturalSize.width
         implicitHeight: implicitWidth
         elementId: "vertical-line"
@@ -95,11 +122,35 @@ FocusScope {
         id: contentAreaLoader
         focus: true
         anchors {
-            right: plasmoid.configuration.sidebarOnRight == true ? separator.right : parent.right
-            left: plasmoid.configuration.sidebarOnRight == true ? parent.left : separator.left
             top: parent.top
             bottom: parent.bottom
         }
+        
+        states: [
+             State {
+                name: "reanchorToLeft" ; when: plasmoid.configuration.sidebarOnRight == false
+
+                AnchorChanges {
+                    target: contentAreaLoader
+                    anchors {
+                        right: parent.right
+                        left: separator.left
+                    }
+                }
+            },
+            
+            State {
+                name: "reanchorToRight" ; when: plasmoid.configuration.sidebarOnRight == true
+
+                AnchorChanges {
+                    target: contentAreaLoader
+                    anchors {
+                        right: separator.right
+                        left: parent.left
+                    }
+                }
+            }
+        ]
         KeyNavigation.backtab: root.sideBarItem
         KeyNavigation.left: sideBarLoader
         Keys.onUpPressed: plasmoid.rootItem.searchField.forceActiveFocus(Qt.BacktabFocusReason)
