@@ -284,9 +284,10 @@ EmptyPage {
 
     PC3.Label {
                 id: descriptionLabel
+
                 visible: plasmoid.configuration.showAppsdescription
                 enabled: false
-                text: itemDelegate.appsdescription
+                text: currentItem.description
                 textFormat: Text.PlainText
                 font: PlasmaCore.Theme.smallestFont
                 elide: root.ElideRight
