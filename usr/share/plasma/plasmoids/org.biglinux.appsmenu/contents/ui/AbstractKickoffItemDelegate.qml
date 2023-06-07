@@ -191,9 +191,9 @@ T.ItemDelegate {
     }
 
     PC3.ToolTip.text: {
-        if (root.labelTruncated && root.descriptionTruncated) {
+        if (root.labelTruncated && root.descriptionTruncated && plasmoid.configuration.showAppsdescription == false) {
             return `${text} (${description})`
-        } else if (root.descriptionTruncated || !root.descriptionVisible) {
+        } else if (root.descriptionTruncated || !root.descriptionVisible && plasmoid.configuration.showAppsdescription == false) {
             return description
         }
         return ""
