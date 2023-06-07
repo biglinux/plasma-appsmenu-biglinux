@@ -30,14 +30,41 @@ FocusScope {
 
     implicitWidth: root.preferredSideBarWidth + separator.implicitWidth + contentAreaLoader.implicitWidth
     implicitHeight: Math.max(root.preferredSideBarHeight, contentAreaLoader.implicitHeight)
-
+    
     Kicker.TriangleMouseFilter {
         id: sideBarFilter
+        
         anchors {
-            left: parent.left
             top: parent.top
             bottom: parent.bottom
         }
+        
+        states: [
+             State {
+                name: "reanchorToLeft" ; when: plasmoid.configuration.sidebarOnRight == false
+
+                AnchorChanges {
+                    target: sideBarFilter
+                    anchors {
+                        right: undefined
+                        left: parent.left
+                    }
+                }
+            },
+            
+            State {
+                name: "reanchorToRight" ; when: plasmoid.configuration.sidebarOnRight == true
+
+                AnchorChanges {
+                    target: sideBarFilter
+                    anchors {
+                        right: parent.right
+                        left: undefined
+                    }
+                }
+            }
+        ]
+        
         implicitWidth: root.preferredSideBarWidth
         implicitHeight: root.preferredSideBarHeight
         edge: LayoutMirroring.enabled ? Qt.LeftEdge : Qt.RightEdge
@@ -53,9 +80,9 @@ FocusScope {
     }
     PlasmaCore.SvgItem {
         id: separator
-        visible: false
+        visible: plasmoid.configuration.showSeparator
         anchors {
-            left: sideBarFilter.right
+            left: plasmoid.configuration.sidebarOnRight == true ? sideBarFilter.left : sideBarFilter.right
             top: parent.top
             bottom: parent.bottom
         }
@@ -68,8 +95,8 @@ FocusScope {
         id: contentAreaLoader
         focus: true
         anchors {
-            left: separator.right
-            right: parent.right
+            right: plasmoid.configuration.sidebarOnRight == true ? separator.right : parent.right
+            left: plasmoid.configuration.sidebarOnRight == true ? parent.left : separator.left
             top: parent.top
             bottom: parent.bottom
         }
