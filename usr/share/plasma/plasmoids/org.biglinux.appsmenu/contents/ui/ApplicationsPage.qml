@@ -73,12 +73,6 @@ BasePage {
         readonly property Kicker.AppsModel appsModel: plasmoid.rootItem.rootModel.modelForRow(appsModelRow)
         focus: true
         initialItem: plasmoid.configuration.showFavoritesCategory == true ? preferredFavoritesViewComponent : preferredAppsViewComponent
-                    
-        
-        Kicker.SystemModel {
-        id: systemModel
-        favoritesModel: plasmoid.rootItem.rootModel.systemFavoritesModel
-        }
     
         Component {
             id: favoritesListViewComponent
@@ -151,8 +145,7 @@ BasePage {
                 id: systemListView
                 objectName: "systemListView"
                 mainContentView: true
-                focus: true
-                model: systemModel
+                model: plasmoid.rootItem.systemModel
             }
         }
 
@@ -162,7 +155,7 @@ BasePage {
                 id: systemGridView
                 objectName: "systemGridView"
                 focus: true
-                model: systemModel
+                model: plasmoid.rootItem.systemModel
             }
         }
    

@@ -53,8 +53,8 @@ Item {
 
         showAllApps: plasmoid.configuration.showAllAppsCategory
         showAllAppsCategorized: false
-        showRecentApps: false
-        showRecentDocs: false
+        showRecentApps: false //plasmoid.configuration.showRecentAppsCategory
+        showRecentDocs: false //plasmoid.configuration.showRecentDocsCategory
         showRecentContacts: false
         showPowerSession: plasmoid.configuration.showSystemCategory
         showFavoritesPlaceholder: plasmoid.configuration.showFavoritesCategory
@@ -82,6 +82,10 @@ Item {
         ordering: 1 // Popular / Frequently Used
     }
     
+    readonly property Kicker.SystemModel systemModel: Kicker.SystemModel {
+        favoritesModel: rootModel.systemFavoritesModel
+    }
+        
     //END
 
     //BEGIN UI elements
