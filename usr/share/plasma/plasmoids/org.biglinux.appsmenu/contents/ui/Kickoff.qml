@@ -82,9 +82,9 @@ Item {
         ordering: 1 // Popular / Frequently Used
     }
     
-    readonly property Kicker.SystemModel systemModel: Kicker.SystemModel {
-        favoritesModel: rootModel.systemFavoritesModel
-    }
+    // readonly property Kicker.SystemModel systemModel: Kicker.SystemModel {
+    //     favoritesModel: rootModel.systemFavoritesModel
+    // }
         
     //END
 
