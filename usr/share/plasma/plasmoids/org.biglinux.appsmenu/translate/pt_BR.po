@@ -208,6 +208,18 @@ msgstr "Ícones das categorias"
 msgid "Apps description"
 msgstr "Descrição dos aplicativos"
 
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Clicking on empty space the menu will close"
+msgstr "Ao clicar em um espaço vazio, o menu será fechado"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Show categories sidebar on the right side"
+msgstr "Mostrar barra lateral de categorias no lado direito"
+
+#: ../contents/ui/ConfigGeneral.qml
+msgid "Show separator between categories and apps"
+msgstr "Mostrar separador entre categorias e aplicativos"
+
 #: ../contents/ui/Header.qml
 msgid "Keep Open"
 msgstr "Manter Aberto"
