@@ -6,7 +6,7 @@ pkgrel=$(date +%H%M)
 arch=('any')
 license=('GPL')
 url="https://github.com/biglinux/plasma-appsmenu-biglinux"
-pkgdesc="New customizable menu to plasma"
+pkgdesc="Fork with simplified interface for kickoff plasma Menu"
 depends=('plasma-desktop')
 source=("git+https://github.com/biglinux/plasma-appsmenu-biglinux.git")
 md5sums=(SKIP)
@@ -21,7 +21,6 @@ package() {
     else
         InternalDir="${srcdir}/${pkgname}"
     fi
-
 
     # Copy files
     if [ -d "${InternalDir}/usr" ]; then

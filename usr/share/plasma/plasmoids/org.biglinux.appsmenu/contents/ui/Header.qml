@@ -3,6 +3,7 @@
     SPDX-FileCopyrightText: 2020 Carl Schwan <carl@carlschwan.eu>
     SPDX-FileCopyrightText: 2021 Mikel Johnson <mikel5764@gmail.com>
     SPDX-FileCopyrightText: 2021 Noah Davis <noahadvs@gmail.com>
+
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
@@ -10,84 +11,185 @@ import QtQuick 2.15
 import QtQml 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Templates 2.15 as T
-import QtGraphicalEffects 1.15
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Qt5Compat.GraphicalEffects
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kirigami 2.13 as Kirigami
-import org.kde.kcoreaddons 1.0 as KCoreAddons
-import org.kde.kquickcontrolsaddons 2.0 as KQuickAddons
-import QtQuick.Window 2.2
+import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigamiaddons.components 1.0 as KirigamiComponents
+import org.kde.coreaddons 1.0 as KCoreAddons
+import org.kde.kcmutils as KCM
+import org.kde.config as KConfig
+import org.kde.plasma.plasmoid 2.0
 
 PlasmaExtras.PlasmoidHeading {
     id: root
-    
+
     property alias searchText: searchField.text
-    property alias fullScreenMode: fullscreenButton.checked
-    
-    contentHeight: searchField.implicitHeight
-    contentWidth: searchField.implicitWidth
-    
+    property Item configureButton: configureButton
+    property Item pinButton: pinButton
+    property Item avatar: avatar
+    property real preferredNameAndIconWidth: 0
+
+    contentHeight: Math.max(searchField.implicitHeight, configureButton.implicitHeight)
+
     leftPadding: 0
-    rightPadding: 10
+    rightPadding: 0
     topPadding: Math.round((background.margins.top - background.inset.top) / 2.0)
     bottomPadding: background.margins.bottom + Math.round((background.margins.bottom - background.inset.bottom) / 2.0)
 
-    leftInset: -plasmoid.rootItem.backgroundMetrics.leftPadding
-    rightInset: -plasmoid.rootItem.backgroundMetrics.rightPadding
+    leftInset: -kickoff.backgroundMetrics.leftPadding
+    rightInset: -kickoff.backgroundMetrics.rightPadding
     topInset: -background.margins.top
     bottomInset: 0
 
-    spacing: plasmoid.rootItem.backgroundMetrics.spacing
-        
-            HoverHandler {
-                id: hoverHandler
-                cursorShape: Qt.PointingHandCursor
-            }
-            PC3.ToolTip.text: Accessible.name
-            PC3.ToolTip.visible: hovered
-            PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
+    KCoreAddons.KUser {
+        id: kuser
+    }
 
-            Keys.onLeftPressed: if (LayoutMirroring.enabled) {
-                searchField.forceActiveFocus(Qt.TabFocusReason)
+    spacing: kickoff.backgroundMetrics.spacing
+
+    function tabSetFocus(event, invertedTarget, normalTarget) {
+        // Set input focus depending on whether layout order matches focus chain order
+        // normalTarget is optional
+        const reason = event.key == Qt.Key_Tab ? Qt.TabFocusReason : Qt.BacktabFocusReason
+        if (kickoff.paneSwap) {
+            invertedTarget.forceActiveFocus(reason)
+        } else if (normalTarget !== undefined) {
+            normalTarget.forceActiveFocus(reason)
+        } else {
+            event.accepted = false
+        }
+    }
+
+    RowLayout {
+        id: nameAndIcon
+        // spacing: root.spacing
+        anchors.left: parent.left
+        height: parent.height
+
+        KirigamiComponents.AvatarButton {
+            id: avatar
+            visible: KConfig.KAuthorized.authorizeControlModule("kcm_users")
+
+            Layout.fillHeight: true
+            Layout.minimumWidth: height
+            Layout.maximumWidth: height
+            Layout.leftMargin: kickoff.backgroundMetrics.leftPadding + 6
+
+            text: `${kuser.loginName}
+${kuser.host}`
+            name: kuser.fullName
+            source: kuser.faceIconUrl + "?timestamp=" + Date.now()
+
+            Keys.onTabPressed: event => {
+                tabSetFocus(event, kickoff.firstCentralPane);
             }
-            Keys.onRightPressed: if (!LayoutMirroring.enabled) {
-                searchField.forceActiveFocus(Qt.TabFocusReason)
+            Keys.onBacktabPressed: event => {
+                tabSetFocus(event, nextItemInFocusChain());
             }
-            Keys.onDownPressed: if (plasmoid.rootItem.sideBar) {
-                plasmoid.rootItem.sideBar.forceActiveFocus(Qt.TabFocusReason)
-            } else {
-                plasmoid.rootItem.contentArea.forceActiveFocus(Qt.TabFocusReason)
+            Keys.onLeftPressed: event => {
+                if (kickoff.sideBarOnRight) {
+                    searchField.forceActiveFocus(Qt.application.layoutDirection == Qt.RightToLeft ? Qt.TabFocusReason : Qt.BacktabFocusReason)
+                }
+            }
+            Keys.onRightPressed: event => {
+                if (!kickoff.sideBarOnRight) {
+                    searchField.forceActiveFocus(Qt.application.layoutDirection == Qt.RightToLeft ? Qt.BacktabFocusReason : Qt.TabFocusReason)
+                }
+            }
+            Keys.onDownPressed: event => {
+                if (kickoff.sideBar) {
+                    kickoff.sideBar.forceActiveFocus(Qt.TabFocusReason)
+                } else {
+                    kickoff.contentArea.forceActiveFocus(Qt.TabFocusReason)
+                }
             }
 
+            onClicked: KCM.KCMLauncher.openSystemSettings("kcm_users")
+        }
+
+        // MouseArea {
+        //     id: nameAndInfoMouseArea
+        //     hoverEnabled: true
+
+        //     Layout.fillHeight: true
+        //     Layout.fillWidth: true
+
+        //     // Kirigami.Heading {
+        //     //     id: nameLabel
+        //     //     anchors.fill: parent
+        //     //     opacity: parent.containsMouse ? 0 : 1
+        //     //     color: Kirigami.Theme.textColor
+        //     //     level: 4
+        //     //     text: kuser.fullName
+        //     //     elide: Text.ElideRight
+        //     //     horizontalAlignment: kickoff.paneSwap ? Text.AlignRight : Text.AlignLeft
+        //     //     verticalAlignment: Text.AlignVCenter
+
+        //     //     Behavior on opacity {
+        //     //         NumberAnimation {
+        //     //             duration: Kirigami.Units.longDuration
+        //     //             easing.type: Easing.InOutQuad
+        //     //         }
+        //     //     }
+        //     // }
+
+        //     // Kirigami.Heading {
+        //     //     id: infoLabel
+        //     //     anchors.fill: parent
+        //     //     level: 5
+        //     //     opacity: parent.containsMouse ? 1 : 0
+        //     //     color: Kirigami.Theme.textColor
+        //     //     text: kuser.os !== "" ? `${kuser.loginName}@${kuser.host} (${kuser.os})` : `${kuser.loginName}@${kuser.host}`
+        //     //     elide: Text.ElideRight
+        //     //     horizontalAlignment: kickoff.paneSwap ? Text.AlignRight : Text.AlignLeft
+        //     //     verticalAlignment: Text.AlignVCenter
+
+        //     //     Behavior on opacity {
+        //     //         NumberAnimation {
+        //     //             duration: Kirigami.Units.longDuration
+        //     //             easing.type: Easing.InOutQuad
+        //     //         }
+        //     //     }
+        //     // }
+
+        //     PC3.ToolTip.text: infoLabel.text
+        //     PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
+        //     PC3.ToolTip.visible: infoLabel.truncated && containsMouse
+        // }
+    }
+    
     RowLayout {
         id: rowLayout
         spacing: root.spacing
         height: parent.height
         anchors {
-            left: parent.left
+            left: nameAndIcon.right
             right: parent.right
         }
-        Keys.onDownPressed: plasmoid.rootItem.contentArea.forceActiveFocus(Qt.TabFocusReason)
+        LayoutMirroring.enabled: kickoff.sideBarOnRight
+        Keys.onDownPressed: event => {
+            kickoff.contentArea.forceActiveFocus(Qt.TabFocusReason);
+        }
 
         PlasmaExtras.SearchField {
             id: searchField
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
             Layout.fillWidth: true
-            Layout.leftMargin: plasmoid.rootItem.backgroundMetrics.leftPadding
+            Layout.leftMargin: kickoff.backgroundMetrics.leftPadding + 10
             focus: true
 
             Binding {
-                target: plasmoid.rootItem
+                target: kickoff
                 property: "searchField"
                 value: searchField
                 // there's only one header ever, so don't waste resources
                 restoreMode: Binding.RestoreNone
             }
             Connections {
-                target: plasmoid
+                target: kickoff
                 function onExpandedChanged() {
-                    if (plasmoid.expanded) {
+                    if (kickoff.expanded) {
                         searchField.clear()
                     }
                 }
@@ -96,120 +198,51 @@ PlasmaExtras.PlasmoidHeading {
                 searchField.forceActiveFocus(Qt.ShortcutFocusReason)
             }
             onAccepted: {
-                plasmoid.rootItem.contentArea.currentItem.action.triggered()
-                plasmoid.rootItem.contentArea.currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
+                kickoff.contentArea.currentItem.action.triggered()
+                kickoff.contentArea.currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
             }
             Keys.priority: Keys.AfterItem
-            Keys.forwardTo: plasmoid.rootItem.contentArea !== null ? plasmoid.rootItem.contentArea.view : []
-            Keys.onLeftPressed: if (activeFocus) {
-                if (LayoutMirroring.enabled) {
-                    nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
-                } else {
-                    nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
+            Keys.forwardTo: kickoff.contentArea !== null ? kickoff.contentArea.view : []
+            Keys.onTabPressed: event => {
+                tabSetFocus(event, nextItemInFocusChain(false));
+            }
+            Keys.onBacktabPressed: event => {
+                tabSetFocus(event, nextItemInFocusChain());
+            }
+            Keys.onLeftPressed: event => {
+                if (activeFocus) {
+                    nextItemInFocusChain(kickoff.sideBarOnRight).forceActiveFocus(
+                        Qt.application.layoutDirection === Qt.RightToLeft ? Qt.TabFocusReason : Qt.BacktabFocusReason)
                 }
             }
-            Keys.onRightPressed: if (activeFocus) {
-                if (!LayoutMirroring.enabled) {
-                    nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
-                } else {
-                    nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
+            Keys.onRightPressed: event => {
+                if (activeFocus) {
+                    nextItemInFocusChain(!kickoff.sideBarOnRight).forceActiveFocus(
+                        Qt.application.layoutDirection === Qt.RightToLeft ? Qt.BacktabFocusReason : Qt.TabFocusReason)
                 }
             }
         }
-        
-         PC3.ToolButton {
-            id: configureButton
-            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-            visible: plasmoid.configuration.showSettingsButton
-            icon.name: "configure"
-            text: plasmoid.action("configure").text
-            display: PC3.ToolButton.IconOnly
 
-            PC3.ToolTip.text: text
-            PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
-            PC3.ToolTip.visible: hovered
-            Keys.onLeftPressed: if (LayoutMirroring.enabled) {
-                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
-            } else {
-                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
-            }
-            Keys.onRightPressed: if (!LayoutMirroring.enabled) {
-                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
-            } else {
-                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
-            }
-            onClicked: plasmoid.action("configure").trigger()
-        }
+            LeaveButtons {
+            id: configureButton // from footer id: leaveButtons
 
-        PC3.ToolButton {
-            checkable: true
-            checked: plasmoid.configuration.pin
-            visible: plasmoid.configuration.showPinButton
-            icon.name: "window-pin"
-            text: i18n("Keep Open")
-            display: PC3.ToolButton.IconOnly
-            PC3.ToolTip.text: text
-            PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
-            PC3.ToolTip.visible: hovered
-            Binding {
-                target: plasmoid
-                property: "hideOnWindowDeactivate"
-                value: !plasmoid.configuration.pin
-                // there should be no other bindings, so don't waste resources
-                restoreMode: Binding.RestoreNone
-            }
-            
-            KeyNavigation.backtab: fullscreenButton
-            KeyNavigation.tab: if (plasmoid.rootItem.sideBar) {
-                return plasmoid.rootItem.sideBar
-            } else {
-                return nextItemInFocusChain()
-            }
-            Keys.onLeftPressed: if (LayoutMirroring.enabled) {
-                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
-            } else {
-                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
-            }
-            Keys.onRightPressed: if (!LayoutMirroring.enabled) {
-                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
-            } else {
-                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
-            }
-            onToggled: plasmoid.configuration.pin = checked
-          }
-        
-         PC3.ToolButton {
-            id: fullscreenButton
-            checkable: true
-            visible: plasmoid.configuration.showFullscreenButton
-            checked: root.width >= Screen.width / 1.02 ? true : false
-            icon.name: "view-fullscreen"
-            text: i18n("Fullscreen view")
-            display: PC3.ToolButton.IconOnly
+            Layout.alignment: Qt.AlignRight
+            Layout.fillWidth: false
+            Layout.leftMargin: kickoff.backgroundMetrics.leftPadding
 
-            PC3.ToolTip.text: text
-            PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
-            PC3.ToolTip.visible: hovered
-            Keys.onLeftPressed: if (LayoutMirroring.enabled) {
-                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
-            } else {
-                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
-            }
-            Keys.onRightPressed: if (!LayoutMirroring.enabled) {
-                nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
-            } else {
-                nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
-            }
-        }
-         
-     LeaveButtons {
-        id: leaveButtons
         anchors {
             right: parent.right
             top: parent.top
             bottom: parent.bottom
             leftMargin: root.spacing
         }
+        shouldCollapseButtons: root.contentWidth + root.spacing + buttonImplicitWidth > root.width
+        Keys.onUpPressed: event => {
+            kickoff.lastCentralPane.forceActiveFocus(Qt.BacktabFocusReason);
+        }
     }
-  } 
+
+
+
+    }
 }

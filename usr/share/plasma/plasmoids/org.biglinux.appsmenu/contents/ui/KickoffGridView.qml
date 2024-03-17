@@ -8,23 +8,25 @@
 
 import QtQuick 2.15
 import QtQml 2.15
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PC2
+
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.kirigami 2.16 as Kirigami
+import org.kde.plasma.extras as PlasmaExtras
+
+import org.kde.ksvg 1.0 as KSvg
+import org.kde.kirigami 2.20 as Kirigami
 
 // ScrollView makes it difficult to control implicit size using the contentItem.
 // Using EmptyPage instead.
 EmptyPage {
     id: root
-    
     property alias model: view.model
     property alias count: view.count
     property alias currentIndex: view.currentIndex
     property alias currentItem: view.currentItem
     property alias delegate: view.delegate
+    property alias blockTargetWheel: wheelHandler.blockTargetWheel
     property alias view: view
-    
+
     clip: view.height < view.contentHeight
 
     header: MouseArea {
@@ -40,7 +42,21 @@ EmptyPage {
             }
         }
     }
-    
+
+    footer: MouseArea {
+        implicitHeight: KickoffSingleton.listItemMetrics.margins.bottom
+        hoverEnabled: true
+        onEntered: {
+            if (containsMouse) {
+                let targetIndex = view.indexAt(mouseX + view.contentX, view.height + view.contentY - 1)
+                if (targetIndex >= 0) {
+                    view.currentIndex = targetIndex
+                    view.forceActiveFocus(Qt.MouseFocusReason)
+                }
+            }
+        }
+    }
+
     /* Not setting GridView as the contentItem because GridView has no way to
      * set horizontal alignment. I don't want to use leftPadding/rightPadding
      * for that because I'd have to change the implicitWidth formula and use a
@@ -53,22 +69,16 @@ EmptyPage {
         readonly property int columns: Math.floor(availableWidth / cellWidth)
         readonly property int rows: Math.floor(availableHeight / cellHeight)
         property bool movedWithKeyboard: false
+        property bool movedWithWheel: false
 
         // NOTE: parent is the contentItem that Control subclasses automatically
         // create when no contentItem is set, but content is added.
         height: parent.height
-        
-        MouseArea {
-            z: -1
-            anchors.fill: parent
-            onClicked: plasmoid.configuration.closeOnEmptySpace == true ? plasmoid.expanded = !plasmoid.expanded : null
-        }
-        
         // There are lots of ways to try to center the content of a GridView
         // and many of them have bad visual flaws. This way works pretty well.
         // Not center aligning when there might be a scrollbar to keep click target positions consistent.
-        anchors.horizontalCenter: plasmoid.rootItem.mayHaveGridWithScrollBar ? undefined : parent.horizontalCenter
-        anchors.horizontalCenterOffset: if (plasmoid.rootItem.mayHaveGridWithScrollBar) {
+        anchors.horizontalCenter: kickoff.mayHaveGridWithScrollBar ? undefined : parent.horizontalCenter
+        anchors.horizontalCenterOffset: if (kickoff.mayHaveGridWithScrollBar) {
             if (root.mirrored) {
                 return verticalScrollBar.implicitWidth/2
             } else {
@@ -77,25 +87,25 @@ EmptyPage {
         } else {
             return 0
         }
-        width: Math.min(parent.width, Math.floor((parent.width - leftMargin - rightMargin) / cellWidth) * cellWidth + leftMargin + rightMargin)
+        width: Math.min(parent.width, Math.floor((parent.width - leftMargin - rightMargin - (kickoff.mayHaveGridWithScrollBar ? verticalScrollBar.implicitWidth : 0)) / cellWidth) * cellWidth + leftMargin + rightMargin)
 
         Accessible.description: i18n("Grid with %1 rows, %2 columns", rows, columns) // can't use i18np here
 
 
         implicitWidth: {
-            let w = view.cellWidth * 4 + leftMargin + rightMargin
-            if (plasmoid.rootItem.mayHaveGridWithScrollBar) {
+            let w = view.cellWidth * 2 + leftMargin + rightMargin + 2
+            if (kickoff.mayHaveGridWithScrollBar) {
                 w += verticalScrollBar.implicitWidth
             }
             return w
         }
-        implicitHeight: view.cellHeight * 4 + topMargin + bottomMargin
+        implicitHeight: view.cellHeight * kickoff.minimumGridRowCount + topMargin + bottomMargin
 
-        leftMargin: plasmoid.rootItem.backgroundMetrics.leftPadding
-        rightMargin: plasmoid.rootItem.backgroundMetrics.rightPadding
+        leftMargin: kickoff.backgroundMetrics.leftPadding
+        rightMargin: kickoff.backgroundMetrics.rightPadding
 
         cellHeight: KickoffSingleton.gridCellSize
-        cellWidth: PlasmaCore.Units.largeSpacing * 9.5
+        cellWidth: KickoffSingleton.gridCellSize * 1.8
 
         currentIndex: count > 0 ? 0 : -1
         focus: true
@@ -109,26 +119,23 @@ EmptyPage {
         keyNavigationWraps: false
 
         highlightMoveDuration: 0
-        highlight: PlasmaCore.FrameSvgItem {
+        highlight: PlasmaExtras.Highlight {
             // The default Z value for delegates is 1. The default Z value for the section delegate is 2.
             // The highlight gets a value of 3 while the drag is active and then goes back to the default value of 0.
             z: root.currentItem && root.currentItem.Drag.active ?
                 3 : 0
-            opacity: view.activeFocus
-                || (plasmoid.rootItem.contentArea === root
-                    && plasmoid.rootItem.searchField.activeFocus) ? 1 : 0.5
+            pressed: view.currentItem && view.currentItem.isPressed
+            active: view.activeFocus
+                || (kickoff.contentArea === root
+                    && kickoff.searchField.activeFocus)
             width: view.cellWidth
             height: view.cellHeight
-            imagePath: "widgets/viewitem"
-            prefix: "hover"
         }
 
         delegate: KickoffGridDelegate {
             id: itemDelegate
-            
             width: view.cellWidth
             Accessible.role: Accessible.Cell
-            
         }
 
         move: normalTransition
@@ -137,7 +144,7 @@ EmptyPage {
         Transition {
             id: normalTransition
             NumberAnimation {
-                duration: PlasmaCore.Units.shortDuration
+                duration: Kirigami.Units.shortDuration
                 properties: "x, y"
                 easing.type: Easing.OutCubic
             }
@@ -152,19 +159,24 @@ EmptyPage {
         }
 
         Kirigami.WheelHandler {
+            id: wheelHandler
             target: view
             filterMouseEvents: true
             // `20 * Qt.styleHints.wheelScrollLines` is the default speed.
-            // `* PlasmaCore.Units.devicePixelRatio` is needed on X11
-            // because Plasma doesn't support Qt scaling.
-            horizontalStepSize: 20 * Qt.styleHints.wheelScrollLines * PlasmaCore.Units.devicePixelRatio
-            verticalStepSize: 20 * Qt.styleHints.wheelScrollLines * PlasmaCore.Units.devicePixelRatio
+            horizontalStepSize: 20 * Qt.styleHints.wheelScrollLines
+            verticalStepSize: 20 * Qt.styleHints.wheelScrollLines
+
+            onWheel: wheel => {
+                view.movedWithWheel = true
+                view.movedWithKeyboard = false
+                movedWithWheelTimer.restart()
+            }
         }
 
         Connections {
-            target: plasmoid
+            target: kickoff
             function onExpandedChanged() {
-                if (plasmoid.expanded) {
+                if (kickoff.expanded) {
                     view.currentIndex = 0
                     view.positionViewAtBeginning()
                 }
@@ -180,35 +192,48 @@ EmptyPage {
             onTriggered: view.movedWithKeyboard = false
         }
 
+        Timer {
+            id: movedWithWheelTimer
+            interval: 200
+            onTriggered: view.movedWithWheel = false
+        }
+
         function focusCurrentItem(event, focusReason) {
             currentItem.forceActiveFocus(focusReason)
             event.accepted = true
         }
 
-        Keys.onMenuPressed: if (currentItem !== null) {
-            currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
-            currentItem.openActionMenu()
+        Keys.onMenuPressed: event => {
+            if (currentItem !== null) {
+                currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
+                currentItem.openActionMenu()
+            }
         }
-        Keys.onPressed: {
+
+        Keys.onPressed: event => {
             let targetX = currentItem ? currentItem.x : contentX
             let targetY = currentItem ? currentItem.y : contentY
             let targetIndex = currentIndex
             // supports mirroring
-            let atLeft = currentIndex % columns === 0
+            const atLeft = currentIndex % columns === (Qt.application.layoutDirection == Qt.RightToLeft ? columns - 1 : 0)
+            // at the beginning of a line
+            const isLeading = currentIndex % columns === 0
             // at the top of a given column and in the top row
             let atTop = currentIndex < columns
             // supports mirroring
-            let atRight = currentIndex % columns === columns - 1
+            const atRight = currentIndex % columns === (Qt.application.layoutDirection == Qt.RightToLeft ? 0 : columns - 1)
+            // at the end of a line
+            const isTrailing = currentIndex % columns === columns - 1
             // at bottom of a given column, not necessarily in the last row
             let atBottom = currentIndex >= count - columns
             // Implements the keyboard navigation described in https://www.w3.org/TR/wai-aria-practices-1.2/#grid
             if (count > 1) {
                 switch (event.key) {
-                    case Qt.Key_Left: if (!atLeft && !plasmoid.rootItem.searchField.activeFocus) {
+                    case Qt.Key_Left: if (!atLeft && !kickoff.searchField.activeFocus) {
                         moveCurrentIndexLeft()
                         focusCurrentItem(event, Qt.BacktabFocusReason)
                     } break
-                    case Qt.Key_H: if (!atLeft && !plasmoid.rootItem.searchField.activeFocus && event.modifiers & Qt.ControlModifier) {
+                    case Qt.Key_H: if (!atLeft && !kickoff.searchField.activeFocus && event.modifiers & Qt.ControlModifier) {
                         moveCurrentIndexLeft()
                         focusCurrentItem(event, Qt.BacktabFocusReason)
                     } break
@@ -220,11 +245,11 @@ EmptyPage {
                         moveCurrentIndexUp()
                         focusCurrentItem(event, Qt.BacktabFocusReason)
                     } break
-                    case Qt.Key_Right: if (!atRight && !plasmoid.rootItem.searchField.activeFocus) {
+                    case Qt.Key_Right: if (!atRight && !kickoff.searchField.activeFocus) {
                         moveCurrentIndexRight()
                         focusCurrentItem(event, Qt.TabFocusReason)
                     } break
-                    case Qt.Key_L: if (!atRight && !plasmoid.rootItem.searchField.activeFocus && event.modifiers & Qt.ControlModifier) {
+                    case Qt.Key_L: if (!atRight && !kickoff.searchField.activeFocus && event.modifiers & Qt.ControlModifier) {
                         moveCurrentIndexRight()
                         focusCurrentItem(event, Qt.TabFocusReason)
                     } break
@@ -239,7 +264,7 @@ EmptyPage {
                     case Qt.Key_Home: if (event.modifiers === Qt.ControlModifier && currentIndex !== 0) {
                         currentIndex = 0
                         focusCurrentItem(event, Qt.BacktabFocusReason)
-                    } else if (!atLeft) {
+                    } else if (!isLeading) {
                         targetIndex -= currentIndex % columns
                         currentIndex = Math.max(targetIndex, 0)
                         focusCurrentItem(event, Qt.BacktabFocusReason)
@@ -247,7 +272,7 @@ EmptyPage {
                     case Qt.Key_End: if (event.modifiers === Qt.ControlModifier && currentIndex !== count - 1) {
                         currentIndex = count - 1
                         focusCurrentItem(event, Qt.TabFocusReason)
-                    } else if (!atRight) {
+                    } else if (!isTrailing) {
                         targetIndex += columns - 1 - (currentIndex % columns)
                         currentIndex = Math.min(targetIndex, count - 1)
                         focusCurrentItem(event, Qt.TabFocusReason)
@@ -282,38 +307,4 @@ EmptyPage {
             }
         }
     }
-    
-    
-    Rectangle {
-        id: descriptionBackground
-       
-        visible: plasmoid.configuration.showAppsdescription
-        anchors.fill: descriptionLabel
-        anchors.centerIn: descriptionLabel
-        color: PlasmaCore.ColorScope.backgroundColor
-        radius: 10
-        
-    }
-                
-    Text {
-        id: descriptionLabel
-        
-        visible: plasmoid.configuration.showAppsdescription
-        text: currentItem.description
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        font: PlasmaCore.Theme.smallestFont
-        color: PlasmaCore.Theme.textColor
-        opacity: 0.8
-        anchors {
-            right: view.right
-            rightMargin: 20
-            bottom: view.bottom
-            bottomMargin: 20
-        }
-        padding: 10
-        maximumLineCount: 1
-                
-    }
-    
 }
