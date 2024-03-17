@@ -43,7 +43,7 @@
         </entry>
         <entry name="applicationsDisplay" type="Int">
             <label>How to display applications: 0 = Grid, 1 = List</label>
-            <default>1</default>
+            <default>0</default>
         </entry>
         <entry name="alphaSort" type="Bool">
             <label>Whether to sort menu contents alphabetically or use manual/system sort order.</label>
