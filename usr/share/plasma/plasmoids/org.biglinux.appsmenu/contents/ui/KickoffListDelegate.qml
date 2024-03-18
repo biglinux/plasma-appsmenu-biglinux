@@ -30,8 +30,8 @@ AbstractKickoffItemDelegate {
     topPadding: compact ? Kirigami.Units.mediumSpacing : Kirigami.Units.smallSpacing
     bottomPadding: compact ? Kirigami.Units.mediumSpacing : Kirigami.Units.smallSpacing
 
-    icon.width: compact || root.isCategoryListItem ? Kirigami.Units.iconSizes.smallMedium : Kirigami.Units.iconSizes.medium
-    icon.height: compact || root.isCategoryListItem ? Kirigami.Units.iconSizes.smallMedium : Kirigami.Units.iconSizes.medium
+    icon.width: compact || root.isCategoryListItem ? Kirigami.Units.iconSizes.small : Kirigami.Units.iconSizes.medium
+    icon.height: compact || root.isCategoryListItem ? Kirigami.Units.iconSizes.small : Kirigami.Units.iconSizes.medium
 
     labelTruncated: label.truncated
     descriptionTruncated: descriptionLabel.truncated
