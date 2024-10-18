@@ -170,9 +170,9 @@ PlasmaExtras.PlasmoidHeading {
                 target: kickoff
                 property: "searchField"
                 value: searchField
+                // there's only one header ever, so don't waste resources
                 restoreMode: Binding.RestoreNone
             }
-
             Connections {
                 target: kickoff
                 function onExpandedChanged() {
@@ -181,13 +181,33 @@ PlasmaExtras.PlasmoidHeading {
                     }
                 }
             }
-
             onTextEdited: {
                 searchField.forceActiveFocus(Qt.ShortcutFocusReason)
             }
-
+            onAccepted: {
+                kickoff.contentArea.currentItem.action.triggered()
+                kickoff.contentArea.currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
+            }
             Keys.priority: Keys.AfterItem
             Keys.forwardTo: kickoff.contentArea !== null ? kickoff.contentArea.view : []
+            Keys.onTabPressed: event => {
+                tabSetFocus(event, nextItemInFocusChain(false));
+            }
+            Keys.onBacktabPressed: event => {
+                tabSetFocus(event, nextItemInFocusChain());
+            }
+            Keys.onLeftPressed: event => {
+                if (activeFocus) {
+                    nextItemInFocusChain(kickoff.sideBarOnRight).forceActiveFocus(
+                        Qt.application.layoutDirection === Qt.RightToLeft ? Qt.TabFocusReason : Qt.BacktabFocusReason)
+                }
+            }
+            Keys.onRightPressed: event => {
+                if (activeFocus) {
+                    nextItemInFocusChain(!kickoff.sideBarOnRight).forceActiveFocus(
+                        Qt.application.layoutDirection === Qt.RightToLeft ? Qt.BacktabFocusReason : Qt.TabFocusReason)
+                }
+            }
         }
 
         // Placeholder to maintain layout stability
