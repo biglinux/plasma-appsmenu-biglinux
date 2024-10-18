@@ -123,8 +123,6 @@ PlasmoidItem {
     readonly property bool paneSwap: Plasmoid.configuration.paneSwap
     readonly property bool sideBarOnRight: (Qt.application.layoutDirection == Qt.RightToLeft) != paneSwap
     // References to items according to their focus chain order
-    readonly property Item firstHeaderItem: header ? (paneSwap ? header.pinButton : header.avatar) : null
-    readonly property Item lastHeaderItem: header ? (paneSwap ? header.avatar : header.pinButton) : null
     readonly property Item firstCentralPane: paneSwap ? contentArea : sideBar
     readonly property Item lastCentralPane: paneSwap ? sideBar : contentArea
     //END
@@ -265,7 +263,7 @@ PlasmoidItem {
                 Layout.preferredHeight: !kickoff.vertical ? -1 : width * (implicitHeight / implicitWidth)
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
                 source: Tools.iconOrDefault(Plasmoid.formFactor, Plasmoid.icon)
-                active: compactRoot.containsMouse || compactDragArea.containsDrag
+                active: GraphicsInfo.api === GraphicsInfo.Software ? false: (compactRoot.containsMouse || compactDragArea.containsDrag)
                 roundToIconSize: implicitHeight === implicitWidth
                 visible: valid
             }
@@ -280,7 +278,7 @@ PlasmoidItem {
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 
                 source: buttonIcon.valid ? null : Tools.defaultIconName
-                active: compactRoot.containsMouse || compactDragArea.containsDrag
+                active: GraphicsInfo.api === GraphicsInfo.Software ? false : compactRoot.containsMouse || compactDragArea.containsDrag
                 visible: !buttonIcon.valid && Plasmoid.icon !== ""
             }
 

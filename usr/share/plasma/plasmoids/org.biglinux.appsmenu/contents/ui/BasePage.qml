@@ -51,7 +51,7 @@ FocusScope {
                     .forceActiveFocus(Qt.TabFocusReason);
             }
             Keys.onBacktabPressed: event => {
-                (kickoff.paneSwap ? contentAreaLoader : kickoff.header.pinButton)
+                (kickoff.paneSwap ? contentAreaLoader : kickoff.header.configureButton)
                     .forceActiveFocus(Qt.BacktabFocusReason);
             }
             Keys.onLeftPressed: event => {

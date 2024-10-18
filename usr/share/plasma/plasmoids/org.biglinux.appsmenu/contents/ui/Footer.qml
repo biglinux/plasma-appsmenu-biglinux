@@ -149,8 +149,6 @@ PlasmaExtras.PlasmoidHeading {
     LeaveButtons {
         id: leaveButtons
         anchors {
-            right: infoLabel.right
-            top: infoLabel.top
             bottom: parent.bottom
             leftMargin: root.spacing
         }
