@@ -33,6 +33,7 @@ KCM.SimpleKCM {
     property int cfg_primaryActions: Plasmoid.configuration.primaryActions
     property alias cfg_showActionButtonCaptions: showActionButtonCaptions.checked
     property alias cfg_compactMode: compactModeCheckbox.checked
+    property alias cfg_useSymbolicIcons: useSymbolicIconsCheckbox.checked
 
     Kirigami.FormLayout {
         Button {
@@ -157,6 +158,13 @@ KCM.SimpleKCM {
             checked: Kirigami.Settings.tabletMode ? true : Plasmoid.configuration.compactMode
             enabled: !Kirigami.Settings.tabletMode
         }
+        
+        CheckBox {
+            id: useSymbolicIconsCheckbox
+            text: i18n("Use symbolic icons")
+            checked: Plasmoid.configuration.useSymbolicIcons
+        }
+        
         Label {
             visible: Kirigami.Settings.tabletMode
             text: i18nc("@info:usagetip under a checkbox when Touch Mode is on", "Automatically disabled when in Touch Mode")

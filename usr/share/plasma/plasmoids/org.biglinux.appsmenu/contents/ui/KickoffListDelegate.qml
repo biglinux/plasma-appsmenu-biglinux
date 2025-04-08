@@ -51,7 +51,24 @@ AbstractKickoffItemDelegate {
 
             animated: false
             selected: root.iconAndLabelsShouldlookSelected
-            source: root.decoration || root.icon.name || root.icon.source
+
+            source: {
+                if (Plasmoid.configuration.useSymbolicIcons) {
+                    // Simple mode: just use the icon as-is
+                    return root.decoration || root.icon.name || root.icon.source
+                } else {
+                    // Original logic for colored icons
+                    const src = root.decoration || root.icon.name
+                    if (src && src.length > 0) {
+                        if (src.endsWith("-symbolic")) {
+                            return src.slice(0, -9); // Remove "-symbolic"
+                        } else if (root.isCategoryListItem && src.search(/:|\/|\\|-symbolic$/g) === -1) {
+                            return src + "-symbolic"; // Add "-symbolic"
+                        }
+                    }
+                    return src || root.icon.source
+                }
+            }
         }
 
         GridLayout {
