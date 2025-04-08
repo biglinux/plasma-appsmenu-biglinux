@@ -101,8 +101,8 @@ EmptyPage {
         }
         implicitHeight: view.cellHeight * kickoff.minimumGridRowCount + topMargin + bottomMargin
 
-        leftMargin: kickoff.backgroundMetrics.leftPadding
-        rightMargin: kickoff.backgroundMetrics.rightPadding
+        leftMargin: 0
+        rightMargin: 0
 
         cellHeight: KickoffSingleton.gridCellSize
         cellWidth: KickoffSingleton.gridCellSize * 1.8
