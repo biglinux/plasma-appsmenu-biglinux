@@ -27,39 +27,17 @@ BasePage {
     contentAreaComponent: VerticalStackView {
         id: stackView
 
-        popEnter: Transition {
-            NumberAnimation {
-                property: "x"
-                from: 0.5 * root.width
-                to: 0
-                duration: Kirigami.Units.longDuration
-                easing.type: Easing.OutCubic
-            }
-            NumberAnimation {
-                property: "opacity"
-                from: 0.0
-                to: 1.0
-                duration: Kirigami.Units.longDuration
-                easing.type: Easing.OutCubic
-            }
-        }
+        // Add back the property declaration
+        property bool isChangingCategory: false
 
-        pushEnter: Transition {
-            NumberAnimation {
-                property: "x"
-                from: 0.5 * -root.width
-                to: 0
-                duration: Kirigami.Units.longDuration
-                easing.type: Easing.OutCubic
-            }
-            NumberAnimation {
-                property: "opacity"
-                from: 0.0
-                to: 1.0
-                duration: Kirigami.Units.longDuration
-                easing.type: Easing.OutCubic
-            }
-        }
+        // Completely remove animations by setting all transitions to null
+        popEnter: null
+        pushEnter: null
+        popExit: null
+        pushExit: null
+
+        // Disable movement transitions by default to speed up category switching
+        movementTransitionsEnabled: false
 
         readonly property string preferredFavoritesViewObjectName: Plasmoid.configuration.favoritesDisplay === 0 ? "favoritesGridView" : "favoritesListView"
         readonly property Component preferredFavoritesViewComponent: Plasmoid.configuration.favoritesDisplay === 0 ? favoritesGridViewComponent : favoritesListViewComponent
@@ -73,7 +51,39 @@ BasePage {
         property int appsModelRow: 0
         readonly property Kicker.AppsModel appsModel: kickoff.rootModel.modelForRow(appsModelRow)
         focus: true
-        initialItem: preferredFavoritesViewComponent
+        initialItem: getOrCreateView("favorites")
+        
+        // Store view instances to avoid recreation
+        property var viewCache: ({})
+
+        // Function to get an existing view or create one if needed
+        function getOrCreateView(viewType) {
+            if (viewCache[viewType]) {
+                return viewCache[viewType];
+            }
+            
+            var component, view;
+            switch(viewType) {
+                case "favorites":
+                    component = Plasmoid.configuration.favoritesDisplay === 0 ? 
+                        favoritesGridViewComponent : favoritesListViewComponent;
+                    break;
+                case "allApps":
+                    component = Plasmoid.configuration.applicationsDisplay === 0 ? 
+                        listOfGridsViewComponent : applicationsListViewComponent;
+                    break;
+                case "categoryApps":
+                    component = Plasmoid.configuration.applicationsDisplay === 0 ? 
+                        applicationsGridViewComponent : applicationsListViewComponent;
+                    break;
+                default:
+                    component = favoritesListViewComponent;
+            }
+            
+            view = component.createObject(stackView);
+            viewCache[viewType] = view;
+            return view;
+        }
 
         Component {
             id: favoritesListViewComponent
@@ -159,40 +169,40 @@ BasePage {
             }
         }
 
-        onPreferredFavoritesViewComponentChanged: {
-            if (root.sideBarItem !== null && root.sideBarItem.currentIndex === 0) {
-                stackView.replace(stackView.preferredFavoritesViewComponent)
-            }
-        }
-        onPreferredAllAppsViewComponentChanged: {
-            if (root.sideBarItem !== null && root.sideBarItem.currentIndex === 1) {
-                stackView.replace(stackView.preferredAllAppsViewComponent)
-            }
-        }
-        onPreferredAppsViewComponentChanged: {
-            if (root.sideBarItem !== null && root.sideBarItem.currentIndex > 1) {
-                stackView.replace(stackView.preferredAppsViewComponent)
-            }
-        }
-
         Connections {
             target: root.sideBarItem
             function onCurrentIndexChanged() {
+                // Flag that we're changing categories to disable animations
+                stackView.isChangingCategory = true;
+                
                 // Only update row index if the condition is met.
-                // The 0 index modelForRow isn't supposed to be used. That's just how it works.
                 if (root.sideBarItem.currentIndex > 0) {
                     appsModelRow = root.sideBarItem.currentIndex
                 }
-                if (root.sideBarItem.currentIndex === 0
-                    && stackView.currentItem.objectName !== stackView.preferredFavoritesViewObjectName) {
-                    stackView.replace(stackView.preferredFavoritesViewComponent)
-                } else if (root.sideBarItem.currentIndex === 1
-                    && stackView.currentItem.objectName !== stackView.preferredAllAppsViewObjectName) {
-                    stackView.replace(stackView.preferredAllAppsViewComponent)
-                } else if (root.sideBarItem.currentIndex > 1
-                    && stackView.currentItem.objectName !== stackView.preferredAppsViewObjectName) {
-                    stackView.replace(stackView.preferredAppsViewComponent)
+                
+                // Use the view cache to switch views without recreating them
+                if (root.sideBarItem.currentIndex === 0) {
+                    var favoritesView = getOrCreateView("favorites");
+                    if (stackView.currentItem !== favoritesView) {
+                        stackView.replace(favoritesView);
+                    }
+                } else if (root.sideBarItem.currentIndex === 1) {
+                    var allAppsView = getOrCreateView("allApps");
+                    if (stackView.currentItem !== allAppsView) {
+                        stackView.replace(allAppsView);
+                    }
+                } else if (root.sideBarItem.currentIndex > 1) {
+                    var categoryView = getOrCreateView("categoryApps");
+                    // Update the model of the existing view instead of creating a new one
+                    if (stackView.currentItem !== categoryView) {
+                        stackView.replace(categoryView);
+                    }
                 }
+                
+                // Reset the flag after a short delay (to ensure animation skip completes)
+                Qt.callLater(function() {
+                    stackView.isChangingCategory = false;
+                });
             }
         }
         Connections {
@@ -202,6 +212,56 @@ BasePage {
                     kickoff.contentArea.currentItem.forceActiveFocus()
                 }
             }
+        }
+
+        onPreferredFavoritesViewComponentChanged: {
+            stackView.isChangingCategory = true;
+            
+            // Clear the cache to force creation of new views with updated components
+            if (viewCache["favorites"]) {
+                viewCache["favorites"].destroy();
+                delete viewCache["favorites"];
+            }
+            
+            if (root.sideBarItem && root.sideBarItem.currentIndex === 0) {
+                stackView.replace(getOrCreateView("favorites"));
+            }
+
+            Qt.callLater(function() {
+                stackView.isChangingCategory = false;
+            });
+        }
+        onPreferredAllAppsViewComponentChanged: {
+            stackView.isChangingCategory = true;
+            
+            if (viewCache["allApps"]) {
+                viewCache["allApps"].destroy();
+                delete viewCache["allApps"];
+            }
+            
+            if (root.sideBarItem && root.sideBarItem.currentIndex === 1) {
+                stackView.replace(getOrCreateView("allApps"));
+            }
+
+            Qt.callLater(function() {
+                stackView.isChangingCategory = false;
+            });
+        }
+        onPreferredAppsViewComponentChanged: {
+            stackView.isChangingCategory = true;
+            
+            if (viewCache["categoryApps"]) {
+                viewCache["categoryApps"].destroy();
+                delete viewCache["categoryApps"];
+            }
+            
+            if (root.sideBarItem && root.sideBarItem.currentIndex > 1) {
+                stackView.replace(getOrCreateView("categoryApps"));
+            }
+
+            Qt.callLater(function() {
+                stackView.isChangingCategory = false;
+            });
         }
     }
     // NormalPage doesn't get destroyed when deactivated, so the binding uses

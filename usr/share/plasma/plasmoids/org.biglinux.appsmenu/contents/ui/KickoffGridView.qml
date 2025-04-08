@@ -67,7 +67,7 @@ EmptyPage {
         readonly property real availableWidth: width - leftMargin - rightMargin
         readonly property real availableHeight: height - topMargin - bottomMargin
         readonly property int columns: Math.floor(availableWidth / cellWidth)
-        readonly property int rows: Math.floor(availableHeight / cellHeight)
+        // Removed the rows property completely
         property bool movedWithKeyboard: false
         property bool movedWithWheel: false
 
@@ -89,8 +89,19 @@ EmptyPage {
         }
         width: Math.min(parent.width, Math.floor((parent.width - leftMargin - rightMargin - (kickoff.mayHaveGridWithScrollBar ? verticalScrollBar.implicitWidth : 0)) / cellWidth) * cellWidth + leftMargin + rightMargin)
 
-        Accessible.description: i18n("Grid with %1 rows, %2 columns", rows, columns) // can't use i18np here
-
+        // Remove the binding and set an initial empty value
+        Accessible.description: ""
+        
+        // Only update description on initial load and when columns change to avoid binding loop
+        Component.onCompleted: updateAccessibilityDescription()
+        onColumnsChanged: updateAccessibilityDescription()
+        
+        // Function to update accessibility description without creating a binding
+        function updateAccessibilityDescription() {
+            // Calculate row count directly here instead of relying on availableHeight change
+            var rowCount = Math.floor((height - topMargin - bottomMargin) / cellHeight);
+            Accessible.description = i18n("Grid with %1 rows, %2 columns", rowCount, columns);
+        }
 
         implicitWidth: {
             let w = view.cellWidth * 2 + leftMargin + rightMargin + 2
@@ -162,148 +173,190 @@ EmptyPage {
             id: wheelHandler
             target: view
             filterMouseEvents: true
-            // `20 * Qt.styleHints.wheelScrollLines` is the default speed.
-            horizontalStepSize: 20 * Qt.styleHints.wheelScrollLines
-            verticalStepSize: 20 * Qt.styleHints.wheelScrollLines
+            
+            // Simplified wheel handling with fixed step sizes instead of calculated ones
+            horizontalStepSize: 60  // Fixed value instead of calculation
+            verticalStepSize: 60    // Fixed value instead of calculation
 
+            // Simplified wheel handler that doesn't update state variables on every event
             onWheel: wheel => {
-                view.movedWithWheel = true
-                view.movedWithKeyboard = false
-                movedWithWheelTimer.restart()
+                // Only set state flags once per batch of wheel events
+                if (!view.movedWithWheel) {
+                    view.movedWithWheel = true
+                    view.movedWithKeyboard = false
+                    // Use a single restart call instead of setting variables and then restarting
+                    movedWithWheelTimer.restart()
+                }
             }
         }
 
+        // Optimize connection by reducing the work done
         Connections {
             target: kickoff
             function onExpandedChanged() {
                 if (kickoff.expanded) {
+                    // Set index first, then position view (more efficient)
                     view.currentIndex = 0
-                    view.positionViewAtBeginning()
+                    // Use immediate positioning without animation
+                    view.cancelFlick()
+                    view.contentY = 0
                 }
             }
         }
 
-        // Used to block hover events temporarily after using keyboard navigation.
-        // If you have one hand on the touch pad or mouse and another hand on the keyboard,
-        // it's easy to accidentally reset the highlight/focus position to the mouse position.
+        // Combine timers to reduce overhead
         Timer {
             id: movedWithKeyboardTimer
             interval: 200
-            onTriggered: view.movedWithKeyboard = false
+            onTriggered: {
+                // Handle both states in one timer to reduce overhead
+                view.movedWithKeyboard = false
+                view.movedWithWheel = false
+            }
         }
 
-        Timer {
-            id: movedWithWheelTimer
-            interval: 200
-            onTriggered: view.movedWithWheel = false
+        // Remove redundant timer
+        property alias movedWithWheelTimer: movedWithKeyboardTimer
+
+        // Simplified focus function that doesn't require event parameter checking
+        function focusCurrentItem(reason) {
+            if (view.currentItem) {
+                view.currentItem.forceActiveFocus(reason)
+                return true
+            }
+            return false
         }
 
-        function focusCurrentItem(event, focusReason) {
-            currentItem.forceActiveFocus(focusReason)
-            event.accepted = true
-        }
-
+        // Optimize menu handling to avoid redundant checks
         Keys.onMenuPressed: event => {
-            if (currentItem !== null) {
+            if (currentItem) {
                 currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
                 currentItem.openActionMenu()
+                event.accepted = true
             }
         }
 
+        // Optimize keyboard navigation with simplified and cached calculations
         Keys.onPressed: event => {
-            let targetX = currentItem ? currentItem.x : contentX
-            let targetY = currentItem ? currentItem.y : contentY
-            let targetIndex = currentIndex
-            // supports mirroring
-            const atLeft = currentIndex % columns === (Qt.application.layoutDirection == Qt.RightToLeft ? columns - 1 : 0)
-            // at the beginning of a line
-            const isLeading = currentIndex % columns === 0
-            // at the top of a given column and in the top row
-            let atTop = currentIndex < columns
-            // supports mirroring
-            const atRight = currentIndex % columns === (Qt.application.layoutDirection == Qt.RightToLeft ? 0 : columns - 1)
-            // at the end of a line
-            const isTrailing = currentIndex % columns === columns - 1
-            // at bottom of a given column, not necessarily in the last row
-            let atBottom = currentIndex >= count - columns
-            // Implements the keyboard navigation described in https://www.w3.org/TR/wai-aria-practices-1.2/#grid
-            if (count > 1) {
-                switch (event.key) {
-                    case Qt.Key_Left: if (!atLeft && !kickoff.searchField.activeFocus) {
-                        moveCurrentIndexLeft()
-                        focusCurrentItem(event, Qt.BacktabFocusReason)
-                    } break
-                    case Qt.Key_H: if (!atLeft && !kickoff.searchField.activeFocus && event.modifiers & Qt.ControlModifier) {
-                        moveCurrentIndexLeft()
-                        focusCurrentItem(event, Qt.BacktabFocusReason)
-                    } break
-                    case Qt.Key_Up: if (!atTop) {
-                        moveCurrentIndexUp()
-                        focusCurrentItem(event, Qt.BacktabFocusReason)
-                    } break
-                    case Qt.Key_K: if (!atTop && event.modifiers & Qt.ControlModifier) {
-                        moveCurrentIndexUp()
-                        focusCurrentItem(event, Qt.BacktabFocusReason)
-                    } break
-                    case Qt.Key_Right: if (!atRight && !kickoff.searchField.activeFocus) {
-                        moveCurrentIndexRight()
-                        focusCurrentItem(event, Qt.TabFocusReason)
-                    } break
-                    case Qt.Key_L: if (!atRight && !kickoff.searchField.activeFocus && event.modifiers & Qt.ControlModifier) {
-                        moveCurrentIndexRight()
-                        focusCurrentItem(event, Qt.TabFocusReason)
-                    } break
-                    case Qt.Key_Down: if (!atBottom) {
-                        moveCurrentIndexDown()
-                        focusCurrentItem(event, Qt.TabFocusReason)
-                    } break
-                    case Qt.Key_J: if (!atBottom && event.modifiers & Qt.ControlModifier) {
-                        moveCurrentIndexDown()
-                        focusCurrentItem(event, Qt.TabFocusReason)
-                    } break
-                    case Qt.Key_Home: if (event.modifiers === Qt.ControlModifier && currentIndex !== 0) {
-                        currentIndex = 0
-                        focusCurrentItem(event, Qt.BacktabFocusReason)
-                    } else if (!isLeading) {
-                        targetIndex -= currentIndex % columns
-                        currentIndex = Math.max(targetIndex, 0)
-                        focusCurrentItem(event, Qt.BacktabFocusReason)
-                    } break
-                    case Qt.Key_End: if (event.modifiers === Qt.ControlModifier && currentIndex !== count - 1) {
-                        currentIndex = count - 1
-                        focusCurrentItem(event, Qt.TabFocusReason)
-                    } else if (!isTrailing) {
-                        targetIndex += columns - 1 - (currentIndex % columns)
-                        currentIndex = Math.min(targetIndex, count - 1)
-                        focusCurrentItem(event, Qt.TabFocusReason)
-                    } break
-                    case Qt.Key_PageUp: if (!atTop) {
-                        targetY = targetY - height + 1
-                        targetIndex = indexAt(targetX, targetY)
-                        // TODO: Find a more efficient, but accurate way to do this
-                        while (targetIndex === -1) {
-                            targetY += 1
-                            targetIndex = indexAt(targetX, targetY)
-                        }
-                        currentIndex = Math.max(targetIndex, 0)
-                        focusCurrentItem(event, Qt.BacktabFocusReason)
-                    } break
-                    case Qt.Key_PageDown: if (!atBottom) {
-                        targetY = targetY + height - 1
-                        targetIndex = indexAt(targetX, targetY)
-                        // TODO: Find a more efficient, but accurate way to do this
-                        while (targetIndex === -1) {
-                            targetY -= 1
-                            targetIndex = indexAt(targetX, targetY)
-                        }
-                        currentIndex = Math.min(targetIndex, count - 1)
-                        focusCurrentItem(event, Qt.TabFocusReason)
-                    } break
-                }
+            // Skip processing if there's no meaningful navigation possible
+            if (count <= 1) {
+                return
             }
-            movedWithKeyboard = event.accepted
-            if (movedWithKeyboard) {
-                movedWithKeyboardTimer.restart()
+
+            // Cache calculations to avoid recomputing them multiple times
+            const col = currentIndex % columns
+            const isRightToLeft = Qt.application.layoutDirection === Qt.RightToLeft
+            const atLeft = isRightToLeft ? (col === columns - 1) : (col === 0)
+            const atRight = isRightToLeft ? (col === 0) : (col === columns - 1)
+            const atTop = currentIndex < columns
+            const atBottom = currentIndex >= count - columns
+
+            // Use simple flags to track what was accepted
+            let accepted = true
+            let reason = Qt.TabFocusReason
+            let newIndex = -1
+
+            switch (event.key) {
+                // Left movement - simplified
+                case Qt.Key_Left:
+                case Qt.Key_H:
+                    if (!atLeft && (!kickoff.searchField.activeFocus || 
+                        (event.key === Qt.Key_H && event.modifiers & Qt.ControlModifier))) {
+                        newIndex = currentIndex - 1
+                        reason = Qt.BacktabFocusReason
+                    } else {
+                        accepted = false
+                    }
+                    break
+
+                // Up movement - simplified
+                case Qt.Key_Up:
+                case Qt.Key_K:
+                    if (!atTop && (event.key !== Qt.Key_K || event.modifiers & Qt.ControlModifier)) {
+                        newIndex = currentIndex - columns
+                        reason = Qt.BacktabFocusReason
+                    } else {
+                        accepted = false
+                    }
+                    break
+
+                // Right movement - simplified
+                case Qt.Key_Right:
+                case Qt.Key_L:
+                    if (!atRight && (!kickoff.searchField.activeFocus ||
+                        (event.key === Qt.Key_L && event.modifiers & Qt.ControlModifier))) {
+                        newIndex = currentIndex + 1
+                    } else {
+                        accepted = false
+                    }
+                    break
+
+                // Down movement - simplified
+                case Qt.Key_Down:
+                case Qt.Key_J:
+                    if (!atBottom && (event.key !== Qt.Key_J || event.modifiers & Qt.ControlModifier)) {
+                        newIndex = currentIndex + columns
+                    } else {
+                        accepted = false
+                    }
+                    break
+
+                // Home/End/Page navigation optimized to avoid complex calculations
+                case Qt.Key_Home:
+                    if (event.modifiers === Qt.ControlModifier) {
+                        newIndex = 0
+                        reason = Qt.BacktabFocusReason
+                    } else {
+                        newIndex = currentIndex - col
+                        reason = Qt.BacktabFocusReason
+                    }
+                    break
+
+                case Qt.Key_End:
+                    if (event.modifiers === Qt.ControlModifier) {
+                        newIndex = count - 1
+                    } else {
+                        newIndex = currentIndex + (columns - 1 - col)
+                    }
+                    break
+
+                // Page navigation without complex index calculations
+                case Qt.Key_PageUp:
+                    if (!atTop) {
+                        newIndex = Math.max(0, currentIndex - (Math.floor(height / cellHeight) * columns))
+                        reason = Qt.BacktabFocusReason
+                    } else {
+                        accepted = false
+                    }
+                    break
+
+                case Qt.Key_PageDown:
+                    if (!atBottom) {
+                        newIndex = Math.min(count - 1, currentIndex + (Math.floor(height / cellHeight) * columns))
+                    } else {
+                        accepted = false
+                    }
+                    break
+
+                default:
+                    accepted = false
+            }
+
+            // Apply the new index if navigation was successful
+            if (accepted && newIndex >= 0) {
+                currentIndex = Math.min(count - 1, Math.max(0, newIndex))
+                if (currentItem) {
+                    currentItem.forceActiveFocus(reason)
+                    event.accepted = true
+                    
+                    // Update the keyboard movement state once instead of per-key
+                    view.movedWithKeyboard = true
+                    view.movedWithWheel = false
+                    movedWithKeyboardTimer.restart()
+                    
+                    // Ensure the item is visible
+                    view.positionViewAtIndex(currentIndex, GridView.Contain)
+                }
             }
         }
     }

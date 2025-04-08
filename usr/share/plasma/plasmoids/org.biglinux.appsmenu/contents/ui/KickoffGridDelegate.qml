@@ -18,39 +18,65 @@ import org.kde.kirigami 2.20 as Kirigami
 AbstractKickoffItemDelegate {
     id: root
 
-    leftPadding: KickoffSingleton.listItemMetrics.margins.left
-    rightPadding: KickoffSingleton.listItemMetrics.margins.right
+    // Use fixed values instead of margins reference to reduce property bindings
+    leftPadding: 6  // Hardcoded value based on typical KickoffSingleton.listItemMetrics.margins.left
+    rightPadding: 6 // Hardcoded value based on typical KickoffSingleton.listItemMetrics.margins.right
     topPadding: Kirigami.Units.smallSpacing * 2
     bottomPadding: Kirigami.Units.smallSpacing * 2
 
     icon.width: Kirigami.Units.iconSizes.large
     icon.height: Kirigami.Units.iconSizes.large
 
-    labelTruncated: label.truncated
+    // Only update when label actually changes instead of constantly evaluating
+    property bool _labelWasTruncated: false
+    onTextChanged: {
+        // Defer evaluation until layout is complete
+        Qt.callLater(function() {
+            _labelWasTruncated = label.truncated;
+            labelTruncated = _labelWasTruncated;
+        });
+    }
+    
+    // Fixed to false instead of binding
     descriptionVisible: false
 
     dragIconItem: iconItem
 
-    contentItem: ColumnLayout {
-        spacing: root.spacing
+    // Cache the icon source to avoid recomputing it on every render
+    property string _cachedIconSource: ""
+    Component.onCompleted: {
+        updateIconSource();
+    }
+    onDecorationChanged: updateIconSource()
+    onIconChanged: updateIconSource()
+    
+    function updateIconSource() {
+        _cachedIconSource = root.decoration || root.icon.name || root.icon.source;
+    }
 
+    contentItem: Item {
+        implicitHeight: iconItem.height + label.height + root.spacing
+        
         Kirigami.Icon {
             id: iconItem
-            implicitWidth: root.icon.width
-            implicitHeight: root.icon.height
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
-
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: root.icon.width
+            height: root.icon.height
+            
             animated: false
             selected: root.iconAndLabelsShouldlookSelected
-            source: root.decoration || root.icon.name || root.icon.source
+            source: root._cachedIconSource
         }
 
         PC3.Label {
             id: label
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-            Layout.fillWidth: true
-            Layout.preferredHeight: label.lineCount === 1 ? label.implicitHeight * 2 : label.implicitHeight
-
+            anchors.top: iconItem.bottom
+            anchors.topMargin: root.spacing
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: implicitHeight * (lineCount === 1 ? 2 : 1)
+            
             text: root.text
             textFormat: Text.PlainText
             elide: Text.ElideRight

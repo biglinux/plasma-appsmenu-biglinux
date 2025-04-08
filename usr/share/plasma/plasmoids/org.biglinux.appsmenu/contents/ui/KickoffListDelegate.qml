@@ -53,7 +53,10 @@ AbstractKickoffItemDelegate {
             selected: root.iconAndLabelsShouldlookSelected
 
             source: {
-                if (Plasmoid.configuration.useSymbolicIcons) {
+                // Add null check to avoid "TypeError: Cannot read property 'useSymbolicIcons' of undefined"
+                const useSymbolicIcons = Plasmoid && Plasmoid.configuration ? Plasmoid.configuration.useSymbolicIcons : false;
+                
+                if (useSymbolicIcons) {
                     // Simple mode: just use the icon as-is
                     return root.decoration || root.icon.name || root.icon.source
                 } else {
