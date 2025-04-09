@@ -34,6 +34,7 @@ KCM.SimpleKCM {
     property alias cfg_showActionButtonCaptions: showActionButtonCaptions.checked
     property alias cfg_compactMode: compactModeCheckbox.checked
     property alias cfg_useSymbolicIcons: useSymbolicIconsCheckbox.checked
+    property alias cfg_showAllApplications: showAllApplicationsCheckbox.checked
 
     Kirigami.FormLayout {
         Button {
@@ -163,6 +164,12 @@ KCM.SimpleKCM {
             id: useSymbolicIconsCheckbox
             text: i18n("Use symbolic icons")
             checked: Plasmoid.configuration.useSymbolicIcons
+        }
+
+        CheckBox {
+            id: showAllApplicationsCheckbox
+            text: i18n("Show 'All Applications' category")
+            checked: Plasmoid.configuration.showAllApplications
         }
         
         Label {

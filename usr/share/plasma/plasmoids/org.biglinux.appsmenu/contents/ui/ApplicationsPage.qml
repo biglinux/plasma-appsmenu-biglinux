@@ -22,6 +22,35 @@ BasePage {
         delegate: KickoffListDelegate {
             width: view.availableWidth
             isCategoryListItem: true
+            visible: !(index === 1 && !Plasmoid.configuration.showAllApplications) // Hide All Applications when configured
+            height: (index === 1 && !Plasmoid.configuration.showAllApplications) ? 0 : implicitHeight // Remove space when hidden
+        }
+        
+        // Ensure we skip hidden items when navigating
+        function indexIsValid(index) {
+            return index !== 1 || Plasmoid.configuration.showAllApplications;
+        }
+        
+        Keys.onDownPressed: {
+            let nextIndex = currentIndex + 1;
+            while (nextIndex < count && !indexIsValid(nextIndex)) {
+                nextIndex++;
+            }
+            if (nextIndex < count) {
+                currentIndex = nextIndex;
+            }
+            event.accepted = true;
+        }
+        
+        Keys.onUpPressed: {
+            let prevIndex = currentIndex - 1;
+            while (prevIndex >= 0 && !indexIsValid(prevIndex)) {
+                prevIndex--;
+            }
+            if (prevIndex >= 0) {
+                currentIndex = prevIndex;
+            }
+            event.accepted = true;
         }
     }
     contentAreaComponent: VerticalStackView {
