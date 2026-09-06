@@ -7,20 +7,23 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.15
-import QtQml 2.15
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.components 3.0 as PC3
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import QtQuick.Templates as T
+
+import org.kde.plasma.plasmoid
+import org.kde.plasma.components as PC3
 import org.kde.plasma.extras as PlasmaExtras
 
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 
 // ScrollView makes it difficult to control implicit size using the contentItem.
 // Using EmptyPage instead.
 EmptyPage {
     id: root
+
     property alias model: view.model
     property alias count: view.count
     property alias currentIndex: view.currentIndex
@@ -29,6 +32,7 @@ EmptyPage {
     property alias section: view.section
     property alias highlight: view.highlight
     property alias view: view
+    property bool isSidebar: false
 
     property bool mainContentView: false
     property bool hasSectionView: false
@@ -42,10 +46,10 @@ EmptyPage {
 
     header: MouseArea {
         implicitHeight: KickoffSingleton.listItemMetrics.margins.top
-        hoverEnabled: true
+        hoverEnabled: root.mainContentView || Plasmoid.configuration.switchCategoryOnHover
         onEntered: {
             if (containsMouse) {
-                let targetIndex = view.indexAt(mouseX + view.contentX, view.contentY)
+                const targetIndex = view.indexAt(mouseX + view.contentX, view.contentY)
                 if (targetIndex >= 0) {
                     view.currentIndex = targetIndex
                     view.forceActiveFocus(Qt.MouseFocusReason)
@@ -56,10 +60,10 @@ EmptyPage {
 
     footer: MouseArea {
         implicitHeight: KickoffSingleton.listItemMetrics.margins.bottom
-        hoverEnabled: true
+        hoverEnabled: root.mainContentView || Plasmoid.configuration.switchCategoryOnHover
         onEntered: {
             if (containsMouse) {
-                let targetIndex = view.indexAt(mouseX + view.contentX, view.height + view.contentY - 1)
+                const targetIndex = view.indexAt(mouseX + view.contentX, view.height + view.contentY - 1)
                 if (targetIndex >= 0) {
                     view.currentIndex = targetIndex
                     view.forceActiveFocus(Qt.MouseFocusReason)
@@ -88,7 +92,7 @@ EmptyPage {
 
         implicitWidth: {
             let totalMargins = leftMargin + rightMargin
-            if (mainContentView) {
+            if (root.mainContentView) {
                 if (kickoff.mayHaveGridWithScrollBar) {
                     totalMargins += verticalScrollBar.implicitWidth
                 }
@@ -113,7 +117,7 @@ EmptyPage {
         focus: true
         interactive: height < contentHeight
         pixelAligned: true
-        reuseItems: true
+        reuseItems: false // explicitly disabled because it doesn't work correctly with switching models like we do
         boundsBehavior: Flickable.StopAtBounds
         // default keyboard navigation doesn't allow focus reasons to be used
         // and eats up/down key events when at the beginning or end of the list.
@@ -122,33 +126,41 @@ EmptyPage {
 
         // This is actually needed. The highlight will animate from thin to wide otherwise.
         highlightResizeDuration: 0
-        highlightMoveDuration: 0
-        highlight: PlasmaExtras.Highlight {
-            // The default Z value for delegates is 1. The default Z value for the section delegate is 2.
-            // The highlight gets a value of 3 while the drag is active and then goes back to the default value of 0.
-            z: root.currentItem && root.currentItem.Drag.active ?
-                3 : 0
-            pressed: view.currentItem && view.currentItem.isPressed && !view.currentItem.isCategoryListItem
-            active: view.activeFocus
-                || (kickoff.contentArea === root
-                    && kickoff.searchField.activeFocus)
+        highlightFollowsCurrentItem: false
+
+        onCountChanged: {
+            if (!activeFocus) {
+                currentIndex = (count > 0 ? 0 : -1)
+            } else if (count > 0 && currentIndex !== -1) {
+                positionViewAtIndex(currentIndex, ListView.Contain)
+            }
         }
 
         delegate: KickoffListDelegate {
             width: view.availableWidth
         }
 
+        // Without switch-on-hover, it's possible for the selected category and the hovered category to be adjacent.
+        // When this happens, their highlights touch and look ugly without some artificial spacing added.
+        spacing: root.isSidebar && !Plasmoid.configuration.switchCategoryOnHover ? Kirigami.Units.smallSpacing : 0
+
         section {
             property: "group"
             criteria: ViewSection.FullString
+            // BigLinux: plain letter headings, without the separator line a
+            // ListSectionHeader would draw next to them.
             delegate: PC3.AbstractButton {
+                id: sectionHeader
+
+                required property string section
+
                 width: view.availableWidth
                 height: KickoffSingleton.compactListDelegateHeight
 
                 PC3.Label {
                     id: contentLabel
                     anchors.left: parent.left
-                    width: section.length === 1
+                    width: sectionHeader.section.length === 1
                         ? KickoffSingleton.compactListDelegateContentHeight + leftPadding + rightPadding
                         : parent.width
                     height: parent.height
@@ -156,13 +168,14 @@ EmptyPage {
                         ? KickoffSingleton.listItemMetrics.margins.left : 0
                     rightPadding: view.effectiveLayoutDirection === Qt.RightToLeft
                         ? KickoffSingleton.listItemMetrics.margins.right : 0
-                    horizontalAlignment: section.length === 1 ? Text.AlignHCenter : Text.AlignLeft
+                    horizontalAlignment: sectionHeader.section.length === 1 ? Text.AlignHCenter : Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     maximumLineCount: 1
                     elide: Text.ElideRight
                     font.pixelSize: KickoffSingleton.compactListDelegateContentHeight
                     enabled: hoverHandler.hovered
-                    text: section.length === 1 ? section.toUpperCase() : section
+                    text: sectionHeader.section.length === 1
+                        ? sectionHeader.section.toUpperCase() : sectionHeader.section
                     textFormat: Text.PlainText
                 }
 
@@ -213,10 +226,19 @@ EmptyPage {
         Connections {
             target: kickoff
             function onExpandedChanged() {
-                if (kickoff.expanded) {
+                if (!kickoff.expanded) {
                     view.currentIndex = 0
                     view.positionViewAtBeginning()
                 }
+            }
+        }
+
+        Connections {
+            target: kickoff.runnerModel
+            enabled: launchMatchTimer.running
+            function onQueryFinished() : void {
+                launchMatchTimer.stop()
+                Qt.callLater(launchMatchTimer.triggered) // callLater to give bindings time to update
             }
         }
 
@@ -235,29 +257,47 @@ EmptyPage {
             onTriggered: view.movedWithWheel = false
         }
 
+        Timer {
+            id: launchMatchTimer
+            interval: 750
+            onTriggered: {
+                view.currentItem?.action.trigger();
+                currentItem.forceActiveFocus(Qt.ShortcutFocusReason);
+            }
+        }
+
+        onCurrentItemChanged: {
+            if (launchMatchTimer.running && view.currentItem?.text.toLowerCase().includes(kickoff.runnerModel.query.toLowerCase())) {
+                launchMatchTimer.stop()
+                launchMatchTimer.triggered()
+            }
+        }
+
         function focusCurrentItem(event, focusReason) {
             currentItem.forceActiveFocus(focusReason)
+            positionViewAtIndex(currentIndex, ListView.Contain)
             event.accepted = true
         }
 
         Keys.onMenuPressed: event => {
-            if (currentItem !== null) {
-                currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
-                currentItem.openActionMenu()
+            const delegate = currentItem as AbstractKickoffItemDelegate;
+            if (delegate !== null) {
+                delegate.forceActiveFocus(Qt.ShortcutFocusReason)
+                delegate.openActionMenu()
             }
         }
         Keys.onPressed: event => {
-            let targetX = currentItem ? currentItem.x : contentX
+            const targetX = currentItem ? currentItem.x : contentX
             let targetY = currentItem ? currentItem.y : contentY
             let targetIndex = currentIndex
-            let atFirst = currentIndex === 0
-            let atLast = currentIndex === count - 1
-            if (count > 1) {
+            const atFirst = currentIndex === 0
+            const atLast = currentIndex === count - 1
+            if (count >= 1 || (kickoff.runnerModel.querying && [Qt.Key_Return, Qt.Key_Enter].includes(event.key))) {
                 switch (event.key) {
                     case Qt.Key_Up: if (!atFirst) {
                         decrementCurrentIndex()
 
-                        if (currentItem.isSeparator) {
+                        if ((currentItem as AbstractKickoffItemDelegate)?.isSeparator) {
                             decrementCurrentIndex()
                         }
 
@@ -270,7 +310,7 @@ EmptyPage {
                     case Qt.Key_Down: if (!atLast) {
                         incrementCurrentIndex()
 
-                        if (currentItem.isSeparator) {
+                        if ((currentItem as AbstractKickoffItemDelegate)?.isSeparator) {
                             incrementCurrentIndex()
                         }
 
@@ -310,6 +350,19 @@ EmptyPage {
                         currentIndex = Math.min(targetIndex, count - 1)
                         focusCurrentItem(event, Qt.TabFocusReason)
                     } break
+                    case Qt.Key_Return:
+                        /* Fall through*/
+                    case Qt.Key_Enter:
+                        if (launchMatchTimer.running) {
+                            launchMatchTimer.stop()
+                            launchMatchTimer.triggered()
+                        } else if (!kickoff.runnerModel.querying || view.currentItem?.text.toLowerCase().includes(kickoff.runnerModel.query.toLowerCase())) {
+                            launchMatchTimer.triggered()
+                        } else {
+                            launchMatchTimer.start()
+                        }
+                        event.accepted = true;
+                        break;
                 }
             }
             movedWithKeyboard = event.accepted

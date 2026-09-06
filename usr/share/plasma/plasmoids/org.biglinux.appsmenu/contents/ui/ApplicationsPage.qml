@@ -3,56 +3,135 @@
  * SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Templates 2.15 as T
-import QtQml 2.15
-import org.kde.plasma.private.kicker 0.1 as Kicker
-import org.kde.kirigami 2.20 as Kirigami
-import org.kde.plasma.plasmoid 2.0
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import QtQuick.Templates as T
+import org.kde.plasma.private.kicker as Kicker
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.plasmoid
+import org.kde.plasma.extras as PlasmaExtras
 
 BasePage {
     id: root
+
+    property real flashFavorite: 0
+
+    // Flash favorites when adding one.
+    SequentialAnimation {
+        id: flashFavoriteAnimation
+        loops: 2
+        alwaysRunToEnd: true
+
+        NumberAnimation {
+            target: root
+            property: "flashFavorite"
+            from: 0
+            to: 1
+            duration: Kirigami.Units.veryLongDuration
+            easing.type: Easing.OutCubic
+        }
+        NumberAnimation {
+            target: root
+            property: "flashFavorite"
+            to: 0
+            duration: Kirigami.Units.veryLongDuration
+            easing.type: Easing.OutCubic
+        }
+    }
+
+    Connections {
+        target: kickoff.rootModel.favoritesModel
+        function onFavoriteAdded() : void {
+            flashFavoriteAnimation.restart();
+        }
+    }
+
     sideBarComponent: KickoffListView {
         id: sideBar
         focus: true // needed for Loaders
         model: kickoff.rootModel
+        isSidebar: true
         // needed otherwise app displayed at top-level will show a first character as group.
         section.property: ""
-        delegate: KickoffListDelegate {
-            width: view.availableWidth
-            isCategoryListItem: true
-            visible: !(index === 1 && !Plasmoid.configuration.showAllApplications) // Hide All Applications when configured
-            height: (index === 1 && !Plasmoid.configuration.showAllApplications) ? 0 : implicitHeight // Remove space when hidden
+        // BigLinux: "All Applications" is the second entry of the root model.
+        // It is hidden unless the user turns it on, because the categories below
+        // already cover the same apps.
+        function indexIsValid(index: int): bool {
+            return index !== 1 || Plasmoid.configuration.showAllApplications
         }
-        
-        // Ensure we skip hidden items when navigating
-        function indexIsValid(index) {
-            return index !== 1 || Plasmoid.configuration.showAllApplications;
-        }
-        
-        Keys.onDownPressed: {
-            let nextIndex = currentIndex + 1;
-            while (nextIndex < count && !indexIsValid(nextIndex)) {
-                nextIndex++;
+
+        Keys.onDownPressed: event => {
+            let nextIndex = sideBar.currentIndex + 1
+            while (nextIndex < sideBar.count && !sideBar.indexIsValid(nextIndex)) {
+                nextIndex++
             }
-            if (nextIndex < count) {
-                currentIndex = nextIndex;
+            if (nextIndex < sideBar.count) {
+                sideBar.currentIndex = nextIndex
             }
-            event.accepted = true;
+            event.accepted = true
         }
-        
-        Keys.onUpPressed: {
-            let prevIndex = currentIndex - 1;
-            while (prevIndex >= 0 && !indexIsValid(prevIndex)) {
-                prevIndex--;
+
+        Keys.onUpPressed: event => {
+            let prevIndex = sideBar.currentIndex - 1
+            while (prevIndex >= 0 && !sideBar.indexIsValid(prevIndex)) {
+                prevIndex--
             }
             if (prevIndex >= 0) {
-                currentIndex = prevIndex;
+                sideBar.currentIndex = prevIndex
             }
-            event.accepted = true;
+            event.accepted = true
+        }
+
+        delegate: KickoffListDelegate {
+            id: sideBarDelegate
+            width: view.availableWidth
+            isCategoryListItem: true
+            visible: sideBar.indexIsValid(sideBarDelegate.index)
+            height: visible ? implicitHeight : 0
+            background: PlasmaExtras.Highlight {
+                // I have to do this for it to actually fill the item for some reason
+                anchors.fill: parent
+                active: false
+                hovered: sideBarDelegate.mouseArea.containsMouse || (flashFavoriteAnimation.running && sideBarDelegate.index === 0) || ((dropAreaLoader.item as DropArea)?.containsAcceptableDrag ?? false) || sideBarDelegate.ListView.isCurrentItem
+                visible: !sideBarDelegate.isSeparator && hovered
+                opacity: flashFavoriteAnimation.running && sideBarDelegate.index === 0 ? root.flashFavorite : 1
+            }
+
+            component FavoritesDropArea: DropArea {
+                // should be  "as AbstractKickoffItemDelegate", but the type system gets confused when changing view style at runtime
+                readonly property Item draggedItem: kickoff.dragSource.sourceItem
+                readonly property bool acceptableDrag: draggedItem && !kickoff.rootModel.favoritesModel.isFavorite(draggedItem.model.favoriteId)
+                readonly property bool containsAcceptableDrag:  acceptableDrag && containsDrag
+                function evaluateEvent(event: DragEvent) : void {
+                    if (acceptableDrag) {
+                        event.accept(Qt.CopyAction)
+                    } else {
+                        event.accept(Qt.IgnoreAction)
+                    }
+                }
+            }
+
+            Loader {
+                id: dropAreaLoader
+                anchors.fill: parent
+                active: sideBarDelegate.index === 0 && !!kickoff.dragSource.sourceItem
+                sourceComponent: FavoritesDropArea {
+                    onPositionChanged: event => evaluateEvent(event)
+                    onEntered: event =>  evaluateEvent(event)
+                    onDropped: event => {
+                        if (acceptableDrag && !sideBarDelegate.ListView.isCurrentItem) {
+                            kickoff.rootModel.favoritesModel.addFavorite(draggedItem.model.favoriteId, sideBar.model.favoritesModel.count)
+                            event.accept(Qt.CopyAction)
+                        } else {
+                            event.accept(Qt.IgnoreAction)
+                        }
+                    }
+                }
+            }
         }
     }
+
     contentAreaComponent: VerticalStackView {
         id: stackView
 
@@ -101,8 +180,21 @@ BasePage {
         // But to trigger model data update, set initial value to 0
         property int appsModelRow: 0
         readonly property Kicker.AppsModel appsModel: kickoff.rootModel.modelForRow(appsModelRow)
+        Connections {
+            target: kickoff.rootModel
+            function onRefreshed() { // recalculate appsModel binding on rootModel refresh;
+                stackView.appsModelRowChanged() // modelForRow does not create dependency
+            }
+        }
         focus: true
         initialItem: preferredFavoritesViewComponent
+
+        function showSectionView(sectionName: string, parentView: KickoffListView): void {
+            stackView.push(applicationsSectionViewComponent, {
+                currentSection: sectionName,
+                parentView,
+            });
+        }
 
         Component {
             id: favoritesListViewComponent
@@ -133,15 +225,13 @@ BasePage {
                 objectName: "applicationsListView"
                 mainContentView: true
                 model: stackView.appsModel
-                section.property: model && model.description === "KICKER_ALL_MODEL" ? "group" : ""
+                // we want to semantically switch between group and "", disabling grouping, workaround for QTBUG-121797
+                section.property: model && model.description === "KICKER_ALL_MODEL" ? "group" : "_unset"
                 section.criteria: ViewSection.FirstCharacter
                 hasSectionView: stackView.appsModelRow === 1
 
                 onShowSectionViewRequested: sectionName => {
-                    stackView.push(applicationsSectionViewComponent, {
-                        "currentSection": sectionName,
-                        "parentView": applicationsListView
-                    });
+                    stackView.showSectionView(sectionName, this);
                 }
             }
         }
@@ -180,10 +270,7 @@ BasePage {
                 gridModel: stackView.appsModel
 
                 onShowSectionViewRequested: sectionName => {
-                    stackView.push(applicationsSectionViewComponent, {
-                        currentSection: sectionName,
-                        parentView: listOfGridsView
-                    });
+                    stackView.showSectionView(sectionName, this);
                 }
             }
         }
@@ -210,7 +297,7 @@ BasePage {
                 // Only update row index if the condition is met.
                 // The 0 index modelForRow isn't supposed to be used. That's just how it works.
                 if (root.sideBarItem.currentIndex > 0) {
-                    appsModelRow = root.sideBarItem.currentIndex
+                    stackView.appsModelRow = root.sideBarItem.currentIndex
                 }
                 if (root.sideBarItem.currentIndex === 0
                     && stackView.currentItem.objectName !== stackView.preferredFavoritesViewObjectName) {
@@ -227,7 +314,7 @@ BasePage {
         Connections {
             target: kickoff
             function onExpandedChanged() {
-                if (kickoff.expanded) {
+                if (!kickoff.expanded && kickoff.contentArea.currentItem) {
                     kickoff.contentArea.currentItem.forceActiveFocus()
                 }
             }

@@ -9,14 +9,13 @@
 
 pragma ComponentBehavior: Bound
 
-import QtQuick 2.15
-import QtQml 2.15
+import QtQuick
+import QtQml
 import QtQuick.Layouts
 import QtQuick.Templates as T
-import Qt5Compat.GraphicalEffects
 import org.kde.plasma.components as PC3
 import org.kde.plasma.extras as PlasmaExtras
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.components as KirigamiComponents
 import org.kde.coreaddons as KCoreAddons
 import org.kde.kcmutils as KCM
@@ -185,8 +184,9 @@ PlasmaExtras.PlasmoidHeading {
                 searchField.forceActiveFocus(Qt.ShortcutFocusReason)
             }
             onAccepted: {
-                kickoff.contentArea.currentItem.action.triggered()
-                kickoff.contentArea.currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
+                // There is nothing to activate when the search has no results.
+                kickoff.contentArea?.currentItem?.action.triggered()
+                kickoff.contentArea?.currentItem?.forceActiveFocus(Qt.ShortcutFocusReason)
             }
             Keys.priority: Keys.AfterItem
             Keys.forwardTo: kickoff.contentArea !== null ? kickoff.contentArea.view : []
@@ -217,13 +217,19 @@ PlasmaExtras.PlasmoidHeading {
             Layout.fillWidth: true
         }
 
-        // Leave buttons (logout buttons), hidden when hovering over avatar
+        // BigLinux: the leave buttons live in the header, not in the footer.
+        // They are hidden while the pointer is over the avatar, which shows the
+        // user name in their place.
         LeaveButtons {
             id: configureButton
             Layout.fillWidth: false
             Layout.leftMargin: kickoff.backgroundMetrics.leftPadding
 
-            shouldCollapseButtons: root.contentWidth + root.spacing + buttonImplicitWidth > root.width
+            iconOnlyOverflowMenu: true
+
+            // Width the buttons may take before collapsing into the overflow menu.
+            maximumWidth: root.width - nameAndIcon.width - searchField.Layout.leftMargin
+                - kickoff.backgroundMetrics.leftPadding - root.spacing * 2
         }
     }
 }

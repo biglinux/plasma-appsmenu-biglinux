@@ -156,9 +156,6 @@
         "Description[x-test]": "xxLauncher to start applicationsxx",
         "Description[zh_CN]": "应用程序启动器",
         "Description[zh_TW]": "開啟應用程式用的啟動器",
-        "ServiceTypes": [
-            "Plasma/Applet"
-        ],
         "EnabledByDefault": true,
         "Icon": "big-favicon-new",
         "Id": "org.biglinux.appsmenu",
@@ -167,7 +164,8 @@
         "Name[es]": "Lanzador de Aplicaciones de BigLinux",
         "Name[pt]": "Lançador de Aplicações BigLinux",
         "Name[pt_BR]": "Lançador de aplicativos BigLinux",
-        "Website": "https://github.com/biglinux/plasma-appsmenu-biglinux"
+        "Website": "https://github.com/biglinux/plasma-appsmenu-biglinux",
+        "BugReportUrl": "https://github.com/biglinux/plasma-appsmenu-biglinux/issues"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
     "X-Plasma-RequiredExtensions": [

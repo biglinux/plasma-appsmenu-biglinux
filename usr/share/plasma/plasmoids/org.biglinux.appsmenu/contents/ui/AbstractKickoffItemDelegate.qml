@@ -9,18 +9,27 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.15
-import QtQml 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Templates 2.15 as T
+
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import QtQuick.Templates as T
 import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.components 3.0 as PC3
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.plasma.components as PC3
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.kirigami as Kirigami
 import "code/tools.js" as Tools
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasmoid
 
 T.ItemDelegate {
     id: root
+
+    enum AppNameFormat {
+        NameOnly,
+        GenericNameOnly,
+        NameAndGenericName,
+        GenericNameAndName
+    }
 
     // model properties
     required property var model
@@ -28,9 +37,11 @@ T.ItemDelegate {
     required property url url
     required property var decoration
     required property string description
+    required property bool isMultilineText
 
     readonly property Flickable view: ListView.view ?? GridView.view
     property bool isCategoryListItem: false
+    property bool removalPlaceholderActive: false
     readonly property bool hasActionList: model && (model.favoriteId !== null || ("hasActionList" in model && model.hasActionList === true))
     property bool isSearchResult: false
 
@@ -43,7 +54,7 @@ T.ItemDelegate {
 
     readonly property alias mouseArea: mouseArea
 
-    readonly property bool iconAndLabelsShouldlookSelected: isPressed && !isCategoryListItem
+    readonly property bool iconAndLabelsShouldlookSelected: down && !isCategoryListItem
 
     property bool labelTruncated: false
     property bool descriptionTruncated: false
@@ -51,22 +62,31 @@ T.ItemDelegate {
 
     property Item dragIconItem: null
 
-    // pressed: is read-only and we're not using it here because we have fancy
-    // custom mouse handling
-    readonly property bool isPressed: mouseArea.pressed
+    down: mouseArea.pressed || dragHandler.active
 
     function openActionMenu(x = undefined, y = undefined) {
         if (!hasActionList) { return; }
 
         let actions = Array.from(model.actionList);
         const favoriteActions = Tools.createFavoriteActions(
-            i18n, //i18n() function callback
-            view.model.favoritesModel,
+            i18n, //i18n() function callback // qmllint disable unqualified
+            root.view.model.favoritesModel,
             model.favoriteId,
         );
         if (favoriteActions) {
             if (actions && actions.length > 0) {
-                actions.push({ "type": "separator" }, ...favoriteActions);
+                // same logic as in kicker's fillActionMenu()
+                // Insert favoriteActions after the "Add to" actions (called
+                // "addLauncherActions" by libkicker)
+                const firstAddToActionIndex = actions.findIndex((action) =>
+                    ["addToDesktop", "addToTaskManager", "addToPanel"].includes(action?.actionId),
+                );
+                if (firstAddToActionIndex >= 0) {
+                    actions.splice(firstAddToActionIndex, 0, ...favoriteActions);
+                } else {
+                    // Or at the end (with a separator) if they're not found
+                    actions.push({ type: "separator" }, ...favoriteActions);
+                }
             } else {
                 actions = favoriteActions;
             }
@@ -97,7 +117,7 @@ T.ItemDelegate {
     enabled: !isSeparator && !model.disabled
     hoverEnabled: false
 
-    text: model.name ?? model.displayWrapped ?? model.display
+    text: model.compactNameWrapped ?? model.compactName ?? model.displayWrapped ?? model.display
     Accessible.role: Accessible.ListItem
     Accessible.description: root.description !== root.text ? root.description : ""
     Accessible.onPressAction: {
@@ -113,12 +133,13 @@ T.ItemDelegate {
             // Unless we're showing search results, eat the activation if we
             // don't have focus, to prevent the return/enter key from
             // inappropriately activating unfocused items
-            if (!root.activeFocus && !root.isSearchResult) {
+            // Also block activation while dragging.
+            if ((!root.activeFocus && !root.isSearchResult) || dragHandler.active || touchDragHandler.active) {
                 return;
             }
-            view.currentIndex = index
+            root.view.currentIndex = root.index
             // if successfully triggered, close popup
-            if (view.model.trigger && view.model.trigger(index, "", null)) {
+            if (root.view.model.trigger && root.view.model.trigger(root.index, "", null)) {
                 if (kickoff.hideOnWindowDeactivate) {
                     kickoff.expanded = false;
                 }
@@ -126,14 +147,47 @@ T.ItemDelegate {
         }
     }
 
-    Drag.active: mouseArea.drag.active
-    Drag.dragType: Drag.Automatic
-    Drag.mimeData: { "text/uri-list" : root.url }
-    Drag.onDragFinished: Drag.imageSource = ""
+    function performDrag(handler: DragHandler): void {
+        if (!handler.active) {
+            kickoff.dragSource.Drag.active = false;
+            kickoff.dragSource.Drag.imageSource = "";
+            kickoff.dragSource.sourceItem = null;
+            return;
+        }
+        root.dragIconItem.grabToImage(result => {
+            if (!handler.active) {
+                return;
+            }
+            kickoff.dragSource.sourceItem = root;
+            kickoff.dragSource.Drag.imageSource = result.url;
+            kickoff.dragSource.Drag.mimeData = {
+                "text/uri-list" : [root.url]
+            };
+            kickoff.dragSource.Drag.active = handler.active;
+        });
+    }
+
+    DragHandler {
+        id: dragHandler
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad | PointerDevice.Stylus
+        enabled: root.dragEnabled && root.dragIconItem !== null
+        target: null // Using this Item fixes drag and drop causing delegates to reset to a 0 X position and overlapping each other.
+
+        onActiveChanged: root.performDrag(this)
+    }
+
+    DragHandler {
+        id: touchDragHandler
+        acceptedDevices: PointerDevice.TouchScreen
+        enabled: dragHandler.enabled
+        target: null
+        yAxis.enabled: false
+
+        onActiveChanged: root.performDrag(this)
+    }
 
     MouseArea {
         id: mouseArea
-        property bool dragEnabled: false
         parent: root
         anchors.fill: parent
         anchors.margins: 1
@@ -150,52 +204,36 @@ T.ItemDelegate {
             // to change while delegates are moving under the mouse cursor
             && kickoff.fullRepresentationItem && !kickoff.fullRepresentationItem.contentItem.busy && !kickoff.fullRepresentationItem.blockingHoverFocus
         acceptedButtons: Qt.LeftButton | Qt.RightButton
-        drag {
-            axis: Drag.XAndYAxis
-            target: root.dragEnabled && mouseArea.dragEnabled ? dragItem : undefined
-        }
-        // Using this Item fixes drag and drop causing delegates
-        // to reset to a 0 X position and overlapping each other.
-        Item { id: dragItem }
 
         onEntered: {
-            // When the movedWithKeyboard condition is broken, we do not want to
-            // select the hovered item without moving the mouse.
-            if (root.view.movedWithKeyboard) {
+            // - When the movedWithKeyboard condition is broken, we do not want to
+            //   select the hovered item without moving the mouse.
+            // - Don't highlight separators.
+            // - Don't switch category items on hover if the setting isn't enabled
+            if (root.view.movedWithKeyboard || root.isSeparator
+                || (root.isCategoryListItem && !Plasmoid.configuration.switchCategoryOnHover)) {
                 return
-            }
-            // Don't highlight separators.
-            if (root.isSeparator) {
-                return;
             }
 
             // forceActiveFocus() touches multiple items, so check for
-            // activeFocus first to be more efficient.
-            if (!root.activeFocus) {
+            // activeFocus first to be more efficient. Keep activeFocus
+            // stable if it's on the searchField to avoid unintentional
+            // activation with Space key presses.
+            if (!root.activeFocus && !kickoff.searchField?.activeFocus) {
                 root.forceActiveFocus(Qt.MouseFocusReason)
             }
             // No need to check currentIndex first because it's
             // built into QQuickListView::setCurrentIndex() already
-            root.view.currentIndex = index
+            root.view.currentIndex = root.index
         }
         onPressed: mouse => {
             // Select and focus on press to improve responsiveness and touch feedback
-            view.currentIndex = index
+            root.view.currentIndex = root.index
             root.forceActiveFocus(Qt.MouseFocusReason)
-
-            // Only enable drag and drop with a mouse.
-            // We don't have a good way to handle it and drag scrolling with touch.
-            mouseArea.dragEnabled = mouse.source === Qt.MouseEventNotSynthesized
 
             // We normally try to open right click menus on press like Qt Widgets
             if (mouse.button === Qt.RightButton) {
                 root.openActionMenu(mouseX, mouseY)
-            } else if (mouseArea.dragEnabled && mouse.button === Qt.LeftButton
-                && root.dragEnabled && root.dragIconItem && root.Drag.imageSource.toString() === ""
-            ) {
-                root.dragIconItem.grabToImage(result => {
-                    root.Drag.imageSource = result.url
-                })
             }
         }
         onClicked: mouse => {
@@ -203,19 +241,18 @@ T.ItemDelegate {
                 root.action.trigger()
             }
         }
-        // MouseEvents for pressAndHold use Qt.MouseEventSynthesizedByQt for mouse.source,
-        // which makes checking mouse.source for whether or not touch input is used useless.
-        onPressAndHold: mouse => {
-            if (mouse.button === Qt.LeftButton) {
-                root.openActionMenu(mouseX, mouseY)
-            }
+
+        TapHandler {
+            acceptedDevices: PointerDevice.TouchScreen
+            onLongPressed: root.openActionMenu(point.position.x, point.position.y)
         }
     }
 
     PC3.ToolTip.text: {
-        if (root.labelTruncated && root.descriptionTruncated) {
-            return `${text} (${description})`
-        } else if (root.descriptionTruncated || !root.descriptionVisible) {
+        if (root.labelTruncated) {
+            return model?.display ?? ""
+        } else if (root.descriptionTruncated || (!root.descriptionVisible && (root.isSearchResult
+                                                                              || Plasmoid.configuration.appNameFormat > 1))) {
             return description
         }
         return ""
@@ -223,5 +260,17 @@ T.ItemDelegate {
     PC3.ToolTip.visible: mouseArea.containsMouse && PC3.ToolTip.text.length > 0
     PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
 
-    background: null
+    background: Loader {
+        active: (root.GridView?.isCurrentItem || root.ListView?.isCurrentItem) ?? false
+        sourceComponent: PlasmaExtras.Highlight {
+            anchors.fill: parent
+            z: (root.Drag.active ?? false) ? 3 : 0
+            hovered: true
+
+            pressed: root.down  && !root.isCategoryListItem
+
+            active: root.view.activeFocus ||
+                    (kickoff.contentArea === root && kickoff.searchField.activeFocus)
+        }
+    }
 }

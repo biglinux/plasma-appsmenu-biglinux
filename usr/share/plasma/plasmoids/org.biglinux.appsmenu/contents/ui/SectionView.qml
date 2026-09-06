@@ -4,10 +4,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
+pragma ComponentBehavior: Bound
 
-import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.plasmoid 2.0
+import QtQuick
+
+import org.kde.plasma.components as PC3
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.plasma.plasmoid
 
 KickoffGridView {
     id: root
@@ -30,8 +33,14 @@ KickoffGridView {
     view.cellHeight: view.cellWidth
 
     delegate: PC3.AbstractButton {
-        width: view.cellWidth
-        height: view.cellHeight
+        id: delegate
+
+        required property int index
+        required property int firstIndex
+        required property string section
+
+        width: root.view.cellWidth
+        height: root.view.cellHeight
 
         hoverEnabled: true
         onHoveredChanged: if (hovered) {
@@ -39,6 +48,19 @@ KickoffGridView {
         }
 
         padding: fontMetrics.descent / 2
+
+        background: Loader {
+            active: delegate.GridView.isCurrentItem
+            sourceComponent: PlasmaExtras.Highlight {
+                anchors.fill: parent
+                z: (root.Drag.active ?? false) ? 3 : 0
+                hovered: true
+
+                pressed: delegate.down
+
+                active: root.view.activeFocus || (kickoff.contentArea === root && kickoff.searchField.activeFocus)
+            }
+        }
 
         contentItem: PC3.Label {
             horizontalAlignment: Text.AlignHCenter
@@ -52,12 +74,13 @@ KickoffGridView {
             font.pixelSize: fontMetrics.font.pixelSize
             fontSizeMode: Text.VerticalFit
 
-            text: model.section
+            text: delegate.section
+            textFormat: Text.PlainText
         }
 
         onClicked: {
             const isGridView = Plasmoid.configuration.applicationsDisplay === 0
-            const destinationIndex = isGridView ? index : model.firstIndex
+            const destinationIndex = isGridView ? index : firstIndex
             root.hideSectionViewRequested(destinationIndex)
         }
     }

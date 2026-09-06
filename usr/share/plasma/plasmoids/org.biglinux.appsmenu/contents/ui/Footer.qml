@@ -5,22 +5,26 @@
  *    SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-import QtQuick 2.15
-import QtQml 2.15
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kirigami 2.20 as Kirigami
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import org.kde.ksvg as KSvg
+import org.kde.plasma.components as PC3
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.kirigami as Kirigami
 
 PlasmaExtras.PlasmoidHeading {
     id: root
-    visible: false // Changed to BigLinux
 
     readonly property alias tabBar: tabBar
     property real preferredTabBarWidth: 0
     readonly property alias leaveButtons: leaveButtons
 
-    contentWidth: tabBar.implicitWidth + root.spacing
+    // BigLinux: the tab bar and the leave buttons live in the header instead,
+    // so the footer is kept for its bindings but never shown.
+    visible: false
+
+    contentWidth: tabBar.implicitWidth + spacing
     contentHeight: leaveButtons.implicitHeight
 
     // We use an increased vertical padding to improve touch usability
@@ -29,9 +33,9 @@ PlasmaExtras.PlasmoidHeading {
     topPadding: Kirigami.Units.smallSpacing * 2
     bottomPadding: Kirigami.Units.smallSpacing * 2
 
+    topInset: 0
     leftInset: 0
     rightInset: 0
-    topInset: 0
     bottomInset: 0
 
     spacing: kickoff.backgroundMetrics.spacing
@@ -41,19 +45,21 @@ PlasmaExtras.PlasmoidHeading {
         id: tabBar
 
         property real tabWidth: Math.max(applicationsTab.implicitWidth, placesTab.implicitWidth)
+
         focus: true
-        width: root.preferredTabBarWidth > 0 ? root.preferredTabBarWidth : implicitWidth
+
+        width: root.preferredTabBarWidth > 0 ? root.preferredTabBarWidth : undefined
         implicitWidth: contentWidth + leftPadding + rightPadding
         implicitHeight: contentHeight + topPadding + bottomPadding
 
-        // This is needed to keep the sparators horizontally aligned
+        // This is needed to keep the separators horizontally aligned
         leftPadding: mirrored ? root.spacing : 0
         rightPadding: !mirrored ? root.spacing : 0
 
         anchors {
-            left: parent.left
             top: parent.top
-            bottom:parent.bottom
+            left: parent.left
+            bottom: parent.bottom
         }
 
         position: PC3.TabBar.Footer
@@ -96,7 +102,7 @@ PlasmaExtras.PlasmoidHeading {
             icon.width: Kirigami.Units.iconSizes.smallMedium
             icon.height: Kirigami.Units.iconSizes.smallMedium
             icon.name: "applications-all-symbolic"
-            text: i18n("Applications")
+            text: i18nc("@title:tab kickoff sidebar tab", "Applications") // qmllint disable unqualified
             Keys.onBacktabPressed: event => {
                 (kickoff.lastCentralPane || nextItemInFocusChain(false))
                     .forceActiveFocus(Qt.BacktabFocusReason)
@@ -112,21 +118,21 @@ PlasmaExtras.PlasmoidHeading {
             icon.width: Kirigami.Units.iconSizes.smallMedium
             icon.height: Kirigami.Units.iconSizes.smallMedium
             icon.name: "compass"
-            text: i18n("Places") //Explore?
+            text: i18nc("@title:tab kickoff sidebar tab", "Places") //Explore? // qmllint disable unqualified
         }
 
         Connections {
             target: kickoff
             function onExpandedChanged() {
-                if (kickoff.expanded) {
+                if (!kickoff.expanded) {
                     tabBar.currentIndex = 0
                 }
             }
         }
 
         Keys.onPressed: event => {
-            const Key_Next = Qt.application.layoutDirection === Qt.RightToLeft ? Qt.Key_Left : Qt.Key_Right
-            const Key_Prev = Qt.application.layoutDirection === Qt.RightToLeft ? Qt.Key_Right : Qt.Key_Left
+            const Key_Next = Application.layoutDirection === Qt.RightToLeft ? Qt.Key_Left : Qt.Key_Right
+            const Key_Prev = Application.layoutDirection === Qt.RightToLeft ? Qt.Key_Right : Qt.Key_Left
             if (event.key === Key_Next) {
                 if (currentIndex === count - 1) {
                     leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
@@ -148,11 +154,16 @@ PlasmaExtras.PlasmoidHeading {
 
     LeaveButtons {
         id: leaveButtons
+
         anchors {
+            top: parent.top
+            right: parent.right
             bottom: parent.bottom
-            leftMargin: root.spacing
         }
-        shouldCollapseButtons: root.contentWidth + root.spacing + buttonImplicitWidth > root.width
+
+        // available width for leaveButtons
+        maximumWidth: root.availableWidth - tabBar.width - root.spacing
+
         Keys.onUpPressed: event => {
             kickoff.lastCentralPane.forceActiveFocus(Qt.BacktabFocusReason);
         }
@@ -181,9 +192,9 @@ PlasmaExtras.PlasmoidHeading {
             id: tabScrollHandler
             acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
             onWheel: {
-                let shouldDec = rotation >= 15
-                let shouldInc = rotation <= -15
-                let shouldReset = (rotation > 0 && tabBar.currentIndex === 0) || (rotation < 0 && tabBar.currentIndex === tabBar.count - 1)
+                const shouldDec = rotation >= 15
+                const shouldInc = rotation <= -15
+                const shouldReset = (rotation > 0 && tabBar.currentIndex === 0) || (rotation < 0 && tabBar.currentIndex === tabBar.count - 1)
                 if (shouldDec) {
                     tabBar.decrementCurrentIndex();
                     rotation = 0

@@ -6,14 +6,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.15
-import QtQml 2.15
+pragma ComponentBehavior: Bound
 
-import org.kde.plasma.components 3.0 as PC3
+import QtQuick
+import QtQuick.Templates as T
+
+import org.kde.plasma.components as PC3
 import org.kde.plasma.extras as PlasmaExtras
 
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 
 // ScrollView makes it difficult to control implicit size using the contentItem.
 // Using EmptyPage instead.
@@ -34,7 +35,7 @@ EmptyPage {
         hoverEnabled: true
         onEntered: {
             if (containsMouse) {
-                let targetIndex = view.indexAt(mouseX + view.contentX, view.contentY)
+                const targetIndex = view.indexAt(mouseX + view.contentX, view.contentY)
                 if (targetIndex >= 0) {
                     view.currentIndex = targetIndex
                     view.forceActiveFocus(Qt.MouseFocusReason)
@@ -48,7 +49,7 @@ EmptyPage {
         hoverEnabled: true
         onEntered: {
             if (containsMouse) {
-                let targetIndex = view.indexAt(mouseX + view.contentX, view.height + view.contentY - 1)
+                const targetIndex = view.indexAt(mouseX + view.contentX, view.height + view.contentY - 1)
                 if (targetIndex >= 0) {
                     view.currentIndex = targetIndex
                     view.forceActiveFocus(Qt.MouseFocusReason)
@@ -64,10 +65,22 @@ EmptyPage {
      */
     GridView {
         id: view
-        readonly property real availableWidth: width - leftMargin - rightMargin
-        readonly property real availableHeight: height - topMargin - bottomMargin
-        readonly property int columns: Math.floor(availableWidth / cellWidth)
-        readonly property int rows: Math.floor(availableHeight / cellHeight)
+
+        // Not storing them as properties somehow avoids a dubious warning
+        // about *Binding loop detected for property "rows"*
+        function availableWidth(): real {
+            return width - leftMargin - rightMargin;
+        }
+        function availableHeight(): real {
+            return height - topMargin - bottomMargin;
+        }
+
+        readonly property int columns: Math.floor(availableWidth() / cellWidth)
+        property int rows
+        Binding on rows {
+            value: Math.floor(view.availableHeight() / view.cellHeight)
+            delayed: true
+        }
         property bool movedWithKeyboard: false
         property bool movedWithWheel: false
 
@@ -77,7 +90,7 @@ EmptyPage {
         // There are lots of ways to try to center the content of a GridView
         // and many of them have bad visual flaws. This way works pretty well.
         // Not center aligning when there might be a scrollbar to keep click target positions consistent.
-        anchors.horizontalCenter: kickoff.mayHaveGridWithScrollBar ? undefined : parent.horizontalCenter
+        anchors.horizontalCenter: undefined
         anchors.horizontalCenterOffset: if (kickoff.mayHaveGridWithScrollBar) {
             if (root.mirrored) {
                 return verticalScrollBar.implicitWidth/2
@@ -89,9 +102,22 @@ EmptyPage {
         }
         width: Math.min(parent.width, Math.floor((parent.width - leftMargin - rightMargin - (kickoff.mayHaveGridWithScrollBar ? verticalScrollBar.implicitWidth : 0)) / cellWidth) * cellWidth + leftMargin + rightMargin)
 
-        Accessible.description: i18n("Grid with %1 rows, %2 columns", rows, columns) // can't use i18np here
+        states: [
+            State {
+                name: "centered"
+                when: !kickoff.mayHaveGridWithScrollBar
+                AnchorChanges {
+                    target: view
+                    anchors.horizontalCenter : parent.horizontalCenter
+                }
+            }
+        ]
+
+        Accessible.description: i18nc("@info:whatsthis Accessible description", "Grid with %1 rows, %2 columns", rows, columns) // can't use i18np here
 
 
+        // BigLinux: the grid is two cells wide by default and the cells are
+        // wider than tall, so app names fit on one or two centred lines.
         implicitWidth: {
             let w = view.cellWidth * 2 + leftMargin + rightMargin + 2
             if (kickoff.mayHaveGridWithScrollBar) {
@@ -101,6 +127,8 @@ EmptyPage {
         }
         implicitHeight: view.cellHeight * kickoff.minimumGridRowCount + topMargin + bottomMargin
 
+        // BigLinux: no side margins, the popup is wide and the cells carry
+        // their own padding.
         leftMargin: 0
         rightMargin: 0
 
@@ -111,26 +139,14 @@ EmptyPage {
         focus: true
         interactive: height < contentHeight
         pixelAligned: true
-        reuseItems: true
+        reuseItems: false // explicitly disabled because it doesn't work correctly with switching models like we do
         boundsBehavior: Flickable.StopAtBounds
         // default keyboard navigation doesn't allow focus reasons to be used
         // and eats up/down key events when at the beginning or end of the list.
         keyNavigationEnabled: false
         keyNavigationWraps: false
 
-        highlightMoveDuration: 0
-        highlight: PlasmaExtras.Highlight {
-            // The default Z value for delegates is 1. The default Z value for the section delegate is 2.
-            // The highlight gets a value of 3 while the drag is active and then goes back to the default value of 0.
-            z: root.currentItem && root.currentItem.Drag.active ?
-                3 : 0
-            pressed: view.currentItem && view.currentItem.isPressed
-            active: view.activeFocus
-                || (kickoff.contentArea === root
-                    && kickoff.searchField.activeFocus)
-            width: view.cellWidth
-            height: view.cellHeight
-        }
+        highlightFollowsCurrentItem: false
 
         delegate: KickoffGridDelegate {
             id: itemDelegate
@@ -176,7 +192,7 @@ EmptyPage {
         Connections {
             target: kickoff
             function onExpandedChanged() {
-                if (kickoff.expanded) {
+                if (!kickoff.expanded) {
                     view.currentIndex = 0
                     view.positionViewAtBeginning()
                 }
@@ -200,34 +216,40 @@ EmptyPage {
 
         function focusCurrentItem(event, focusReason) {
             currentItem.forceActiveFocus(focusReason)
+            positionViewAtIndex(currentIndex, GridView.Contain)
             event.accepted = true
         }
 
         Keys.onMenuPressed: event => {
-            if (currentItem !== null) {
-                currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
-                currentItem.openActionMenu()
+            const delegate = currentItem as AbstractKickoffItemDelegate;
+            if (delegate !== null) {
+                delegate.forceActiveFocus(Qt.ShortcutFocusReason)
+                delegate.openActionMenu()
             }
         }
 
         Keys.onPressed: event => {
-            let targetX = currentItem ? currentItem.x : contentX
+            const targetX = currentItem ? currentItem.x : contentX
             let targetY = currentItem ? currentItem.y : contentY
             let targetIndex = currentIndex
             // supports mirroring
-            const atLeft = currentIndex % columns === (Qt.application.layoutDirection == Qt.RightToLeft ? columns - 1 : 0)
+            const atLeft = currentIndex % columns === (Application.layoutDirection == Qt.RightToLeft ? columns - 1 : 0)
             // at the beginning of a line
             const isLeading = currentIndex % columns === 0
             // at the top of a given column and in the top row
-            let atTop = currentIndex < columns
+            const atTop = currentIndex < columns
             // supports mirroring
-            const atRight = currentIndex % columns === (Qt.application.layoutDirection == Qt.RightToLeft ? 0 : columns - 1)
+            const atRight = currentIndex % columns === (Application.layoutDirection == Qt.RightToLeft ? 0 : columns - 1)
             // at the end of a line
             const isTrailing = currentIndex % columns === columns - 1
             // at bottom of a given column, not necessarily in the last row
             let atBottom = currentIndex >= count - columns
             // Implements the keyboard navigation described in https://www.w3.org/TR/wai-aria-practices-1.2/#grid
-            if (count > 1) {
+            if (count > 0 && (event.key == Qt.Key_Return || event.key == Qt.Key_Enter)) {
+                (root.currentItem as AbstractKickoffItemDelegate).action.triggered();
+                root.currentItem.forceActiveFocus(Qt.ShortcutFocusReason);
+                event.accepted = true;
+            } else if (count > 1) {
                 switch (event.key) {
                     case Qt.Key_Left: if (!atLeft && !kickoff.searchField.activeFocus) {
                         moveCurrentIndexLeft()

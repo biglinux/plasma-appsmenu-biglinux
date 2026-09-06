@@ -9,21 +9,28 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Window 2.15
-import QtQml 2.15
-import org.kde.plasma.plasmoid 2.0
+
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import QtQuick.Layouts
+import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.private.kicker 0.1 as Kicker
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.ksvg as KSvg
+import org.kde.plasma.components as PC3
+import org.kde.plasma.private.kicker as Kicker
+import org.kde.kirigami as Kirigami
 
 import "code/tools.js" as Tools
 
 PlasmoidItem {
     id: kickoff
+
+    width: Kirigami.Units.iconSizes.huge
+    height: Kirigami.Units.iconSizes.huge
+
+    switchWidth: fullRepresentationItem ? fullRepresentationItem.Layout.minimumWidth : Kirigami.Units.iconSizes.huge * 10
+    switchHeight: fullRepresentationItem ? fullRepresentationItem.Layout.minimumHeight : Kirigami.Units.iconSizes.huge * 10
 
     // The properties are defined here instead of the singleton because each
     // instance of Kickoff requires different instances of these properties
@@ -47,9 +54,12 @@ PlasmoidItem {
         // TODO: appletInterface property now can be ported to "applet" and have the real Applet* assigned directly
         appletInterface: kickoff
 
+        appNameFormat: Plasmoid.configuration.appNameFormat
         flat: true // have categories, but no subcategories
         sorted: Plasmoid.configuration.alphaSort
+        // BigLinux: keep group separators in every display mode
         showSeparators: true
+        showRootSeparator: true
         showTopLevelItems: true
 
         showAllApps: true
@@ -58,6 +68,7 @@ PlasmoidItem {
         showRecentDocs: false
         showPowerSession: false
         showFavoritesPlaceholder: true
+        highlightNewlyInstalledApps: Plasmoid.configuration.highlightNewlyInstalledApps
 
         Component.onCompleted: {
             favoritesModel.initForClient("org.kde.plasma.kickoff.favorites.instance-" + Plasmoid.id)
@@ -80,24 +91,28 @@ PlasmoidItem {
         }
         appletInterface: kickoff
         mergeResults: true
-        favoritesModel: rootModel.favoritesModel
+        favoritesModel: kickoff.rootModel.favoritesModel
     }
 
     readonly property Kicker.ComputerModel computerModel: Kicker.ComputerModel {
         appletInterface: kickoff
-        favoritesModel: rootModel.favoritesModel
+        favoritesModel: kickoff.rootModel.favoritesModel
         systemApplications: Plasmoid.configuration.systemApplications
         Component.onCompleted: {
             //systemApplications = Plasmoid.configuration.systemApplications;
         }
     }
 
-    readonly property Kicker.RecentUsageModel recentUsageModel: Kicker.RecentUsageModel {
-        favoritesModel: rootModel.favoritesModel
+    readonly property alias recentUsageModel: recentUsageModel
+    Kicker.RecentUsageModel {
+        id: recentUsageModel
+        favoritesModel: kickoff.rootModel.favoritesModel
     }
 
-    readonly property Kicker.RecentUsageModel frequentUsageModel: Kicker.RecentUsageModel {
-        favoritesModel: rootModel.favoritesModel
+    readonly property alias frequentUsageModel: frequentUsageModel
+    Kicker.RecentUsageModel {
+        id: frequentUsageModel
+        favoritesModel: kickoff.rootModel.favoritesModel
         ordering: 1 // Popular / Frequently Used
     }
     //END
@@ -121,20 +136,31 @@ PlasmoidItem {
     // True when central pane (and header) LayoutMirroring diverges from global
     // LayoutMirroring, in order to achieve the desired sidebar position
     readonly property bool paneSwap: Plasmoid.configuration.paneSwap
-    readonly property bool sideBarOnRight: (Qt.application.layoutDirection == Qt.RightToLeft) != paneSwap
+    readonly property bool sideBarOnRight: (Application.layoutDirection == Qt.RightToLeft) != paneSwap
     // References to items according to their focus chain order
+    // BigLinux: the header has no pin button; the leave buttons sit at that end
+    // of the header instead, so they are the focus-chain boundary.
+    readonly property Item firstHeaderItem: header ? (paneSwap ? header.configureButton : header.avatar) : null
+    readonly property Item lastHeaderItem: header ? (paneSwap ? header.avatar : header.configureButton) : null
     readonly property Item firstCentralPane: paneSwap ? contentArea : sideBar
     readonly property Item lastCentralPane: paneSwap ? sideBar : contentArea
+
+    readonly property Item dragSource: Item {
+        id: dragSource // BUG 449426
+        property Item sourceItem
+        Drag.dragType: Drag.Automatic
+        Drag.supportedActions: Qt.CopyAction | Qt.LinkAction | Qt.MoveAction
+    }
     //END
 
     //BEGIN Metrics
     readonly property KSvg.FrameSvgItem backgroundMetrics: KSvg.FrameSvgItem {
         // Inset defaults to a negative value when not set by margin hints
-        readonly property real leftPadding: margins.left - Math.max(inset.left, 0)
-        readonly property real rightPadding: margins.right - Math.max(inset.right, 0)
-        readonly property real topPadding: margins.top - Math.max(inset.top, 0)
-        readonly property real bottomPadding: margins.bottom - Math.max(inset.bottom, 0)
-        readonly property real spacing: leftPadding
+        readonly property real leftPadding: Math.round(margins.left - Math.max(inset.left, 0))
+        readonly property real rightPadding: Math.round(margins.right - Math.max(inset.right, 0))
+        readonly property real topPadding: Math.round(margins.top - Math.max(inset.top, 0))
+        readonly property real bottomPadding: Math.round(margins.bottom - Math.max(inset.bottom, 0))
+        readonly property real spacing: Math.round(leftPadding)
         visible: false
         imagePath: Plasmoid.formFactor === PlasmaCore.Types.Planar ? "widgets/background" : "dialogs/background"
     }
@@ -163,9 +189,6 @@ PlasmoidItem {
 
     Plasmoid.icon: Plasmoid.configuration.icon
 
-    switchWidth: fullRepresentationItem ? fullRepresentationItem.Layout.minimumWidth : -1
-    switchHeight: fullRepresentationItem ? fullRepresentationItem.Layout.minimumHeight : -1
-
     preferredRepresentation: compactRepresentation
 
     fullRepresentation: FullRepresentation { focus: true }
@@ -184,10 +207,12 @@ PlasmoidItem {
         readonly property bool shouldHaveIcon: Plasmoid.formFactor === PlasmaCore.Types.Vertical || Plasmoid.icon !== ""
         readonly property bool shouldHaveLabel: Plasmoid.formFactor !== PlasmaCore.Types.Vertical && Plasmoid.configuration.menuLabel !== ""
 
+        // BigLinux: fixed size so the menu button matches the other
+        // BigLinux panel icons instead of following the icon theme size.
         readonly property int iconSize: 48
 
         readonly property var sizing: {
-            const displayedIcon = buttonIcon.valid ? buttonIcon : buttonIconFallback;
+            const displayedIcon = imageFallback.visible ? imageFallback : (buttonIcon.valid ? buttonIcon : buttonIconFallback);
 
             let impWidth = 0;
             if (shouldHaveIcon) {
@@ -232,6 +257,7 @@ PlasmoidItem {
         property bool wasExpanded
 
         Accessible.name: Plasmoid.title
+        Accessible.role: Accessible.Button
 
         onPressed: wasExpanded = kickoff.expanded
         onClicked: kickoff.expanded = !wasExpanded
@@ -239,13 +265,18 @@ PlasmoidItem {
         DropArea {
             id: compactDragArea
             anchors.fill: parent
+            onEntered: drag => {
+                if (drag.hasUrls) {
+                    expandOnDragTimer.start()
+                }
+            }
+            onExited: expandOnDragTimer.stop()
         }
 
         Timer {
             id: expandOnDragTimer
             // this is an interaction and not an animation, so we want it as a constant
             interval: 250
-            running: compactDragArea.containsDrag
             onTriggered: kickoff.expanded = true
         }
 
@@ -261,11 +292,13 @@ PlasmoidItem {
                 Layout.fillHeight: !kickoff.vertical
                 Layout.preferredWidth: kickoff.vertical ? -1 : height / (implicitHeight / implicitWidth)
                 Layout.preferredHeight: !kickoff.vertical ? -1 : width * (implicitHeight / implicitWidth)
+                Layout.maximumHeight: Kirigami.Units.iconSizes.huge
+                Layout.maximumWidth: Kirigami.Units.iconSizes.huge
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
                 source: Tools.iconOrDefault(Plasmoid.formFactor, Plasmoid.icon)
-                active: GraphicsInfo.api === GraphicsInfo.Software ? false: (compactRoot.containsMouse || compactDragArea.containsDrag)
+                active: compactRoot.containsMouse || compactDragArea.containsDrag
                 roundToIconSize: implicitHeight === implicitWidth
-                visible: valid
+                visible: valid && !imageFallback.visible
             }
 
             Kirigami.Icon {
@@ -278,8 +311,27 @@ PlasmoidItem {
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 
                 source: buttonIcon.valid ? null : Tools.defaultIconName
-                active: GraphicsInfo.api === GraphicsInfo.Software ? false : compactRoot.containsMouse || compactDragArea.containsDrag
-                visible: !buttonIcon.valid && Plasmoid.icon !== ""
+                active: compactRoot.containsMouse || compactDragArea.containsDrag
+                visible: !buttonIcon.valid && Plasmoid.icon !== "" && !imageFallback.visible
+            }
+
+            Image {
+                id: imageFallback
+
+                readonly property bool nonSquareImage: sourceSize.width != sourceSize.height
+
+                visible: nonSquareImage && status == Image.Ready
+                source: Plasmoid.icon.startsWith("/") ? "file:" + Plasmoid.icon.split("/").map(encodeURIComponent).join("/") : ""
+
+                Layout.fillWidth: kickoff.vertical
+                Layout.fillHeight: !kickoff.vertical
+                Layout.preferredWidth: kickoff.vertical ? -1 : height / (implicitHeight / implicitWidth)
+                Layout.preferredHeight: !kickoff.vertical ? -1 : width * (implicitHeight / implicitWidth)
+                Layout.maximumHeight: kickoff.vertical ? -1 : Kirigami.Units.iconSizes.huge
+                Layout.maximumWidth: kickoff.vertical ? Kirigami.Units.iconSizes.huge : -1
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+                fillMode: Image.PreserveAspectFit
+                mipmap: true
             }
 
             PC3.Label {
@@ -290,6 +342,7 @@ PlasmoidItem {
                 Layout.rightMargin: Kirigami.Units.smallSpacing
 
                 text: Plasmoid.configuration.menuLabel
+                textFormat: Text.StyledText
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.NoWrap
@@ -302,12 +355,12 @@ PlasmoidItem {
     }
 
     Kicker.ProcessRunner {
-        id: processRunner;
+        id: processRunner
     }
 
     Plasmoid.contextualActions: [
         PlasmaCore.Action {
-            text: i18n("Edit Applications…")
+            text: i18nc("@action:inmenu launches kmenuedit", "Edit Applications…") // qmllint disable unqualified
             icon.name: "kmenuedit"
             visible: Plasmoid.immutability !== PlasmaCore.Types.SystemImmutable
             onTriggered: processRunner.runMenuEditor()
@@ -315,8 +368,6 @@ PlasmoidItem {
     ]
 
     Component.onCompleted: {
-        if (Plasmoid.hasOwnProperty("activationTogglesExpanded")) {
-            Plasmoid.activationTogglesExpanded = true
-        }
+        Plasmoid.activationTogglesExpanded = true
     }
 } // root

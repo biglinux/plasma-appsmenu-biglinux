@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-import QtQuick 2.15
-import QtQml 2.15
+pragma ComponentBehavior: Bound
+
+import QtQuick
 
 KickoffListView {
     id: root

@@ -9,11 +9,13 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
  */
-import QtQuick 2.15
-import QtQml 2.15
-import QtQuick.Layouts 1.15
-import org.kde.plasma.components 3.0 as PC3
-import org.kde.kirigami 2.20 as Kirigami
+
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import QtQuick.Layouts
+import org.kde.plasma.components as PC3
+import org.kde.kirigami as Kirigami
 
 AbstractKickoffItemDelegate {
     id: root
@@ -42,11 +44,28 @@ AbstractKickoffItemDelegate {
 
             animated: false
             selected: root.iconAndLabelsShouldlookSelected
-            source: root.decoration || root.icon.name || root.icon.source
+            source: root.removalPlaceholderActive ? "list-remove" : (root.decoration || root.icon.name || root.icon.source)
+
+            Loader {
+                anchors {
+                    right: parent.right
+                    rightMargin: -root.rightPadding
+                    top: parent.top
+                }
+                visible: active
+                active: (root.model?.isNewlyInstalled ?? false) && !root.removalPlaceholderActive
+
+                sourceComponent: Kirigami.Badge {
+                    text: i18nc("@label Newly-installed app, badge, keep short", "New!") // qmllint disable unqualified
+                    type: Kirigami.Badge.Type.Positive
+                    Accessible.name: i18nc("@label Accessible name for badge", "Newly-installed application") // qmllint disable unqualified
+                }
+            }
         }
 
         PC3.Label {
             id: label
+            visible: !root.removalPlaceholderActive
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             Layout.fillWidth: true
             Layout.preferredHeight: label.lineCount === 1 ? label.implicitHeight * 2 : label.implicitHeight

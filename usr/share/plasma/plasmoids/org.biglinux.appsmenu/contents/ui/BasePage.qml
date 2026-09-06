@@ -7,15 +7,19 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Templates 2.15 as T
-import QtQml 2.15
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.plasma.workspace.trianglemousefilter 1.0
+
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Templates as T
+import org.kde.ksvg as KSvg
+import org.kde.plasma.plasmoid
+import org.kde.plasma.workspace.trianglemousefilter
 
 FocusScope {
     id: root
+
     property real preferredSideBarWidth: implicitSideBarWidth
     property real preferredSideBarHeight: implicitSideBarHeight
 
@@ -27,14 +31,15 @@ FocusScope {
     property alias implicitSideBarWidth: sideBarLoader.implicitWidth
     property alias implicitSideBarHeight: sideBarLoader.implicitHeight
 
-    implicitWidth: root.preferredSideBarWidth + separator.implicitWidth + contentAreaLoader.implicitWidth
-    implicitHeight: Math.max(root.preferredSideBarHeight, contentAreaLoader.implicitHeight)
+    implicitWidth: preferredSideBarWidth + separator.implicitWidth + contentAreaLoader.implicitWidth
+    implicitHeight: Math.max(preferredSideBarHeight, contentAreaLoader.implicitHeight)
 
     TriangleMouseFilter {
         id: sideBarFilter
+        active: Plasmoid.configuration.switchCategoryOnHover
         anchors {
-            left: parent.left
             top: parent.top
+            left: parent.left
             bottom: parent.bottom
         }
         LayoutMirroring.enabled: kickoff.sideBarOnRight
@@ -77,13 +82,15 @@ FocusScope {
     KSvg.SvgItem {
         id: separator
         anchors {
-            left: sideBarFilter.right
             top: parent.top
+            left: sideBarFilter.right
             bottom: parent.bottom
         }
         LayoutMirroring.enabled: kickoff.sideBarOnRight
         implicitWidth: naturalSize.width
         implicitHeight: implicitWidth
+        // BigLinux: no vertical rule between the sidebar and the content area.
+        // The item is kept so the layout keeps reserving the same width.
         // elementId: "vertical-line"
         // svg: KickoffSingleton.lineSvg
     }
@@ -91,9 +98,9 @@ FocusScope {
         id: contentAreaLoader
         focus: true
         anchors {
+            top: parent.top
             left: separator.right
             right: parent.right
-            top: parent.top
             bottom: parent.bottom
         }
         LayoutMirroring.enabled: kickoff.sideBarOnRight
