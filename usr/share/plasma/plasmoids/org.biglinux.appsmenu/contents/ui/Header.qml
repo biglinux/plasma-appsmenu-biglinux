@@ -183,13 +183,17 @@ PlasmaExtras.PlasmoidHeading {
             onTextEdited: {
                 searchField.forceActiveFocus(Qt.ShortcutFocusReason)
             }
-            onAccepted: {
-                // There is nothing to activate when the search has no results.
-                kickoff.contentArea?.currentItem?.action.triggered()
-                kickoff.contentArea?.currentItem?.forceActiveFocus(Qt.ShortcutFocusReason)
-            }
             Keys.priority: Keys.AfterItem
-            Keys.forwardTo: kickoff.contentArea !== null ? kickoff.contentArea.view : []
+            Keys.forwardTo: {
+                if (kickoff.contentArea === null) {
+                    return []
+                }
+                if (kickoff.contentArea instanceof ListOfGridsView) {
+                    // forward to grid inside of list, or down will skip the whole grid
+                    return [kickoff.contentArea.view.currentItem?.view, kickoff.contentArea.view]
+                }
+                return kickoff.contentArea.view
+            }
             Keys.onTabPressed: event => {
                 tabSetFocus(event, nextItemInFocusChain(false));
             }
