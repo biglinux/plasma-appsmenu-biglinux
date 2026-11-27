@@ -183,11 +183,6 @@ PlasmaExtras.PlasmoidHeading {
             onTextEdited: {
                 searchField.forceActiveFocus(Qt.ShortcutFocusReason)
             }
-            onAccepted: {
-                // There is nothing to activate when the search has no results.
-                kickoff.contentArea?.currentItem?.action.triggered()
-                kickoff.contentArea?.currentItem?.forceActiveFocus(Qt.ShortcutFocusReason)
-            }
             Keys.priority: Keys.AfterItem
             Keys.forwardTo: kickoff.contentArea !== null ? kickoff.contentArea.view : []
             Keys.onTabPressed: event => {
